@@ -366,22 +366,25 @@ int main() {
   int rc;
   int numFails = 0;
 
+  PartRecord *theList;
+  insertPart(&theList,1,9,"Door");
+
   rc = testOne();
   if (rc != 0)
     ++numFails;
 
-  rc = testTwo();
-  if (rc != 0)
-    ++numFails;
-
-  rc = testThree();
-  if (rc != 0)
-    ++numFails;
-
-  if (numFails == 0)
-    printf("all tests pass\n");
-  else
-    printf("some tests fail\n");
+//  rc = testTwo();
+//  if (rc != 0)
+//    ++numFails;
+//
+//  rc = testThree();
+//  if (rc != 0)
+//    ++numFails;
+//
+//  if (numFails == 0)
+//    printf("all tests pass\n");
+//  else
+//    printf("some tests fail\n");
 
   return numFails;
 }

@@ -6,28 +6,34 @@
 #include "includes.h"
 
 int insertPart(PartRecord **theList, int partNumber, int quantity, char *partName){
-    PartRecord *curr = *theList;
+    PartRecord *curr = theList;
     PartRecord *prev = curr;
+    bool addPart;
 
-    int start;
-    if (theList != NULL)
-        start = 0;
-    else {
+    if (theList == NULL)
         return 1;
-    }
-    while (curr != NULL || start == 0) {
-        start = 1;
+    while (curr != NULL) {
         // Look for items location
         // Return if duplicate
         if (curr->partNumber == partNumber)
             return 1;
-        if (curr->partNumber < partNumber && curr->next->partNumber > partNumber) {
-            PartRecord *newRecord = malloc(sizeof(PartRecord));
-            newRecord->partNumber = partNumber;
-            newRecord->quantity = quantity;
-            strcpy(curr->partName, partName);
-            prev->next = newRecord;
-            return 0;
+        if (curr->partNumber < partNumber) {
+            if (!(curr->next == NULL))
+                if (curr->next->partNumber > partNumber)
+                    addPart = true;
+            else {
+                addPart = true;
+            }
+            if (addPart) {
+                PartRecord *newRecord = malloc(sizeof(PartRecord));
+                newRecord->partNumber = partNumber;
+                newRecord->quantity = quantity;
+                strcpy(curr->partName, partName);
+                prev->next = newRecord;
+                newRecord->next = curr;
+                //printParts(theList);
+                return 0;
+            }
         }
         prev = curr;
         curr = curr->next;
