@@ -11,6 +11,7 @@ int insertPart(PartRecord **theList, int partNumber, int quantity, char *partNam
 
     PartRecord *curr = *theList;
     PartRecord *prev;
+    PartRecord *next;
 
     if (curr == NULL) {
         curr = malloc(sizeof(PartRecord));
@@ -19,72 +20,33 @@ int insertPart(PartRecord **theList, int partNumber, int quantity, char *partNam
         strcpy(curr->partName, partName);
         curr->next = NULL;
         *theList = (PartRecord *)curr;
+        return 0;
     }
     else {
-        bool addPart = false;
-
-        while (curr != NULL) {
-            prev = curr;
-            if (curr->partNumber < partNumber && curr->next == NULL)
-                addPart = true;
-            else {
-                if (curr->partNumber < partNumber && curr->next->partNumber > partNumber)
-                    curr->partNumber;
-                    addPart = true;
-            }
-            curr = curr->next;
-            if (addPart) {
-                PartRecord *newPart = malloc(sizeof (PartRecord));
-                newPart->partNumber = partNumber;
-                newPart->quantity = quantity;
-                strcpy(newPart->partName, partName);
-                newPart->next = NULL;
-                prev->next = newPart;
+        bool head = false;
+        if (curr->partNumber > partNumber) {
+            next = curr;
+            head = true;
+        } else {
+            while (curr != NULL) {
+                // Append to the end of list
+                prev = curr;
+                curr = curr->next;
+                next = NULL;
             }
         }
+        PartRecord *newPart = malloc(sizeof (PartRecord));
+        newPart->partNumber = partNumber;
+        newPart->quantity = quantity;
+        strcpy(newPart->partName, partName);
+        newPart->next = next;
+        if (!head)
+            prev->next = newPart;
+        else {
+            // Assign new node to start of list
+            *theList = (PartRecord *)newPart;
+        }
     }
-
-
-//    PartRecord *curr = *theList;
-//    bool addPart;
-//    // If theList points to nothing assign starting node
-//    if (curr == NULL) {
-//        curr = malloc(sizeof(PartRecord));
-//        curr->next = NULL;
-//        addPart = true;
-//        *theList = curr;
-//    }
-//
-//    PartRecord *prev = curr;
-//
-//    while (curr != NULL) {
-//        // Look for items location
-//        // Return if duplicate
-//        if (curr->partNumber == partNumber)
-//            return 1;
-//        if (curr->partNumber < partNumber) {
-//            if (!(curr->next == NULL))
-//                if (curr->next->partNumber > partNumber)
-//                    addPart = true;
-//            else {
-//                addPart = true;
-//            }
-//            if (addPart) {
-//                PartRecord *newRecord = malloc(sizeof(PartRecord));
-//                newRecord->partNumber = partNumber;
-//                newRecord->quantity = quantity;
-//                strcpy(curr->partName, partName);
-//                prev->next = newRecord;
-//                newRecord->next = curr;
-//                //printParts(theList);
-//                return 0;
-//            }
-//        }
-//        prev = curr;
-//        curr = curr->next;
-//    }
-//
-//    return 1;
 
 }
 
