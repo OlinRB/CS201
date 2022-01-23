@@ -8,11 +8,9 @@
 int insertPart(PartRecord **theList, int partNumber, int quantity, char *partName){
     if (theList == NULL)
         return 1;
-
     PartRecord *curr = *theList;
     PartRecord *prev;
     PartRecord *next;
-
     if (curr == NULL) {
         curr = malloc(sizeof(PartRecord));
         curr->partNumber = partNumber;
@@ -24,36 +22,58 @@ int insertPart(PartRecord **theList, int partNumber, int quantity, char *partNam
     }
     else {
         bool head = false;
+        bool duplicate = false;
         if (curr->partNumber > partNumber) {
             next = curr;
             head = true;
         } else {
             while (curr != NULL) {
-                // Append to the end of list
-                prev = curr;
+                // Append to the end of list and Middle
+                if (curr->partNumber == partNumber) {
+                    duplicate = true;
+                    return 1;
+                }
+                if (curr->partNumber > partNumber) {
+                    next = curr;
+                }
+                else {
+                    prev = curr;
+                    next = NULL;
+                }
                 curr = curr->next;
-                next = NULL;
             }
         }
-        PartRecord *newPart = malloc(sizeof (PartRecord));
-        newPart->partNumber = partNumber;
-        newPart->quantity = quantity;
-        strcpy(newPart->partName, partName);
-        newPart->next = next;
-        if (!head)
-            prev->next = newPart;
-        else {
-            // Assign new node to start of list
-            *theList = (PartRecord *)newPart;
+        if (!duplicate) {
+            PartRecord *newPart = malloc(sizeof(PartRecord));
+            newPart->partNumber = partNumber;
+            newPart->quantity = quantity;
+            strcpy(newPart->partName, partName);
+            newPart->next = next;
+            if (!head)
+                prev->next = newPart;
+            else {
+                // Assign new node to start of list
+                *theList = (PartRecord *) newPart;
+            }
         }
+        return 0;
     }
+    return 1;
 
 }
 
 int deletePart(PartRecord **theList, int partNumber){
+    if (theList == NULL)
+        return 1;
     PartRecord *curr = *theList;
     PartRecord *prev;
     PartRecord *next;
+    // If first item to be deleted
+    if (curr->partNumber == partNumber) {
+        *theList = (PartRecord *) curr->next;
+        free(curr);
+        return 0;
+    }
     if (curr != NULL) {
         while (curr != NULL) {
             if (curr->partNumber == partNumber) {

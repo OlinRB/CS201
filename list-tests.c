@@ -369,9 +369,9 @@ int main() {
   PartRecord *theList;
   insertPart(&theList,1,9,"Door");
 
-//  rc = testOne();
-//  if (rc != 0)
-//    ++numFails;
+  rc = testOne();
+  if (rc != 0)
+    ++numFails;
 
   rc = testTwo();
   if (rc != 0)
@@ -381,10 +381,10 @@ int main() {
   if (rc != 0)
     ++numFails;
 
-//  if (numFails == 0)
-//    printf("all tests pass\n");
-//  else
-//    printf("some tests fail\n");
+  if (numFails == 0)
+    printf("all tests pass\n");
+  else
+    printf("some tests fail\n");
 
   return numFails;
 }
