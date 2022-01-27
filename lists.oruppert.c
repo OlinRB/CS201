@@ -3,7 +3,10 @@
 //
 
 #include "lists.oruppert.h"
-#include "includes.h"
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <stdbool.h>
 
 int insertPart(PartRecord **theList, int partNumber, int quantity, char *partName){
     if (theList == NULL)
