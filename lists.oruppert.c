@@ -117,6 +117,61 @@ void printParts(PartRecord *theList) {
     }
 }
 
+int mergePartLists(PartRecord *listOne, PartRecord *listTwo, PartRecord **mergedList) {
+    PartRecord *merged = *mergedList;
+    PartRecord *mergedTemp = merged;
+    PartRecord *tempListOne = listOne;
+    PartRecord *tempListTwo = listTwo;
+    PartRecord *duplicate = NULL;
+    PartRecord *dupHead;
+    bool dupHeadNode = true;
+    bool duplicates = false;
+
+    if (mergedList == NULL)
+        return 1;
+
+    // Check for conflicting records
+    PartRecord *currOne = tempListOne;
+    PartRecord *currTwo = tempListTwo;
+    while (currOne != NULL) {
+        while (currTwo != NULL) {
+            if (currOne->partNumber == currTwo->partNumber && strcmp(currOne->partName,currTwo->partName) != 0)
+                return 1;
+            if (currOne->partNumber == currTwo->partNumber) {
+                insertPart(&duplicate, currOne->partNumber, (currOne->quantity + 1), currOne->partName);
+                if (dupHeadNode) {
+                    dupHead = duplicate;
+                    dupHeadNode = false;
+                    duplicates = true;
+                }
+
+            }
+            currTwo = currTwo->next;
+        }
+        currOne = currOne->next;
+        currTwo = tempListTwo;
+    }
+    // No conflicts found
+    // Add parts to merged list
+    // Start duplicates then call insertPart
+    if (duplicates){
+        while (dupHead != NULL) {
+            insertPart(mergedList, dupHead->partNumber, dupHead->quantity, dupHead->partName);
+            dupHead = dupHead->next;
+        }
+    }
+    while (tempListOne != NULL) {
+        insertPart(mergedList, tempListOne->partNumber, tempListOne->quantity, tempListOne->partName);
+        tempListOne = tempListOne->next;
+    }
+    while (tempListTwo != NULL) {
+        insertPart(mergedList, tempListTwo->partNumber, tempListTwo->quantity, tempListTwo->partName);
+        tempListTwo = tempListTwo->next;
+    }
+    return 0;
+
+}
+
 int freeMem(PartRecord *theList) {
     if (theList == NULL)
         return 0;

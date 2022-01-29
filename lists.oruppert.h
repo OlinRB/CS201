@@ -21,6 +21,8 @@ PartRecord *findPart(PartRecord *theList, int partNumber);
 
 void printParts(PartRecord *theList);
 
+int mergePartLists(PartRecord *listOne, PartRecord *listTwo, PartRecord **mergedList);
+
 int freeMem(PartRecord *theList);
 
 #endif //LINKEDLIST_LISTS_ORUPPERT_H
