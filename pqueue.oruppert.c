@@ -12,7 +12,7 @@ int enqueue(PQueueNode **pqueue, int priority, void *data) {
     if (pqueue == NULL)
         return 1;
     PQueueNode *curr = *pqueue;
-    PQueueNode *prev;
+    PQueueNode *prev = NULL;
     PQueueNode *next;
     if (curr == NULL) {
         curr = malloc(sizeof(PQueueNode));
@@ -24,12 +24,14 @@ int enqueue(PQueueNode **pqueue, int priority, void *data) {
     }
     else {
         bool head = false;
+        bool foundPlacement = false;
         if (curr->priority > priority) {
             next = curr;
             head = true;
         } else {
-            while (curr != NULL) {
+            while (curr != NULL && !foundPlacement) {
                 if (curr->priority > priority) {
+                    foundPlacement = true;
                     next = curr;
                 } else {
                     prev = curr;
@@ -58,8 +60,8 @@ void *dequeue(PQueueNode **pqueue) {
         return NULL;
     PQueueNode *curr = *pqueue;
     Song *song = curr->data;
-    curr = curr->next;
-    free(pqueue);
+    *pqueue = curr->next;
+    //free(pqueue);
     return song;
 
 
@@ -82,6 +84,7 @@ void printSong(void *data) {
     printf(" (");
     printf("%s", song->artist);
     printf(")");
+    printf("\n");
 }
 
 //-------------------------------------------------------
@@ -95,7 +98,6 @@ void printQueue(PQueueNode *pqueue, void (printFunction)(void *)) {
         printf("%d",qnode->priority);
         printf(" Data = ");
         printFunction(qnode->data);
-        printf("\n");
         qnode = qnode->next;
     }
 }
