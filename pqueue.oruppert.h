@@ -20,6 +20,8 @@ typedef struct PQueueStruct {
 
 int enqueue(PQueueNode **pqueue, int priority, void *data);
 
+int enqueueRandInts(PQueueNode **pqueue, int priority);
+
 void *dequeue(PQueueNode **pqueue);
 
 void *peek(PQueueNode *pqueue);
@@ -32,5 +34,6 @@ int queueLength(PQueueNode *pqueue);
 
 void printSong(void *data);
 
+void extraCredit(int arrayLen, int numHighVal);
 
 #endif //LINKEDLIST_LISTS_ORUPPERT_H

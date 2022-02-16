@@ -118,4 +118,77 @@ int queueLength(PQueueNode *pqueue) {
     }
     return cnt;
 }
+int enqueueRandInts(PQueueNode **pqueue, int priority) {
+    if (pqueue == NULL)
+        return 1;
+    PQueueNode *curr = *pqueue;
+    PQueueNode *prev = NULL;
+    PQueueNode *next;
+    if (curr == NULL) {
+        curr = malloc(sizeof(PQueueNode));
+        curr->priority = priority;
+        curr->next = NULL;
+        *pqueue = (PQueueNode *)curr;
+        return 0;
+    }
+    else {
+        bool head = false;
+        bool foundPlacement = false;
+        if (curr->priority < priority) {
+            next = curr;
+            head = true;
+        } else {
+            while (curr != NULL && !foundPlacement) {
+                if (curr->priority < priority) {
+                    foundPlacement = true;
+                    next = curr;
+                } else {
+                    prev = curr;
+                    next = NULL;
+                }
+                curr = curr->next;
+            }
+        }
+        PQueueNode *newQueue = malloc(sizeof(PQueueNode));
+        newQueue->priority = priority;
+        newQueue->next = next;
+        if (!head)
+            prev->next = newQueue;
+        else {
+            // Assign new node to head of queue
+            *pqueue = (PQueueNode *) newQueue;
+        }
+        return 0;
+    }
+    return 1;
+}
+
+
+void extraCredit(int arrayLen, int numHighVal) {
+    int numArr[arrayLen];
+    int i;
+    PQueueNode *pqueue = NULL;
+    for (i = 0; i < arrayLen; ++i) {
+        numArr[i] = rand();
+        printf("%d",numArr[i]);
+        printf(" ");
+    }
+    // Add data to pqueue
+    for (i = 0; i < arrayLen; ++i) {
+        enqueueRandInts(&pqueue, numArr[i]);
+    }
+    // Print first n results
+    printf("\n");
+    printf("The highest %d values are: ", numHighVal);
+    PQueueNode *curr = pqueue;
+    int numPrinted = 0;
+    while (curr != NULL && numPrinted < numHighVal) {
+        printf("%d", curr->priority);
+        printf(" ");
+        curr = curr->next;
+        ++numPrinted;
+    }
+
+
+}
 
