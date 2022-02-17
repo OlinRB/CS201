@@ -61,7 +61,7 @@ void *dequeue(PQueueNode **pqueue) {
     PQueueNode *curr = *pqueue;
     Song *song = curr->data;
     *pqueue = curr->next;
-    //free(pqueue);
+    free(curr);
     return song;
 
 
