@@ -94,9 +94,9 @@ void printQueue(PQueueNode *pqueue, void (printFunction)(void *)) {
 
     qnode = pqueue;
     while (qnode != NULL) {
-        printf("Priority = ");
+        printf("priority = ");
         printf("%d",qnode->priority);
-        printf(" Data = ");
+        printf(" data = ");
         printFunction(qnode->data);
         qnode = qnode->next;
     }
