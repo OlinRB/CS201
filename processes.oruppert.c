@@ -22,12 +22,22 @@
 //• etc.
 
 int done;
-int loop;
+int parentWait, childWait;
 
 void handler1(int signum) {
-    printf("this is handler1(): got a signal %d\n", signum);
+    if (signum == SIGUSR1) {
+        printf("From SIGUSR1: got a signal %d\n", signum);
+        parentWait = 0;
+        childWait = 1;
+    }
+    else {
+        printf("From SIGUSR2: got signal %d\n", signum);
+        parentWait = 1;
+        childWait = 0;
+
+    }
+
     done = 1;
-    loop = 1;
 }
 
 
@@ -73,6 +83,7 @@ int main() {
 
         printf("Parent is writing '%s' to the shared memory\n", buffer);
         strcpy(ptr, buffer);
+        signal(SIGUSR1, handler1);
         wait(NULL);
 
     } else {
@@ -83,8 +94,9 @@ int main() {
 
         shmdt(ptr);
         // Kill process
-        printf("Waiting to kill...");
-        //sleep(10);
+        printf("Waiting to kill...\n");
+        //sleep(5);
+        signal(SIGUSR2, handler1);
         kill(getpid(), SIGUSR1);
     }
 
