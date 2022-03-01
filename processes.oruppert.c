@@ -83,7 +83,11 @@ int main() {
 
         shmdt(ptr);
         // Kill process
+        while (! done) {
+            int kill(pid_t getpid(), int sig);
+        }
     }
+
 
 
     return 0;
