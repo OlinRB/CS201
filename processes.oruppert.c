@@ -27,8 +27,9 @@ int parentWait, childWait;
 void handler1(int signum) {
     if (signum == SIGUSR1) {
         printf("From SIGUSR1: got a signal %d\n", signum);
-        parentWait = 0;
-        childWait = 1;
+//        parentWait = 0;
+//        childWait = 1;
+// Make explicit to fork
     }
     else {
         printf("From SIGUSR2: got signal %d\n", signum);
@@ -58,13 +59,13 @@ int main() {
         return(8);
     }
 
-    memset(&action, 0, sizeof(struct sigaction));
-    action.sa_handler = handler1;
-    sigaction(SIGUSR1, &action, NULL);
 
 
     // Create fork
     pid = fork();
+    // put in code for parent and child
+    memset(&action, 0, sizeof(struct sigaction));
+    action.sa_handler = handler1;
     if (pid < 0) {
         printf("fork failed\n");
         return(8);
@@ -73,38 +74,23 @@ int main() {
     if (pid > 0) {
         // this is the parent
         printf("I am the parent, and my pid is %d\n", getpid());
-
+        sigaction(SIGUSR1, &action, NULL);
         ptr = (char *) shmat(memid, 0, 0);
         if (ptr == NULL) {
             printf("shmat() failed\n");
             return (8);
         }
-
-        printf("Parent is writing '%s' to the shared memory\n", buffer);
-        strcpy(ptr, buffer);
-        // Wait for signal to move on
-        while (! parentWait )
-            // Waiting
-            signal(SIGUSR1, handler1);
         wait(NULL);
 
     } else {
         ptr = (char *) shmat(memid, 0, 0);
         printf("I am the child, and my pid is %d\n", getpid());
-
-        printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
-
+        sigaction(SIGUSR2, &action, NULL);
         shmdt(ptr);
-        if (strcmp(ptr, "done") == 0) {
-            printf("Done");
-            kill(getpid(), SIGUSR1); }
-
-        kill(getpid(), SIGUSR1);
-        while (! childWait)
-            signal(SIGUSR2, handler1);
-
-
     }
+
+    // While loop for actions
+
 
 
 
