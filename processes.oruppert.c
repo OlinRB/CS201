@@ -100,8 +100,8 @@ int main() {
             kill(getpid(), SIGUSR1); }
 
         kill(getpid(), SIGUSR1);
-        while (! childWait)
-            signal(SIGUSR1, handler1);
+//        while (! childWait)
+//            signal(SIGUSR1, handler1);
 
 
     }
