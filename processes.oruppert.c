@@ -105,6 +105,7 @@ int main() {
 
             shmdt(ptr);
             signal(SIGUSR2, handler1);
+            kill(getpid(), SIGUSR1);
         }
     }
 
