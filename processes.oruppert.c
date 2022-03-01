@@ -74,24 +74,6 @@ int main() {
         wait(NULL);
 
     } else {
-        // this is the child
-        printf("PID before new getPID: %d\n", pid);
-        pid = getpid();
-        printf("I am the child, and my pid is %d\n", pid);
-        ptr = (char *) shmat(memid, 0, 0);
-        if (ptr == NULL) {
-            printf("shmat() in child failed\n");
-            return (8);
-        }
-
-        printf("Child will do busywork for a little while\n");
-        double d;
-        for (int i = 0; i < 5000; ++i) {
-            for (int j = 0; j < 5000; ++j) {
-                d = d + (double) i / (double) j;
-            }
-        }
-        d = d + 45;
 
         printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
 
