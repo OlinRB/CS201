@@ -62,35 +62,32 @@ int main() {
     }
 
 
-    while (! loop ) {
-        if (pid > 0) {
-            // this is the parent
-            printf("I am the parent, and my pid is %d\n", getpid());
 
-            ptr = (char *) shmat(memid, 0, 0);
-            if (ptr == NULL) {
-                printf("shmat() failed\n");
-                return (8);
-            }
+    if (pid > 0) {
+        // this is the parent
+        printf("I am the parent, and my pid is %d\n", getpid());
 
-            printf("Parent is writing '%s' to the shared memory\n", buffer);
-            strcpy(ptr, buffer);
-            wait(NULL);
-
-        } else {
-            ptr = (char *) shmat(memid, 0, 0);
-
-            printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
-
-            shmdt(ptr);
-            // Kill process
-            kill(pid_t getpid(), 11);
+        ptr = (char *) shmat(memid, 0, 0);
+        if (ptr == NULL) {
+            printf("shmat() failed\n");
+            return (8);
         }
-//        while (! done) {
-//            // Waiting for SIGUSR1
-//
-//        }
+
+        printf("Parent is writing '%s' to the shared memory\n", buffer);
+        strcpy(ptr, buffer);
+        wait(NULL);
+
+    } else {
+        ptr = (char *) shmat(memid, 0, 0);
+        printf("I am the child, and my pid is %d\n", getpid());
+
+        printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
+
+        shmdt(ptr);
+        // Kill process
+        kill(pid_t getpid(), 10);
     }
+
 
 //    printf("now wait for something to happen\n");
 //    while ( ! done );
