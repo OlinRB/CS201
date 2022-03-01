@@ -22,10 +22,12 @@
 //• etc.
 
 int done;
+int loop;
 
 void handler1(int signum) {
     printf("this is handler1(): got a signal %d\n", signum);
     done = 1;
+    loop = 1;
 }
 
 
@@ -38,6 +40,7 @@ int main() {
     char *ptr;
     char buffer[BUFFER_SIZE];
     done = 0;
+    loop = 0;
 
     // Create shared mem
     memid = shmget(key, BUFFER_SIZE, IPC_EXCL | 0666);
@@ -59,26 +62,32 @@ int main() {
     }
 
     strcpy(buffer, "hello world");
-    if (pid > 0) {
-        // this is the parent
-        printf("I am the parent, and my pid is %d\n", getpid());
+    while (! loop ) {
+        if (pid > 0) {
+            // this is the parent
+            printf("I am the parent, and my pid is %d\n", getpid());
 
-        ptr = (char *) shmat(memid, 0, 0);
-        if (ptr == NULL) {
-            printf("shmat() failed\n");
-            return(8);
+            ptr = (char *) shmat(memid, 0, 0);
+            if (ptr == NULL) {
+                printf("shmat() failed\n");
+                return (8);
+            }
+
+            printf("Parent is writing '%s' to the shared memory\n", buffer);
+            strcpy(ptr, buffer);
+            wait(NULL);
+
+        } else {
+            ptr = (char *) shmat(memid, 0, 0);
+
+            printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
+
+            shmdt(ptr);
         }
+        while (! done) {
+            // Waiting for SIGUSR1
 
-        printf("Parent is writing '%s' to the shared memory\n", buffer);
-        strcpy(ptr, buffer);
-        wait(NULL);
-
-    } else {
-        ptr = (char *) shmat(memid, 0, 0);
-
-        printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
-
-        shmdt(ptr);
+        }
     }
 
 //    printf("now wait for something to happen\n");
