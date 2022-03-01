@@ -85,12 +85,8 @@ int main() {
 
         shmdt(ptr);
         // Kill process
-        kill(pid_t getpid(), 10);
     }
 
-
-//    printf("now wait for something to happen\n");
-//    while ( ! done );
 
     return 0;
 }
