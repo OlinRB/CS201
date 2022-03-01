@@ -82,7 +82,10 @@ int main() {
 
         printf("Parent is writing '%s' to the shared memory\n", buffer);
         strcpy(ptr, buffer);
-        signal(SIGUSR1, handler1);
+        // Wait for signal to move on
+        while (! parentWait )
+            // Waiting
+            signal(SIGUSR1, handler1);
         wait(NULL);
 
     } else {
@@ -92,11 +95,13 @@ int main() {
         printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
 
         shmdt(ptr);
-        // Kill process
-        printf("Waiting to kill...\n");
-        //sleep(5);
-//        signal(SIGUSR2, handler1);
-//        kill(getpid(), SIGUSR1);
+        if (ptr == "done")
+            kill(getpid(), SIGUSR1);
+
+        while (! childWait)
+            signal(SIGUSR1, handler1);
+
+
     }
 
 
