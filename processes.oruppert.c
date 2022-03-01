@@ -93,7 +93,7 @@ int main() {
             // Parent actions
             printf("Parent is writing '%s' to the shared memory\n", buffer);
             strcpy(ptr, buffer);
-            signal(SIGUSR1, handler1);
+            signal(SIGUSR1, &handler1);
             wait(NULL);
         } else {
             ptr = (char *) shmat(memid, 0, 0);
@@ -104,7 +104,7 @@ int main() {
             printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
 
             shmdt(ptr);
-            signal(SIGUSR2, handler1);
+            signal(SIGUSR2, &handler1);
             kill(getpid(), SIGUSR1);
         }
     }
