@@ -92,6 +92,7 @@ int main() {
             // Parent actions
             printf("Parent is writing '%s' to the shared memory\n", buffer);
             strcpy(ptr, buffer);
+            signal(SIGUSR1, handler1);
             wait(NULL);
         } else {
             ptr = (char *) shmat(memid, 0, 0);
