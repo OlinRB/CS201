@@ -39,7 +39,6 @@ int main() {
     char buffer[BUFFER_SIZE];
     done = 0;
 
-    strcpy(buffer, "testing 12345");
     // Create shared mem
     memid = shmget(key, BUFFER_SIZE, IPC_EXCL | 0666);
     if (memid < 0) {
@@ -59,6 +58,7 @@ int main() {
         return(8);
     }
 
+    strcpy(buffer, "hello world");
     if (pid > 0) {
         // this is the parent
         printf("I am the parent, and my pid is %d\n", getpid());
@@ -101,7 +101,6 @@ int main() {
 //    printf("now wait for something to happen\n");
 //    while ( ! done );
 
-    printf("done!\n");
     return 0;
 }
 
