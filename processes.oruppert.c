@@ -99,6 +99,7 @@ int main() {
             printf("Done");
             kill(getpid(), SIGUSR1); }
 
+        kill(getpid(), SIGUSR1);
         while (! childWait)
             signal(SIGUSR1, handler1);
 
