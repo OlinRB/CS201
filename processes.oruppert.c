@@ -87,21 +87,22 @@ int main() {
     }
 
     // While loop for actions
-    if (pid > 0) {
-        // Parent actions
-        printf("Parent is writing '%s' to the shared memory\n", buffer);
-        strcpy(ptr, buffer);
-        sleep(20);
-        wait(NULL);
-    } else {
-        ptr = (char *) shmat(memid, 0, 0);
-        if (ptr == NULL) {
-            printf("shmat() in child failed\n");
-            return(8);
-        }
-        printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
+    for (int i = 0; i < 3; ++i) {
+        if (pid > 0) {
+            // Parent actions
+            printf("Parent is writing '%s' to the shared memory\n", buffer);
+            strcpy(ptr, buffer);
+            wait(NULL);
+        } else {
+            ptr = (char *) shmat(memid, 0, 0);
+            if (ptr == NULL) {
+                printf("shmat() in child failed\n");
+                return (8);
+            }
+            printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
 
-        shmdt(ptr);
+            shmdt(ptr);
+        }
     }
 
     return 0;
