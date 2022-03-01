@@ -36,7 +36,7 @@ int main() {
     done = 0;
     pid = getpid();
 
-    printf("Starting; my pid is %d\n", pid);
+    printf("I am the parent and my pid is %d\n", pid);
 
     memset(&action, 0, sizeof(struct sigaction));
     action.sa_handler = handler1;
