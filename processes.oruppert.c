@@ -80,13 +80,13 @@ int main() {
         ptr = (char *) shmat(memid, 0, 0);
         if (ptr == NULL) {
             printf("shmat() in child failed\n");
-            return(8);
+            return (8);
         }
 
         printf("Child will do busywork for a little while\n");
         double d;
-        for (int i=0; i<5000; ++i) {
-            for (int j=0; j<5000; ++j) {
+        for (int i = 0; i < 5000; ++i) {
+            for (int j = 0; j < 5000; ++j) {
                 d = d + (double) i / (double) j;
             }
         }
@@ -95,6 +95,7 @@ int main() {
         printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
 
         shmdt(ptr);
+    }
 
 //    printf("now wait for something to happen\n");
 //    while ( ! done );
