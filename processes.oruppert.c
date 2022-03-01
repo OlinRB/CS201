@@ -83,6 +83,8 @@ int main() {
 
         shmdt(ptr);
         // Kill process
+        sleep(100);
+        printf("Waiting to kill...");
         kill(getpid(), SIGUSR1);
     }
 
