@@ -95,8 +95,8 @@ int main() {
         // Kill process
         printf("Waiting to kill...\n");
         //sleep(5);
-        signal(SIGUSR2, handler1);
-        kill(getpid(), SIGUSR1);
+//        signal(SIGUSR2, handler1);
+//        kill(getpid(), SIGUSR1);
     }
 
 
