@@ -83,9 +83,9 @@ int main() {
         printf("Parent is writing '%s' to the shared memory\n", buffer);
         strcpy(ptr, buffer);
         // Wait for signal to move on
-        while (! parentWait )
-            // Waiting
-            signal(SIGUSR1, handler1);
+//        while (! parentWait )
+//            // Waiting
+//            signal(SIGUSR1, handler1);
         wait(NULL);
 
     } else {
