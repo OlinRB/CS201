@@ -69,7 +69,7 @@ int main() {
         printf("fork failed\n");
         return(8);
     }
-    strcpy(buffer, "Hello world");
+    strcpy(buffer, "done");
     if (pid > 0) {
         // this is the parent
         printf("I am the parent, and my pid is %d\n", getpid());
