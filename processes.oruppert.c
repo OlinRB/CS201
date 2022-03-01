@@ -83,7 +83,7 @@ int main() {
 
         shmdt(ptr);
         // Kill process
-        kill(getpid(), SIGUSR1)
+        kill(getpid(), SIGUSR1);
     }
 
 
