@@ -25,6 +25,7 @@ int done;
 int parentWait, childWait;
 
 void handler1(int signum) {
+    printf("Handler called....\n");
     if (signum == SIGUSR1) {
         printf("From SIGUSR1: got a signal %d\n", signum);
 //        parentWait = 0;
