@@ -74,6 +74,7 @@ int main() {
         wait(NULL);
 
     } else {
+        ptr = (char *) shmat(memid, 0, 0);
 
         printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
 
