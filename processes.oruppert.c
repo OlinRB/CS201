@@ -50,7 +50,6 @@ int main() {
     char *ptr;
     char buffer[BUFFER_SIZE];
     done = 0;
-    loop = 0;
 
     // Create shared mem
     memid = shmget(key, BUFFER_SIZE, IPC_EXCL | 0666);
