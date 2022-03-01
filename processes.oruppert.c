@@ -104,6 +104,7 @@ int main() {
             printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
 
             shmdt(ptr);
+            signal(SIGUSR2, handler1);
         }
     }
 
