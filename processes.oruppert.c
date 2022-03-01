@@ -61,7 +61,7 @@ int main() {
         return(8);
     }
 
-    strcpy(buffer, "hello world");
+
     while (! loop ) {
         if (pid > 0) {
             // this is the parent
@@ -83,11 +83,13 @@ int main() {
             printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
 
             shmdt(ptr);
+            // Kill process
+            kill(pid_t getpid(), 11);
         }
-        while (! done) {
-            // Waiting for SIGUSR1
-
-        }
+//        while (! done) {
+//            // Waiting for SIGUSR1
+//
+//        }
     }
 
 //    printf("now wait for something to happen\n");
