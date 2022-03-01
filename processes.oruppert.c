@@ -39,6 +39,7 @@ int main() {
     char buffer[BUFFER_SIZE];
     done = 0;
 
+    strcpy(buffer, "testing 12345");
     // Create shared mem
     memid = shmget(key, BUFFER_SIZE, IPC_EXCL | 0666);
     if (memid < 0) {
@@ -74,7 +75,7 @@ int main() {
 
     } else {
         // this is the child
-        printf("PID before new getPID: %d", pid);
+        printf("PID before new getPID: %d\n", pid);
         pid = getpid();
         printf("I am the child, and my pid is %d\n", pid);
         ptr = (char *) shmat(memid, 0, 0);
