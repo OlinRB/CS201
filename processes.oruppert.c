@@ -95,7 +95,7 @@ int main() {
         printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
 
         shmdt(ptr);
-        if (ptr == "done")
+        if (strcmp(ptr, "done") == 0)
             kill(getpid(), SIGUSR1);
 
         while (! childWait)
