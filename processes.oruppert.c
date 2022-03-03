@@ -33,6 +33,7 @@ void handler1(int signum) {
         printf("From SIGUSR2: got signal %d\n", signum);
         parentWait = 1;
         childWait = 0;
+        kill(getpid(), SIGUSR2);
     }
 
     done = 1;
