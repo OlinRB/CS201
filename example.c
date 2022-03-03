@@ -34,24 +34,23 @@ void main()
         printf("I am the child, and my pid is %d", getpid());
     }
 
-    if (pid == 0) { /* child */
-        signal(SIGHUP, sighup);
-        signal(SIGINT, sigint);
-        signal(SIGQUIT, sigquit);
-        for (;;)
-            ; /* loop for ever */
-    }
+    for (int i = 0; i < 3; ++i) {
+        if (pid == 0) { /* child */
+            signal(SIGHUP, sighup);
+            signal(SIGINT, sigint);
+            signal(SIGQUIT, sigquit);
+            for (;;); /* loop for ever */
+        } else /* parent */
+        { /* pid hold id of child */
+            printf("\nPARENT: sending SIGHUP\n\n");
+            kill(pid, SIGHUP);
 
-    else /* parent */
-    { /* pid hold id of child */
-        printf("\nPARENT: sending SIGHUP\n\n");
-        kill(pid, SIGHUP);
+            printf("\nPARENT: sending SIGINT\n\n");
+            kill(pid, SIGINT);
 
-        printf("\nPARENT: sending SIGINT\n\n");
-        kill(pid, SIGINT);
-
-        printf("\nPARENT: sending SIGQUIT\n\n");
-        kill(pid, SIGQUIT);
+            printf("\nPARENT: sending SIGQUIT\n\n");
+            kill(pid, SIGQUIT);
+        }
     }
 }
 
