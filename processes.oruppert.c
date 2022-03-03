@@ -48,6 +48,7 @@ int main() {
     char *ptr;
     char buffer[BUFFER_SIZE];
     done = 0;
+    childWait = 1;
 
     // Create shared mem
     memid = shmget(key, BUFFER_SIZE, IPC_EXCL | 0666);
@@ -77,6 +78,7 @@ int main() {
         wait(NULL);
 
     } else {
+        printf(childWait);
         while (childWait) {
             // Wait
         }
