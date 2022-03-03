@@ -28,12 +28,11 @@ void handler1(int signum) {
     printf("Handler called....\n");
     if (signum == SIGUSR1) {
         printf("From SIGUSR1: got a signal %d\n", signum);
+        childWait = 0;
     }
     else {
         printf("From SIGUSR2: got signal %d\n", signum);
-        parentWait = 1;
-        childWait = 0;
-        kill(getpid(), SIGUSR2);
+        childWait = 1;
     }
 
     done = 1;
@@ -78,6 +77,9 @@ int main() {
         wait(NULL);
 
     } else {
+        while (childWait) {
+            // Wait
+        }
         ptr = (char *) shmat(memid, 0, 0);
         printf("I am the child, and my pid is %d\n", getpid());
         sigaction(SIGUSR2, &action, NULL);
