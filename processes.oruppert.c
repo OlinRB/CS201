@@ -95,6 +95,8 @@ int main() {
             strcpy(ptr, buffer);
             signal(SIGUSR1, &handler1);
             wait(NULL);
+            kill(getpid(), SIGUSR2);
+
         } else {
             ptr = (char *) shmat(memid, 0, 0);
             if (ptr == NULL) {
@@ -105,7 +107,7 @@ int main() {
 
             shmdt(ptr);
             signal(SIGUSR2, &handler1);
-            //kill(getpid(), SIGUSR2);
+            kill(getpid(), SIGUSR2);
         }
     }
 
