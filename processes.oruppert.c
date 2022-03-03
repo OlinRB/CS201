@@ -87,7 +87,7 @@ int main() {
         shmdt(ptr);
     }
 
-    // While loop for actions
+    // While loop for actions https://www.geeksforgeeks.org/signals-c-set-2/
     for (int i = 0; i < 3; ++i) {
         if (pid > 0) {
             // Parent actions
@@ -105,7 +105,7 @@ int main() {
 
             shmdt(ptr);
             signal(SIGUSR2, &handler1);
-            kill(getpid(), SIGUSR2);
+            //kill(getpid(), SIGUSR2);
         }
     }
 

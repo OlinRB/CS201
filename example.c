@@ -39,14 +39,11 @@ void main()
         printf("\nPARENT: sending SIGHUP\n\n");
         kill(pid, SIGHUP);
 
-        sleep(3); /* pause for 3 secs */
         printf("\nPARENT: sending SIGINT\n\n");
         kill(pid, SIGINT);
 
-        sleep(3); /* pause for 3 secs */
         printf("\nPARENT: sending SIGQUIT\n\n");
         kill(pid, SIGQUIT);
-        sleep(3);
     }
 }
 
