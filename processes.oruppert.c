@@ -28,15 +28,11 @@ void handler1(int signum) {
     printf("Handler called....\n");
     if (signum == SIGUSR1) {
         printf("From SIGUSR1: got a signal %d\n", signum);
-//        parentWait = 0;
-//        childWait = 1;
-// Make explicit to fork
     }
     else {
         printf("From SIGUSR2: got signal %d\n", signum);
         parentWait = 1;
         childWait = 0;
-
     }
 
     done = 1;
@@ -93,9 +89,9 @@ int main() {
             // Parent actions
             printf("Parent is writing '%s' to the shared memory\n", buffer);
             strcpy(ptr, buffer);
-            signal(SIGUSR1, &handler1);
+            //signal(SIGUSR1, &handler1);
             wait(NULL);
-            kill(getpid(), SIGUSR2);
+            kill(getpid(), SIGUSR1);
 
         } else {
             ptr = (char *) shmat(memid, 0, 0);
@@ -106,7 +102,7 @@ int main() {
             printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
 
             shmdt(ptr);
-            signal(SIGUSR2, &handler1);
+            //signal(SIGUSR2, &handler1);
             kill(getpid(), SIGUSR2);
         }
     }
