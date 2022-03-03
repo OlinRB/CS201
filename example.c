@@ -26,6 +26,14 @@ void main()
         exit(1);
     }
 
+    // Print out PIDs
+    if (getpid() > 0) {
+        // I am the parent
+        printf("I am the parent, and my pid is %d", getpid());
+    } else {
+        printf("I am the child, and my pid is %d", getpid());
+    }
+
     if (pid == 0) { /* child */
         signal(SIGHUP, sighup);
         signal(SIGINT, sigint);
