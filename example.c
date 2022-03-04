@@ -61,7 +61,7 @@ int main() {
             //printf("I am the parent, pid: %d\n", getpid());
             ptr = (char *) shmat(memid, 0, 0);
             ptrLoop = (char *) shmat(memidLoop,0,0);
-            if (ptr == NULL || ptrLoop) {
+            if (ptr == NULL || ptrLoop == NULL) {
                 printf("shmat() failed\n");
                 return (8);
             }
