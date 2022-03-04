@@ -36,7 +36,7 @@ int main() {
     int memidLoop;
     int keyLoop = IPC_PRIVATE;
     char *ptrLoop;
-    char *bufferLoop;
+    char *bufferLoop[BUFFER_SIZE];
 
     strcpy(buffer, "hello from me");
     strcpy(bufferLoop, "0");
@@ -50,7 +50,7 @@ int main() {
 
     done = 0;
     memid = shmget(key, BUFFER_SIZE, IPC_EXCL | 0666);
-    //memidLoop = shmget(keyLoop, sizeof(int), IPC_EXCL | 0666);
+    memidLoop = shmget(keyLoop, sizeof(int), IPC_EXCL | 0666);
     if (memid < 0 || memidLoop < 0) {
         printf("shmget() failed\n");
         return(8);
@@ -60,13 +60,13 @@ int main() {
         if (pid > 0) {
             //printf("I am the parent, pid: %d\n", getpid());
             ptr = (char *) shmat(memid, 0, 0);
-            //ptrLoop = (char *) shmat(memidLoop,0,0);
+            ptrLoop = (char *) shmat(memidLoop,0,0);
             if (ptr == NULL || ptrLoop) {
                 printf("shmat() failed\n");
                 return (8);
             }
             printf("Parent is writing '%s' to the shared memory\n", buffer);
-            //printf("Parent Shared int: %s\n", bufferLoop);
+            printf("Parent Shared int: %s\n", bufferLoop);
             strcpy(ptr, buffer);
             wait(NULL);
             kill(getpid(), SIGUSR1);
