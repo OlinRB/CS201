@@ -84,7 +84,7 @@ int main() {
             ptrLoop = (char *) shmat(memidLoop, 0, 0);
             printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
             printf("Child Shared int: %s\n", ptrLoop);
-            strcpy(ptrLoop, "0")
+            strcpy(ptrLoop, "0");
             shmdt(ptr);
             shmdt(ptrLoop);
             kill(getpid(), SIGUSR2);
