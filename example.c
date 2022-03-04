@@ -20,15 +20,19 @@ void handler1(int signum) {
 int main() {
     int pid;
     struct sigaction action;
-
-    done = 0;
-    pid = getpid();
-
-    printf("Starting; my pid is %d\n", pid);
-
     memset(&action, 0, sizeof(struct sigaction));
     action.sa_handler = handler1;
     sigaction(SIGUSR1, &action, NULL);
+
+    done = 0;
+    pid = fork();
+    if (pid > 0) {
+        printf("I am the parent");
+    } else {
+        printf("I am the child");
+    }
+
+    printf("Starting; my pid is %d\n", pid);
 
     printf("now wait for something to happen\n");
     kill(getpid(), SIGUSR1);
