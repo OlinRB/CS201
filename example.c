@@ -51,7 +51,7 @@ int main() {
         wait(NULL);
         kill(getpid(), SIGUSR1);
     } else {
-        printf("I am the child, pid: %d\n", getpid());
+        printf("\nI am the child, pid: %d\n", getpid());
 //        ptr = (char *) shmat(memid, 0, 0);
 //        printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
         shmdt(ptr);
