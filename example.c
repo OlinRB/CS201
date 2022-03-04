@@ -9,6 +9,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <signal.h>
+#include <sys/wait.h>
+#include <sys/shm.h>
 #define BUFFER_SIZE 32
 int done;
 
