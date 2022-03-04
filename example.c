@@ -27,9 +27,9 @@ int main() {
     done = 0;
     pid = fork();
     if (pid > 0) {
-        printf("I am the parent");
+        printf("I am the parent, pid: %d\n", getpid());
     } else {
-        printf("I am the child");
+        printf("I am the child, pid: %d\n", getpid());
     }
 
     printf("Starting; my pid is %d\n", pid);
