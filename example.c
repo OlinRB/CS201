@@ -15,7 +15,7 @@ int done;
 void handler1(int signum) {
     if (signum == SIGUSR1) {
         printf("\nGot SIGUSR1\n");
-        printf("this is handler1(): got a signal %d\n", signum);
+        printf("this is handler99(): got a signal %d\n", signum);
     }
     if (signum == SIGUSR2) {
         printf("\nGot SIGUSR2\n");
