@@ -31,10 +31,6 @@ int main() {
     } else {
         printf("I am the child, pid: %d\n", getpid());
     }
-
-    printf("Starting; my pid is %d\n", pid);
-
-    printf("now wait for something to happen\n");
     kill(getpid(), SIGUSR1);
     while ( ! done );
 
