@@ -75,7 +75,6 @@ int main() {
         }
         kill(pid, SIGUSR1);
         wait(NULL);
-        kill(pid, SIGUSR2);
 
     } else {
         ptr = (char *) shmat(memid, 0, 0);
