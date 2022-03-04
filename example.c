@@ -28,6 +28,7 @@ int main() {
     pid = fork();
     if (pid > 0) {
         printf("I am the parent, pid: %d\n", getpid());
+        kill(getpid(), SIGUSR1);
     } else {
         printf("I am the child, pid: %d\n", getpid());
         kill(getpid(), SIGUSR1);
