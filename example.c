@@ -39,7 +39,7 @@ int main() {
     char bufferLoop[BUFFER_SIZE];
 
     strcpy(buffer, "hello from me");
-    strcpy(bufferLoop, "0");
+    //strcpy(bufferLoop, "0");
     // Signals
     int pid;
     struct sigaction action;
@@ -50,8 +50,8 @@ int main() {
 
     done = 0;
     memid = shmget(key, BUFFER_SIZE, IPC_EXCL | 0666);
-    memidLoop = shmget(key, BUFFER_SIZE, IPC_EXCL | 0666);
-    if (memid < 0 || memidLoop < 0) {
+    //memidLoop = shmget(key, BUFFER_SIZE, IPC_EXCL | 0666);
+    if (memid < 0) {
         printf("shmget() failed\n");
         return(8);
     }
@@ -64,7 +64,7 @@ int main() {
 //            while (strcmp("0", ptrLoop) != 0) {
 //                ptrLoop = (char *) shmat(memidLoop, 0, 0);
 //            }
-            if (ptr == NULL || ptrLoop == NULL) {
+            if (ptr == NULL) {
                 printf("shmat() failed\n");
                 return (8);
             }
