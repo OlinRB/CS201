@@ -34,6 +34,7 @@ int main() {
     if (getpid() > 0) {
         // I am the parent
         printf("I am the parent, and my pid is %d\n", getpid());
+        wait(NULL);
     } else {
         printf("I am the child, and my pid is %d\n", getpid());
     }

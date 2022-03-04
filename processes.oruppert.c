@@ -34,8 +34,6 @@ void handler1(int signum) {
         printf("From SIGUSR2: got signal %d\n", signum);
         childWait = 1;
     }
-
-    done = 1;
 }
 
 
@@ -88,29 +86,29 @@ int main() {
         shmdt(ptr);
     }
 
-    // While loop for actions https://www.geeksforgeeks.org/signals-c-set-2/
-    for (int i = 0; i < 3; ++i) {
-        if (pid > 0) {
-            // Parent actions
-            printf("Parent is writing '%s' to the shared memory\n", buffer);
-            strcpy(ptr, buffer);
-            //signal(SIGUSR1, &handler1);
-            wait(NULL);
-            kill(getpid(), SIGUSR1);
-
-        } else {
-            ptr = (char *) shmat(memid, 0, 0);
-            if (ptr == NULL) {
-                printf("shmat() in child failed\n");
-                return (8);
-            }
-            printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
-
-            shmdt(ptr);
-            //signal(SIGUSR2, &handler1);
-            kill(getpid(), SIGUSR2);
-        }
-    }
+//    // While loop for actions https://www.geeksforgeeks.org/signals-c-set-2/
+//    for (int i = 0; i < 3; ++i) {
+//        if (pid > 0) {
+//            // Parent actions
+//            printf("Parent is writing '%s' to the shared memory\n", buffer);
+//            strcpy(ptr, buffer);
+//            //signal(SIGUSR1, &handler1);
+//            wait(NULL);
+//            kill(getpid(), SIGUSR1);
+//
+//        } else {
+//            ptr = (char *) shmat(memid, 0, 0);
+//            if (ptr == NULL) {
+//                printf("shmat() in child failed\n");
+//                return (8);
+//            }
+//            printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
+//
+//            shmdt(ptr);
+//            //signal(SIGUSR2, &handler1);
+//            kill(getpid(), SIGUSR2);
+//        }
+//    }
 
     return 0;
 }
