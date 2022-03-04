@@ -23,7 +23,6 @@ void handler1(int signum) {
 
 int main() {
     // Memory
-    int pid;
     int memid;
     int key = IPC_PRIVATE;
     char *ptr;
