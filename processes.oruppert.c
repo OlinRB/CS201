@@ -73,6 +73,7 @@ int main() {
             printf("shmat() failed\n");
             return (8);
         }
+        kill(pid, SIGUSR1);
         wait(NULL);
         kill(pid, SIGUSR2);
 
@@ -81,7 +82,7 @@ int main() {
         printf("I am the child, and my pid is %d\n", getpid());
         sigaction(SIGUSR2, &action, NULL);
         shmdt(ptr);
-        kill(pid, SIGUSR1);
+        kill(pid, SIGUSR2);
     }
 
 //    // While loop for actions https://www.geeksforgeeks.org/signals-c-set-2/
