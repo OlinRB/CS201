@@ -68,13 +68,13 @@ int main(int argc, char *argv[]) {
         // this is the child
         pid = getpid();
         printf("I am the child, and my pid is %d\n", pid);
-        ptr = (char *) shmat(memid, 0, 0);
-        if (ptr == NULL) {
-            printf("shmat() in child failed\n");
-            return(8);
-        }
-        printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
-        shmdt(ptr);
+//        ptr = (char *) shmat(memid, 0, 0);
+//        if (ptr == NULL) {
+//            printf("shmat() in child failed\n");
+//            return(8);
+//        }
+//        printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
+//        shmdt(ptr);
         kill(pid, SIGUSR1);
     }
 

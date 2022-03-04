@@ -18,42 +18,19 @@ void handler1(int signum) {
 
 // driver code
 int main() {
-    int pid;
-    struct sigaction action;
-    memset(&action, 0, sizeof(struct sigaction));
-    action.sa_handler = handler1;
-    sigaction(SIGUSR1, &action, NULL);
-
-    /* get child process */
-    if ((pid = fork()) < 0) {
-        perror("fork");
-        exit(1);
-    }
-
-    // Print out PIDs
-    if (getpid() > 0) {
-        // I am the parent
-        printf("I am the parent, and my pid is %d\n", getpid());
-        wait(NULL);
+    int pid = fork();
+    if (pid == -1)
+        return 1;
+    if (pid == 0)  {
+        printf("This is the child process, PID: %d", getpid());
+        kill(getpid(), SIGUSR1);
     } else {
-        printf("I am the child, and my pid is %d\n", getpid());
+        struct sigaction sa = {0};
+        sa.sa_handler = &handler1;
+        sigaction(SIGUSR1, &sa, NULL);
+        printf("This is the parent process, PID: %d", getpid());
+        wait(NULL);
     }
-
-//    for (int i = 0; i < 3; ++i) {
-//        if (pid == 0) { /* child */
-//
-//            for (;;); /* loop for ever */
-//        } else /* parent */
-//        { /* pid hold id of child */
-//            printf("\nPARENT: sending SIGHUP\n\n");
-//            kill(pid, SIGHUP);
-//
-//            printf("\nPARENT: sending SIGINT\n\n");
-//            kill(pid, SIGINT);
-//
-//            printf("\nPARENT: sending SIGQUIT\n\n");
-//            kill(pid, SIGQUIT);
-//        }
-
+    return 0;
 }
 
