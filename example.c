@@ -13,12 +13,11 @@
 #include <sys/shm.h>
 #define BUFFER_SIZE 32
 int done;
-int wait;
+
 
 void handler1(int signum) {
     if (signum == SIGUSR1) {
         printf("\nGot SIGUSR1\n");
-        writing = 1;
         //printf("this is handler1(): got a signal %d\n", signum);
     }
     if (signum == SIGUSR2) {
