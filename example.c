@@ -30,8 +30,8 @@ int main() {
         printf("I am the parent, pid: %d\n", getpid());
     } else {
         printf("I am the child, pid: %d\n", getpid());
+        kill(getpid(), SIGUSR1);
     }
-    kill(getpid(), SIGUSR1);
     while ( ! done );
 
     printf("done!\n");
