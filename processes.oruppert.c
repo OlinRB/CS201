@@ -74,6 +74,7 @@ int main() {
             return (8);
         }
         wait(NULL);
+        kill(pid, SIGUSR1);
 
     } else {
         ptr = (char *) shmat(memid, 0, 0);
