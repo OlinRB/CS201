@@ -77,11 +77,11 @@ int main() {
 //            }
             //printf("\nI am the child, pid: %d\n", getpid());
             ptr = (char *) shmat(memid, 0, 0);
-            ptrLoop = (char *) shmat(memidLoop, 0, 0);
+            //ptrLoop = (char *) shmat(memidLoop, 0, 0);
             printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
             printf("Child Shared int: %s\n", ptrLoop);
             shmdt(ptr);
-            shmdt(ptrLoop);
+            //shmdt(ptrLoop);
             kill(getpid(), SIGUSR2);
         }
         while (!done);
