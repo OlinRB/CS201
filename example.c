@@ -49,25 +49,27 @@ int main() {
         return(8);
     }
     pid = fork();
-    if (pid > 0) {
-        printf("I am the parent, pid: %d\n", getpid());
-        ptr = (char *) shmat(memid, 0, 0);
-        if (ptr == NULL) {
-            printf("shmat() failed\n");
-            return(8);
+    for (int i = 0; i < 2; ++i){
+        if (pid > 0) {
+            //printf("I am the parent, pid: %d\n", getpid());
+            ptr = (char *) shmat(memid, 0, 0);
+            if (ptr == NULL) {
+                printf("shmat() failed\n");
+                return (8);
+            }
+            printf("Parent is writing '%s' to the shared memory\n", buffer);
+            strcpy(ptr, buffer);
+            wait(NULL);
+            kill(getpid(), SIGUSR1);
+        } else {
+            //printf("\nI am the child, pid: %d\n", getpid());
+            ptr = (char *) shmat(memid, 0, 0);
+            printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
+            shmdt(ptr);
+            kill(getpid(), SIGUSR2);
         }
-        printf("Parent is writing '%s' to the shared memory\n", buffer);
-        strcpy(ptr, buffer);
-        wait(NULL);
-        kill(getpid(), SIGUSR1);
-    } else {
-        printf("\nI am the child, pid: %d\n", getpid());
-        ptr = (char *) shmat(memid, 0, 0);
-        printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
-        shmdt(ptr);
-        kill(getpid(), SIGUSR2);
+        while (!done);
     }
-    while ( ! done );
 
     printf("done!\n");
     return 0;
