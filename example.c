@@ -9,7 +9,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <signal.h>
-
+#define BUFFER_SIZE 32
 int done;
 
 void handler1(int signum) {
