@@ -36,7 +36,7 @@ int main() {
     int memidLoop;
     int keyLoop = IPC_PRIVATE;
     char *ptrLoop;
-    char *bufferLoop[BUFFER_SIZE];
+    char bufferLoop[BUFFER_SIZE];
 
     strcpy(buffer, "hello from me");
     strcpy(bufferLoop, "0");
