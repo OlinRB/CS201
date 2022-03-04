@@ -69,9 +69,9 @@ int main() {
                 return (8);
             }
             printf("Parent is writing '%s' to the shared memory\n", buffer);
-            printf("Parent Shared int: %s\n", bufferLoop);
+            //printf("Parent Shared int: %s\n", bufferLoop);
             strcpy(ptr, buffer);
-            strcpy(ptrLoop, "1");
+            //strcpy(ptrLoop, "1");
             wait(NULL);
             kill(getpid(), SIGUSR1);
         } else {
@@ -81,12 +81,12 @@ int main() {
             }
             //printf("\nI am the child, pid: %d\n", getpid());
             ptr = (char *) shmat(memid, 0, 0);
-            ptrLoop = (char *) shmat(memidLoop, 0, 0);
+            //ptrLoop = (char *) shmat(memidLoop, 0, 0);
             printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
-            printf("Child Shared int: %s\n", ptrLoop);
-            strcpy(ptrLoop, "0");
+            //printf("Child Shared int: %s\n", ptrLoop);
+            //strcpy(ptrLoop, "0");
             shmdt(ptr);
-            shmdt(ptrLoop);
+            //shmdt(ptrLoop);
             kill(getpid(), SIGUSR2);
         }
         while (!done);
