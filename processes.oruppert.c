@@ -20,7 +20,7 @@
 //• the parent process writes a word to shared memory
 //• the child process reads the word and prints it out
 //• etc.
-
+int childWait;
 int waiting = 1;
 
 void handler1(int signum) {
