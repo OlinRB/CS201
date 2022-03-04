@@ -43,6 +43,11 @@ int main() {
     sigaction(SIGUSR2, &action, NULL);
 
     done = 0;
+    memid = shmget(key, BUFFER_SIZE, IPC_EXCL | 0666);
+    if (memid < 0) {
+        printf("shmget() failed\n");
+        return(8);
+    }
     pid = fork();
     if (pid > 0) {
         printf("I am the parent, pid: %d\n", getpid());
