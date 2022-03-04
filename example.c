@@ -68,7 +68,6 @@ int main() {
             printf("Parent is writing '%s' to the shared memory\n", buffer);
             printf("Parent Shared int: %s\n", bufferLoop);
             strcpy(ptr, buffer);
-            *ptrLoop = 0;
             wait(NULL);
             kill(getpid(), SIGUSR1);
         } else {
