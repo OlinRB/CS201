@@ -73,7 +73,7 @@ int main() {
             printf("shmat() failed\n");
             return (8);
         }
-        kill(pid, SIGUSR1);
+        kill(pid, SIGUSR2);
         wait(NULL);
 
     } else {
