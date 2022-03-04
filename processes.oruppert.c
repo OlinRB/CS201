@@ -10,7 +10,13 @@
 
 
 void handle_sigusr1(int sig) {
+    signal(SIGUSR1, handle_sigusr1);
     printf("Handler called....");
+    printf("Got signal %d", sig);
+}
+
+void handle_sigusr2(int sig) {
+    printf("2 Handler called....");
     printf("Got signal %d", sig);
 }
 
@@ -41,6 +47,8 @@ int main(int argc, char *argv[]) {
         struct sigaction sa = {0};
         sa.sa_handler = &handle_sigusr1;
         sigaction(SIGUSR1, &sa, NULL);
+        signal(SIGUSR1, handle_sigusr1);
+        signal(SIGUSR2, handle_sigusr2);
 
 
 
