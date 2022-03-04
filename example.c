@@ -13,7 +13,7 @@
 #include <sys/shm.h>
 #define BUFFER_SIZE 32
 int done;
-int writing = 1;
+int wait;
 
 void handler1(int signum) {
     if (signum == SIGUSR1) {
@@ -34,8 +34,13 @@ int main() {
     int key = IPC_PRIVATE;
     char *ptr;
     char buffer[BUFFER_SIZE];
+    int memidLoop;
+    int keyLoop = IPC_PRIVATE;
+    char *ptrLoop;
+    char *bufferLoop;
 
     strcpy(buffer, "hello from me");
+    strcpy(bufferLoop, "0");
     // Signals
     int pid;
     struct sigaction action;
@@ -46,7 +51,8 @@ int main() {
 
     done = 0;
     memid = shmget(key, BUFFER_SIZE, IPC_EXCL | 0666);
-    if (memid < 0) {
+    memidLoop = shmget(key, sizeof(int), IPC_EXCL | 0666);
+    if (memid < 0 || memidLoop < 0) {
         printf("shmget() failed\n");
         return(8);
     }
@@ -55,12 +61,15 @@ int main() {
         if (pid > 0) {
             //printf("I am the parent, pid: %d\n", getpid());
             ptr = (char *) shmat(memid, 0, 0);
-            if (ptr == NULL) {
+            ptrLoop = (int *) shmat(memidLoop,0,0);
+            if (ptr == NULL || ptrLoop) {
                 printf("shmat() failed\n");
                 return (8);
             }
             printf("Parent is writing '%s' to the shared memory\n", buffer);
+            printf("Parent Shared int: %s\n", bufferLoop);
             strcpy(ptr, buffer);
+            *ptrLoop = 0;
             wait(NULL);
             kill(getpid(), SIGUSR1);
         } else {
@@ -69,8 +78,11 @@ int main() {
             }
             //printf("\nI am the child, pid: %d\n", getpid());
             ptr = (char *) shmat(memid, 0, 0);
+            ptrLoop = (char *) shmat(memidLoop, 0, 0);
             printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
+            printf("Child Shared int: %s\n", ptrLoop);
             shmdt(ptr);
+            shmdt(ptrLoop);
             kill(getpid(), SIGUSR2);
         }
         while (!done);
