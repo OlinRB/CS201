@@ -15,11 +15,11 @@ int done;
 void handler1(int signum) {
     if (signum == SIGUSR1) {
         printf("\nGot SIGUSR1\n");
-        //printf("this is handler99(): got a signal %d\n", signum);
+        printf("this is handler99(): got a signal %d\n", signum);
     }
     if (signum == SIGUSR2) {
         printf("\nGot SIGUSR2\n");
-        //printf("this is handler2(): got a signal %d\n", signum);
+        printf("this is handler2(): got a signal %d\n", signum);
     }
     done = 1;
 }
@@ -51,13 +51,13 @@ int main() {
 //        }
 //        printf("Parent is writing '%s' to the shared memory\n", buffer);
 //        strcpy(ptr, buffer);
-        wait(NULL);
+        //wait(NULL);
         kill(getpid(), SIGUSR1);
     } else {
         printf("\nI am the child, pid: %d\n", getpid());
 //        ptr = (char *) shmat(memid, 0, 0);
 //        printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
-        shmdt(ptr);
+        //shmdt(ptr);
         kill(getpid(), SIGUSR2);
     }
     while ( ! done );
