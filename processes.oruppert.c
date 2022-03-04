@@ -76,10 +76,6 @@ int main() {
         wait(NULL);
 
     } else {
-        printf(childWait);
-        while (childWait) {
-            // Wait
-        }
         ptr = (char *) shmat(memid, 0, 0);
         printf("I am the child, and my pid is %d\n", getpid());
         sigaction(SIGUSR2, &action, NULL);
