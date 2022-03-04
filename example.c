@@ -56,7 +56,7 @@ int main() {
         return(8);
     }
     pid = fork();
-    for (int i = 0; i < 2; ++i){
+    for (int i = 0; i < 4; ++i){
         if (pid > 0) {
             //printf("I am the parent, pid: %d\n", getpid());
             ptr = (char *) shmat(memid, 0, 0);
