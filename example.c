@@ -25,6 +25,7 @@ int main() {
     memset(&action, 0, sizeof(struct sigaction));
     action.sa_handler = handler1;
     sigaction(SIGUSR1, &action, NULL);
+    sigaction(SIGUSR2, &action, NULL);
 
     done = 0;
     pid = fork();
@@ -33,7 +34,7 @@ int main() {
         kill(getpid(), SIGUSR1);
     } else {
         printf("I am the child, pid: %d\n", getpid());
-        kill(getpid(), SIGUSR1);
+        kill(getpid(), SIGUSR2);
     }
     while ( ! done );
 
