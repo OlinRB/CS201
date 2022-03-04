@@ -11,13 +11,18 @@
 #include <unistd.h>
 
 // function declaration
-void sighup();
-void sigint();
-void sigquit();
+void handler1(int signum) {
+    printf("this is handler1(): got a signal %d\n", signum);
+}
+
 
 // driver code
 int main() {
     int pid;
+    struct sigaction action;
+    memset(&action, 0, sizeof(struct sigaction));
+    action.sa_handler = handler1;
+    sigaction(SIGUSR1, &action, NULL);
 
     /* get child process */
     if ((pid = fork()) < 0) {
@@ -28,9 +33,9 @@ int main() {
     // Print out PIDs
     if (getpid() > 0) {
         // I am the parent
-        printf("I am the parent, and my pid is %d", getpid());
+        printf("I am the parent, and my pid is %d\n", getpid());
     } else {
-        printf("I am the child, and my pid is %d", getpid());
+        printf("I am the child, and my pid is %d\n", getpid());
     }
 
 //    for (int i = 0; i < 3; ++i) {
