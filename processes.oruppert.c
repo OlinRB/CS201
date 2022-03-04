@@ -21,8 +21,7 @@
 //• the child process reads the word and prints it out
 //• etc.
 
-int done;
-int parentWait, childWait;
+int waiting = 1;
 
 void handler1(int signum) {
     printf("Handler called....\n");
@@ -76,11 +75,14 @@ int main() {
         wait(NULL);
 
     } else {
+//        while (waiting) {
+//            // Wait for call
+//        }
         ptr = (char *) shmat(memid, 0, 0);
         printf("I am the child, and my pid is %d\n", getpid());
         sigaction(SIGUSR2, &action, NULL);
         shmdt(ptr);
-        kill(pid, SIGUSR1);
+        kill(pid, SIGUSR2);
     }
 
 //    // While loop for actions https://www.geeksforgeeks.org/signals-c-set-2/
