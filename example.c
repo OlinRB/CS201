@@ -50,7 +50,7 @@ int main() {
 
     done = 0;
     memid = shmget(key, BUFFER_SIZE, IPC_EXCL | 0666);
-    memidLoop = shmget(keyLoop, BUFFER_SIZE, IPC_EXCL | 0666);
+    memidLoop = shmget(key, BUFFER_SIZE, IPC_EXCL | 0666);
     if (memid < 0 || memidLoop < 0) {
         printf("shmget() failed\n");
         return(8);
