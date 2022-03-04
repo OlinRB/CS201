@@ -1,85 +1,82 @@
-// jdh CS201 S22
+// jdh 1-31-22
+// CS 201 S22
+//
+// compile this and run it; then, in a second terminal window,
+// do this command: "kill -SIGUSR1 <pid>" with the pid that this
+// program prints out when it start
 
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <signal.h>
 #include <sys/wait.h>
 #include <sys/shm.h>
-
 #define BUFFER_SIZE 32
+int done;
 
 
-void handle_sigusr1(int sig) {
-    signal(SIGUSR1, handle_sigusr1);
-    printf("Handler called....");
-    printf("Got signal %d", sig);
+void handler1(int signum) {
+    if (signum == SIGUSR1) {
+        printf("\nGot SIGUSR1\n");
+        //printf("this is handler1(): got a signal %d\n", signum);
+    }
+    if (signum == SIGUSR2) {
+        printf("\nGot SIGUSR2\n");
+        //printf("this is handler2(): got a signal %d\n", signum);
+    }
+    done = 1;
 }
 
-void handle_sigusr2(int sig) {
-    printf("2 Handler called....");
-    printf("Got signal %d", sig);
-}
-
-
-int main(int argc, char *argv[]) {
-    int pid;
+int main() {
+    // Memory
     int memid;
     int key = IPC_PRIVATE;
     char *ptr;
     char buffer[BUFFER_SIZE];
+    int memidLoop;
+    int keyLoop = IPC_PRIVATE;
+    char *ptrLoop;
+    char bufferLoop[BUFFER_SIZE];
 
     strcpy(buffer, "hello from me");
+    // Signals
+    int pid;
+    struct sigaction action;
+    memset(&action, 0, sizeof(struct sigaction));
+    action.sa_handler = handler1;
+    sigaction(SIGUSR1, &action, NULL);
+    sigaction(SIGUSR2, &action, NULL);
 
+    done = 0;
     memid = shmget(key, BUFFER_SIZE, IPC_EXCL | 0666);
     if (memid < 0) {
         printf("shmget() failed\n");
         return(8);
     }
-
     pid = fork();
-    if (pid < 0) {
-        printf("fork failed\n");
-        return(8);
-    }
-
-    if (pid > 0) {
-        // this is the parent
-        struct sigaction sa = {0};
-        sa.sa_handler = &handle_sigusr1;
-        sigaction(SIGUSR1, &sa, NULL);
-        signal(SIGUSR1, handle_sigusr1);
-        signal(SIGUSR2, handle_sigusr2);
-
-
-
-        printf("I am the parent, and my pid is %d\n", getpid());
-
-        ptr = (char *) shmat(memid, 0, 0);
-        if (ptr == NULL) {
-            printf("shmat() failed\n");
-            return(8);
+    for (int i = 0; i < 4; ++i){
+        if (pid > 0) {
+            printf("I am the parent, pid: %d\n", getpid());
+            ptr = (char *) shmat(memid, 0, 0);
+            if (ptr == NULL) {
+                printf("shmat() failed\n");
+                return (8);
+            }
+            printf("Parent is writing '%s' to the shared memory\n", buffer);
+            strcpy(ptr, buffer);
+            wait(NULL);
+            kill(getpid(), SIGUSR1);
+        } else {
+            ptr = (char *) shmat(memid, 0, 0);
+            //ptrLoop = (char *) shmat(memidLoop, 0, 0);
+            printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
+            shmdt(ptr);
+            kill(getpid(), SIGUSR2);
         }
-
-        printf("Parent is writing '%s' to the shared memory\n", buffer);
-        strcpy(ptr, buffer);
-        wait(NULL);
-
-    } else {
-        // this is the child
-        pid = getpid();
-        printf("I am the child, and my pid is %d\n", pid);
-//        ptr = (char *) shmat(memid, 0, 0);
-//        if (ptr == NULL) {
-//            printf("shmat() in child failed\n");
-//            return(8);
-//        }
-//        printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
-//        shmdt(ptr);
-        kill(pid, SIGUSR1);
+        while (!done);
     }
 
-    shmdt(ptr);
-    shmctl(memid, IPC_RMID, NULL);
-
+    printf("done!\n");
     return 0;
 }
+
