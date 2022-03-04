@@ -22,6 +22,15 @@ void handler1(int signum) {
 }
 
 int main() {
+    // Memory
+    int pid;
+    int memid;
+    int key = IPC_PRIVATE;
+    char *ptr;
+    char buffer[BUFFER_SIZE];
+
+    strcpy(buffer, "hello from me");
+    // Signals
     int pid;
     struct sigaction action;
     memset(&action, 0, sizeof(struct sigaction));
@@ -33,9 +42,15 @@ int main() {
     pid = fork();
     if (pid > 0) {
         printf("I am the parent, pid: %d\n", getpid());
+        printf("Parent is writing '%s' to the shared memory\n", buffer);
+        strcpy(ptr, buffer);
+        wait(NULL);
         kill(getpid(), SIGUSR1);
     } else {
         printf("I am the child, pid: %d\n", getpid());
+        ptr = (char *) shmat(memid, 0, 0);
+        printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
+        shmdt(ptr);
         kill(getpid(), SIGUSR2);
     }
     while ( ! done );
