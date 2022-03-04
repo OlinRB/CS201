@@ -1,114 +1,79 @@
-//
-// Created by olinr on 2/27/2022.
-//
-
+// jdh CS201 S22
 
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
 #include <sys/shm.h>
-#include <signal.h>
 
 #define BUFFER_SIZE 32
 
-//• the parent creates a shared memory segment
-//• the parent forks a child process
-//• the child process attaches to the shared memory
-//• the parent process writes a word to shared memory
-//• the child process reads the word and prints it out
-//• the parent process writes a word to shared memory
-//• the child process reads the word and prints it out
-//• etc.
-int childWait;
-int waiting = 1;
-
-void handler1(int signum) {
-    printf("Handler called....\n");
-    if (signum == SIGUSR1) {
-        printf("From SIGUSR1: got a signal %d\n", signum);
-        childWait = 0;
-    }
-    else {
-        printf("From SIGUSR2: got signal %d\n", signum);
-        childWait = 1;
-    }
-}
-
-
-int main() {
+int main(int argc, char *argv[]) {
     int pid;
-    struct sigaction action;
-    // Vars for shared mem
     int memid;
     int key = IPC_PRIVATE;
     char *ptr;
     char buffer[BUFFER_SIZE];
-    done = 0;
-    childWait = 1;
 
-    // Create shared mem
+    strcpy(buffer, "hello from me");
+
     memid = shmget(key, BUFFER_SIZE, IPC_EXCL | 0666);
     if (memid < 0) {
         printf("shmget() failed\n");
         return(8);
     }
-    // Create fork
+
     pid = fork();
-    // put in code for parent and child
-    memset(&action, 0, sizeof(struct sigaction));
-    action.sa_handler = handler1;
     if (pid < 0) {
         printf("fork failed\n");
         return(8);
     }
-    strcpy(buffer, "done");
+
     if (pid > 0) {
         // this is the parent
         printf("I am the parent, and my pid is %d\n", getpid());
-        sigaction(SIGUSR1, &action, NULL);
+
         ptr = (char *) shmat(memid, 0, 0);
         if (ptr == NULL) {
             printf("shmat() failed\n");
-            return (8);
+            return(8);
         }
+
+        printf("Parent is writing '%s' to the shared memory\n", buffer);
+        strcpy(ptr, buffer);
         wait(NULL);
 
     } else {
-//        while (waiting) {
-//            // Wait for call
-//        }
+        // this is the child
+        pid = getpid();
+        printf("I am the child, and my pid is %d\n", pid);
         ptr = (char *) shmat(memid, 0, 0);
-        printf("I am the child, and my pid is %d\n", getpid());
-        sigaction(SIGUSR2, &action, NULL);
+        if (ptr == NULL) {
+            printf("shmat() in child failed\n");
+            return(8);
+        }
+
+        printf("Child will do busywork for a little while\n");
+        double d;
+        for (int i=0; i<5000; ++i) {
+            for (int j=0; j<5000; ++j) {
+                d = d + (double) i / (double) j;
+            }
+        }
+        d = d + 45;
+
+        printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
+
         shmdt(ptr);
-        kill(pid, SIGUSR2);
+
+        if (d > 10.0)
+            return 0;
+        else
+            return 1;
     }
 
-//    // While loop for actions https://www.geeksforgeeks.org/signals-c-set-2/
-//    for (int i = 0; i < 3; ++i) {
-//        if (pid > 0) {
-//            // Parent actions
-//            printf("Parent is writing '%s' to the shared memory\n", buffer);
-//            strcpy(ptr, buffer);
-//            //signal(SIGUSR1, &handler1);
-//            wait(NULL);
-//            kill(getpid(), SIGUSR1);
-//
-//        } else {
-//            ptr = (char *) shmat(memid, 0, 0);
-//            if (ptr == NULL) {
-//                printf("shmat() in child failed\n");
-//                return (8);
-//            }
-//            printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
-//
-//            shmdt(ptr);
-//            //signal(SIGUSR2, &handler1);
-//            kill(getpid(), SIGUSR2);
-//        }
-//    }
+    shmdt(ptr);
+    shmctl(memid, IPC_RMID, NULL);
 
     return 0;
 }
-
