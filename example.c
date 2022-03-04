@@ -13,10 +13,12 @@
 #include <sys/shm.h>
 #define BUFFER_SIZE 32
 int done;
+int writing = 1;
 
 void handler1(int signum) {
     if (signum == SIGUSR1) {
         printf("\nGot SIGUSR1\n");
+        writing = 1;
         //printf("this is handler1(): got a signal %d\n", signum);
     }
     if (signum == SIGUSR2) {
@@ -62,6 +64,9 @@ int main() {
             wait(NULL);
             kill(getpid(), SIGUSR1);
         } else {
+            while (writing) {
+                // Wait
+            }
             //printf("\nI am the child, pid: %d\n", getpid());
             ptr = (char *) shmat(memid, 0, 0);
             printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
