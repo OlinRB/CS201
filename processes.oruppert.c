@@ -53,23 +53,10 @@ int main(int argc, char *argv[]) {
             return(8);
         }
 
-        printf("Child will do busywork for a little while\n");
-        double d;
-        for (int i=0; i<5000; ++i) {
-            for (int j=0; j<5000; ++j) {
-                d = d + (double) i / (double) j;
-            }
-        }
-        d = d + 45;
 
         printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
 
         shmdt(ptr);
-
-        if (d > 10.0)
-            return 0;
-        else
-            return 1;
     }
 
     shmdt(ptr);
