@@ -13,6 +13,8 @@
 int done;
 
 void handler1(int signum) {
+    if (signum == SIGUSR1)
+        printf("Got SIGUSR1");
     printf("this is handler1(): got a signal %d\n", signum);
     done = 1;
 }
