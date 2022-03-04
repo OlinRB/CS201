@@ -61,6 +61,9 @@ int main() {
             //printf("I am the parent, pid: %d\n", getpid());
             ptr = (char *) shmat(memid, 0, 0);
             ptrLoop = (char *) shmat(memidLoop,0,0);
+            while (strcmp("0", ptrLoop) != 0) {
+                ptrLoop = (char *) shmat(memidLoop, 0, 0);
+            }
             if (ptr == NULL || ptrLoop == NULL) {
                 printf("shmat() failed\n");
                 return (8);
@@ -72,14 +75,16 @@ int main() {
             wait(NULL);
             kill(getpid(), SIGUSR1);
         } else {
-//            while (writing) {
-//                // Wait
-//            }
+            ptrLoop = (char *) shmat(memidLoop, 0, 0);
+            while (strcmp("0", ptrLoop) == 0) {
+                ptrLoop = (char *) shmat(memidLoop, 0, 0);
+            }
             //printf("\nI am the child, pid: %d\n", getpid());
             ptr = (char *) shmat(memid, 0, 0);
             ptrLoop = (char *) shmat(memidLoop, 0, 0);
             printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
             printf("Child Shared int: %s\n", ptrLoop);
+            strcpy(ptrLoop, "0")
             shmdt(ptr);
             shmdt(ptrLoop);
             kill(getpid(), SIGUSR2);
