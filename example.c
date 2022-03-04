@@ -80,7 +80,7 @@ int main() {
             printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
             printf("Child Shared int: %s\n", ptrLoop);
             shmdt(ptr);
-            //shmdt(ptrLoop);
+            shmdt(ptrLoop);
             kill(getpid(), SIGUSR2);
         }
         while (!done);
