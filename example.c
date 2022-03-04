@@ -19,15 +19,15 @@ void handler1(int signum) {
 // driver code
 int main() {
     int pid = fork();
+    struct sigaction sa = {0};
+    sa.sa_handler = &handler1;
+    sigaction(SIGUSR1, &sa, NULL);
     if (pid == -1)
         return 1;
     if (pid == 0)  {
         printf("This is the child process, PID: %d", getpid());
-        kill(getpid(), SIGUSR1);
+        //kill(getpid(), SIGUSR1);
     } else {
-        struct sigaction sa = {0};
-        sa.sa_handler = &handler1;
-        sigaction(SIGUSR1, &sa, NULL);
         printf("This is the parent process, PID: %d", getpid());
         wait(NULL);
     }
