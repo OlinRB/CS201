@@ -26,54 +26,29 @@ void main()
         exit(1);
     }
 
-//    // Print out PIDs
-//    if (getpid() > 0) {
-//        // I am the parent
-//        printf("I am the parent, and my pid is %d", getpid());
-//    } else {
-//        printf("I am the child, and my pid is %d", getpid());
-//    }
-
-    for (int i = 0; i < 3; ++i) {
-        if (pid == 0) { /* child */
-            signal(SIGHUP, sighup);
-            signal(SIGINT, sigint);
-            signal(SIGQUIT, sigquit);
-            for (;;); /* loop for ever */
-        } else /* parent */
-        { /* pid hold id of child */
-            printf("\nPARENT: sending SIGHUP\n\n");
-            kill(pid, SIGHUP);
-
-            printf("\nPARENT: sending SIGINT\n\n");
-            kill(pid, SIGINT);
-
-            printf("\nPARENT: sending SIGQUIT\n\n");
-            kill(pid, SIGQUIT);
-        }
+    // Print out PIDs
+    if (getpid() > 0) {
+        // I am the parent
+        printf("I am the parent, and my pid is %d", getpid());
+    } else {
+        printf("I am the child, and my pid is %d", getpid());
     }
-}
 
-// sighup() function definition
-void sighup()
-
-{
-    signal(SIGHUP, sighup); /* reset signal */
-    printf("CHILD: I have received a SIGHUP\n");
-}
-
-// sigint() function definition
-void sigint()
-
-{
-    signal(SIGINT, sigint); /* reset signal */
-    printf("CHILD: I have received a SIGINT\n");
-}
-
-// sigquit() function definition
-void sigquit()
-{
-    printf("My DADDY has Killed me!!!\n");
-    exit(0);
+//    for (int i = 0; i < 3; ++i) {
+//        if (pid == 0) { /* child */
+//
+//            for (;;); /* loop for ever */
+//        } else /* parent */
+//        { /* pid hold id of child */
+//            printf("\nPARENT: sending SIGHUP\n\n");
+//            kill(pid, SIGHUP);
+//
+//            printf("\nPARENT: sending SIGINT\n\n");
+//            kill(pid, SIGINT);
+//
+//            printf("\nPARENT: sending SIGQUIT\n\n");
+//            kill(pid, SIGQUIT);
+//        }
+    }
 }
 
