@@ -73,9 +73,9 @@ int main() {
             wait(NULL);
             kill(getpid(), SIGUSR1);
         } else {
-            while (writing) {
-                // Wait
-            }
+//            while (writing) {
+//                // Wait
+//            }
             //printf("\nI am the child, pid: %d\n", getpid());
             ptr = (char *) shmat(memid, 0, 0);
             ptrLoop = (char *) shmat(memidLoop, 0, 0);
