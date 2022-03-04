@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
         }
         printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
         shmdt(ptr);
-        kill(getpid(), SIGUSR1);
+        kill(pid, SIGUSR1);
     }
 
     shmdt(ptr);
