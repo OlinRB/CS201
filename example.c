@@ -41,6 +41,11 @@ int main() {
     pid = fork();
     if (pid > 0) {
         printf("I am the parent, pid: %d\n", getpid());
+        ptr = (char *) shmat(memid, 0, 0);
+        if (ptr == NULL) {
+            printf("shmat() failed\n");
+            return(8);
+        }
         printf("Parent is writing '%s' to the shared memory\n", buffer);
         strcpy(ptr, buffer);
         wait(NULL);
