@@ -8,6 +8,13 @@
 
 #define BUFFER_SIZE 32
 
+
+void handle_sigusr1(int sig) {
+    printf("Handler called....");
+    printf("Got signal %d", sig);
+}
+
+
 int main(int argc, char *argv[]) {
     int pid;
     int memid;
@@ -31,6 +38,12 @@ int main(int argc, char *argv[]) {
 
     if (pid > 0) {
         // this is the parent
+        struct sigaction sa = {0};
+        sa.sa_handler = &handle_sigusr1;
+        sigaction(SIGUSR1, &sa, NULL);
+
+
+
         printf("I am the parent, and my pid is %d\n", getpid());
 
         ptr = (char *) shmat(memid, 0, 0);
@@ -52,11 +65,9 @@ int main(int argc, char *argv[]) {
             printf("shmat() in child failed\n");
             return(8);
         }
-
-
         printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
-
         shmdt(ptr);
+        kill(getpid(), SIGUSR1);
     }
 
     shmdt(ptr);
