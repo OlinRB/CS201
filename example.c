@@ -16,8 +16,7 @@ void sigint();
 void sigquit();
 
 // driver code
-void main()
-{
+int main() {
     int pid;
 
     /* get child process */
@@ -49,6 +48,6 @@ void main()
 //            printf("\nPARENT: sending SIGQUIT\n\n");
 //            kill(pid, SIGQUIT);
 //        }
-    }
+
 }
 
