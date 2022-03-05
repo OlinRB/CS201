@@ -13,9 +13,10 @@
 #include <sys/shm.h>
 #define BUFFER_SIZE 32
 int done;
-
+int cnt = 0;
 
 void handler1(int signum) {
+    ++cnt;
     if (signum == SIGUSR1) {
         printf("\nGot SIGUSR1, PID: %d\n", getpid());
         //done = 1;
@@ -60,10 +61,10 @@ int main() {
     pid = fork();
     for (int i = 0; i < 4; ++i){
         if (pid > 0) {
-            printf("Inside Parent\n");
-            while (!done) {
-                // Wait until reading is done
-            }
+            printf("Inside Parent, cnt = %d\n", cnt);
+//            while (!done) {
+//                // Wait until reading is done
+//            }
             printf("I am the parent, pid: %d\n", getpid());
             ptr = (char *) shmat(memid, 0, 0);
             if (ptr == NULL) {
@@ -76,15 +77,14 @@ int main() {
             wait(NULL);
             kill(getpid(), SIGUSR1);
         } else {
-            printf("Inside Child\n");
-            while (!done) {
-                // Wait until writing is done
-            }
+            printf("Inside Child, cnt = %d\n", cnt);
+//            while (!done) {
+//                // Wait until writing is done
+//            }
             ptr = (char *) shmat(memid, 0, 0);
             //ptrLoop = (char *) shmat(memidLoop, 0, 0);
             printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
             shmdt(ptr);
-            kill(getpid(), SIGUSR1);
             kill(getpid(), SIGUSR2);
         }
     }
