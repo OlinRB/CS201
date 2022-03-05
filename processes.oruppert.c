@@ -47,7 +47,6 @@ int main() {
     char wordList[4][BUFFER_SIZE] = {"hello","from", "Olin", "done"};
 
     // Create fork
-    int parentPID = getpid();
     int pid = fork();
     if (pid < 0) {
         printf("Fork failed");
