@@ -90,7 +90,7 @@ int main() {
                 going = 0;
                 return 0;
             } else {
-                kill(getppid(), SIGUSR1));
+                kill(getppid(), SIGUSR1);
                 shmdt(ptr);
             }
 
