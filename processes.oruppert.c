@@ -25,7 +25,7 @@ void handler1(int signum) {
     if (signum == SIGUSR2) {
         printf("\nGot SIGUSR2, PID: %d\n", getpid());
         //printf("this is handler2(): got a signal %d\n", signum);
-        //done = 1;
+        done = 0;
     }
     done = 1;
 
