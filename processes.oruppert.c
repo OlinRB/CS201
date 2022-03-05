@@ -57,8 +57,9 @@ int main() {
         action.sa_handler = handler1;
         sigaction(SIGUSR1, &action, NULL);
         printf("Inside parent, pid: %d\n", getpid());
-        while (going) {
+        while (going==1) {
             while (!done);
+            done = 0;
             ptr = (char *) shmat(memid, 0, 0);
             if (ptr == NULL) {
                 printf("shmat() failed\n");
@@ -78,6 +79,7 @@ int main() {
         sigaction(SIGUSR2, &action, NULL);
         kill(getppid(), SIGUSR1);
         while (going) {
+            while (!finished);
             ptr = (char *) shmat(memid,0,0);
             if (ptr == NULL) {
                 printf("shmat() failed\n");
