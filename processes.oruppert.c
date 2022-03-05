@@ -16,16 +16,26 @@ int done;
 int going;
 int finished;
 
-void handler1(int signum) {
-    if (signum == SIGUSR1) {
-        //printf("\nGot SIGUSR1, PID: %d\n", getpid());
-        done = 1;
-    }
-    if (signum == SIGUSR2) {
-        //printf("\nGot SIGUSR2, PID: %d\n", getpid());
-        finished = 1;
-    }
+//void handler1(int signum) {
+//    if (signum == SIGUSR1) {
+//        //printf("\nGot SIGUSR1, PID: %d\n", getpid());
+//        done = 1;
+//    }
+//    if (signum == SIGUSR2) {
+//        //printf("\nGot SIGUSR2, PID: %d\n", getpid());
+//        finished = 1;
+//    }
+//
+//}
 
+void handler1(int signum) {
+    printf("Parent got signal %d", signum);
+    done = 1;
+}
+
+void handler2(int signum) {
+    printf("Child got signal %d", signum);
+    finished = 1;
 }
 
 int main() {
@@ -53,6 +63,7 @@ int main() {
         return(8);
     }
     memset(&action, 0, sizeof(struct sigaction));
+
     pid = fork();
     int i = 3;
     if (pid > 0) {
@@ -68,7 +79,7 @@ int main() {
                 return (8);
             }
             printf("Parent is writing '%s' to the shared memory\n", buffer);
-            strcpy(buffer, (const char *) (wordList + i));
+            //strcpy(buffer, (const char *) (wordList + i));
             strcpy(ptr, buffer);
             if (strcmp("done", ptr) == 0)
                 going = 0;
@@ -76,7 +87,7 @@ int main() {
         wait(NULL);
     } else {
         pid = getpid();
-        action.sa_handler = handler1;
+        action.sa_handler = handler2;
         printf("I am the child and my PID is %d\n", pid);
         sigaction(SIGUSR2, &action, NULL);
         kill(getppid(), SIGUSR1);
