@@ -71,6 +71,7 @@ int main() {
     for (int i = 0; i < 4; ++i){
         if (pid > 0) {
             printf("Inside Parent, cnt = %d, done = %d\n", cnt, done);
+            printf("Inside Child, PID = %d\n", childPID);
 //
 //            while (!done) {
 //                // Wait until reading is done
