@@ -18,14 +18,14 @@ int cnt = 0;
 void handler1(int signum) {
     ++cnt;
     if (signum == SIGUSR1) {
-        //printf("\nGot SIGUSR1, PID: %d\n", getpid());
+        printf("\nGot SIGUSR1, PID: %d\n", getpid());
         if (cnt % 2 == 0)
             done = 0;
         else
             done = 1;
     }
     if (signum == SIGUSR2) {
-        //printf("\nGot SIGUSR2, PID: %d\n", getpid());
+        printf("\nGot SIGUSR2, PID: %d\n", getpid());
         if (cnt % 2 != 0)
             done = 0;
         else
@@ -49,6 +49,7 @@ int main() {
     strcpy(buffer, "hello");
     // Signals
     int pid;
+    printf("\nParents PID: %d\n\n", getpid())
     struct sigaction action;
     memset(&action, 0, sizeof(struct sigaction));
     action.sa_handler = handler1;
@@ -65,10 +66,10 @@ int main() {
     for (int i = 0; i < 4; ++i){
         if (pid > 0) {
             printf("Inside Parent, cnt = %d, done = %d\n", cnt, done);
-
-            while (!done) {
-                // Wait until reading is done
-            }
+//
+//            while (!done) {
+//                // Wait until reading is done
+//            }
             printf("I am the parent, pid: %d\n", getpid());
             ptr = (char *) shmat(memid, 0, 0);
             if (ptr == NULL) {
@@ -79,17 +80,17 @@ int main() {
             strcpy(buffer, (const char *) (wordList + i));
             strcpy(ptr, buffer);
             wait(NULL);
-            kill(getpid(), SIGUSR2);
+            kill(getpid(), SIGUSR1);
         } else {
             printf("Inside Child, cnt = %d, done = %d\n", cnt, done);
-            while (!done) {
-                // Wait until writing is done
-            }
+//            while (!done) {
+//                // Wait until writing is done
+//            }
             ptr = (char *) shmat(memid, 0, 0);
             //ptrLoop = (char *) shmat(memidLoop, 0, 0);
             printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
             shmdt(ptr);
-            kill(getpid(), SIGUSR1);
+            kill(getpid(), SIGUSR2);
         }
     }
 
