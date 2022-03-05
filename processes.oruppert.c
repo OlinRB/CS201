@@ -49,7 +49,7 @@ int main() {
     strcpy(buffer, "hello");
     // Signals
     int pid;
-    printf("\nParents PID: %d\n\n", getpid())
+    printf("\nParents PID: %d\n\n", getpid());
     struct sigaction action;
     memset(&action, 0, sizeof(struct sigaction));
     action.sa_handler = handler1;
