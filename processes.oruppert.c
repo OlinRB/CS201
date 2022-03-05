@@ -12,7 +12,7 @@
 #include <sys/wait.h>
 #include <sys/shm.h>
 #define BUFFER_SIZE 32
-int done =1;
+int done;
 int run;
 int finished;
 int cnt = 0;
@@ -52,20 +52,6 @@ int main() {
         printf("Fork failed");
         return (8);
     }
-
-//    // Set up signals
-//    if (pid > 0) {
-//        // Parent
-//        action.sa_handler = handler;
-//        sigaction(SIGUSR1, &action, NULL);
-//        printf("\nI am the parent and my pid is: %d\n", getpid());
-//    } else {
-//        // Child
-//        pid = getpid();
-//        action.sa_handler = handler;
-//        printf("I am the child and my pid is %d\n", pid);
-//        sigaction(SIGUSR2, &action, NULL);
-//    }
 
     run = 1;
     if (pid > 0) {
