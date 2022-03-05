@@ -67,9 +67,9 @@ int main() {
         action.sa_handler = handler;
         sigaction(SIGUSR1, &action, NULL);
         printf("Inside parent, pid: %d\n", getpid());
-        for (int i = 1; i < 4; ++i) {
-            while (going == 1) {
-                while (!done);
+        while (going==1) {
+            while (! done );
+            for (int i = 1; i < 4; ++i) {
                 done = 0;
                 ptr = (char *) shmat(memid, 0, 0);
                 if (ptr == NULL) {
