@@ -87,7 +87,7 @@ int main() {
             wait(NULL);
             kill(childPID, SIGUSR1);
         } else {
-            printf("Inside Child, cnt = %d, done = %d\n", cnt, done);
+            printf("Inside Child, PID = %d\n", childPID);
 //            while (!done) {
 //                // Wait until writing is done
 //            }
