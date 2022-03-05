@@ -18,14 +18,14 @@ int done = 0;
 void handler1(int signum) {
     if (signum == SIGUSR1) {
         printf("\nGot SIGUSR1, PID: %d\n", getpid());
-        done = 1;
+        //done = 1;
 
         //printf("this is handler1(): got a signal %d\n", signum);
     }
     if (signum == SIGUSR2) {
         printf("\nGot SIGUSR2, PID: %d\n", getpid());
         //printf("this is handler2(): got a signal %d\n", signum);
-        done = 1;
+        //done = 1;
     }
 
 }
