@@ -13,70 +13,52 @@
 #include <sys/shm.h>
 #define BUFFER_SIZE 32
 int done;
-int cnt = 0;
+int going;
+int finished;
 
 void handler1(int signum) {
-    ++cnt;
     if (signum == SIGUSR1) {
-        printf("\nGot SIGUSR1, PID: %d\n", getpid());
-        if (cnt % 2 == 0)
-            done = 0;
-        else
-            done = 1;
+        //printf("\nGot SIGUSR1, PID: %d\n", getpid());
+        done = 1;
     }
     if (signum == SIGUSR2) {
-        printf("\nGot SIGUSR2, PID: %d\n", getpid());
-        if (cnt % 2 != 0)
-            done = 0;
-        else
-            done = 1;
+        //printf("\nGot SIGUSR2, PID: %d\n", getpid());
+        finished = 1;
     }
 
 }
 
 int main() {
+    // Constants
+    going = 1;
+    int result;
+    int pid;
+
+    struct sigaction action;
+
     // Memory
     int memid;
     int key = IPC_PRIVATE;
     char *ptr;
     char buffer[BUFFER_SIZE];
-    int memidLoop;
-    int keyLoop = IPC_PRIVATE;
-    char *ptrLoop;
-    char bufferLoop[BUFFER_SIZE];
-    char wordList[3][BUFFER_SIZE] = {"from", "jason", "done"};
+    char wordList[4][BUFFER_SIZE] = {"hello","from", "jason", "done"};
 
-    strcpy(buffer, "hello");
-    // Signals
-    int pid;
-    int parentPID = getpid();
-    struct sigaction action;
-    memset(&action, 0, sizeof(struct sigaction));
-    action.sa_handler = handler1;
-    sigaction(SIGUSR1, &action, NULL);
-    sigaction(SIGUSR2, &action, NULL);
-
+    strcpy(buffer, (const char *) wordList);
 
     memid = shmget(key, BUFFER_SIZE, IPC_EXCL | 0666);
     if (memid < 0) {
         printf("shmget() failed\n");
         return(8);
     }
-    int childPID;
+    memset(&action, 0, sizeof(struct sigaction));
     pid = fork();
-    // Get PIDS
-    if (pid == 0)
-        childPID = getpid();
-
-    for (int i = 0; i < 4; ++i){
-        if (pid > 0) {
-            printf("Inside Parent, cnt = %d, done = %d\n", cnt, done);
-            printf("Inside Child, PID = %d\n", childPID);
-//
-//            while (!done) {
-//                // Wait until reading is done
-//            }
-            printf("I am the parent, pid: %d\n", parentPID);
+    int i = 3;
+    if (pid > 0) {
+        action.sa_handler = handler1;
+        sigaction(SIGUSR1, &action, NULL);
+        printf("Inside parent, pid: %d\n", getpid());
+        while (going) {
+            while (!done);
             ptr = (char *) shmat(memid, 0, 0);
             if (ptr == NULL) {
                 printf("shmat() failed\n");
@@ -85,24 +67,38 @@ int main() {
             printf("Parent is writing '%s' to the shared memory\n", buffer);
             strcpy(buffer, (const char *) (wordList + i));
             strcpy(ptr, buffer);
-            wait(NULL);
-            signal(SIGUSR2, handler1);
-            kill(childPID, SIGUSR1);
-        } else {
-            printf("Inside Child, PID = %d\n", childPID);
-//            while (!done) {
-//                // Wait until writing is done
-//            }
-            ptr = (char *) shmat(memid, 0, 0);
-            //ptrLoop = (char *) shmat(memidLoop, 0, 0);
-            printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
-            shmdt(ptr);
-            signal(SIGUSR1, handler1);
-            kill(parentPID, SIGUSR2);
+            if (strcmp("done", ptr) == 0)
+                going = 0;
         }
+        wait(NULL);
+    } else {
+        pid = getpid();
+        action.sa_handler = handler1;
+        printf("I am the child and my PID is %d\n", pid);
+        sigaction(SIGUSR2, &action, NULL);
+        kill(getppid(), SIGUSR1)
+        while (going) {
+            ptr = (char *) shmat(memid,0,0);
+            if (ptr == NULL) {
+                printf("shmat() failed\n");
+                return (8);
+            }
+            printf("I am the child and I am reading this from shared memory: %s\n", ptr);
+            finished = 0;
+            if (strcmp("done", ptr) == 0) {
+                printf("Exiting");
+                going = 0;
+                return 0;
+            } else {
+                kill(getppid(), SIGUSR1));
+                shmdt(ptr);
+            }
+
+        }
+
     }
 
-    printf("done!\n");
-    return 0;
+    shmdt(ptr);
+    shmctl(memid, IPC_RMID, NULL);
 }
 
