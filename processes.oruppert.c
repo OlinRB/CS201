@@ -62,8 +62,10 @@ int main() {
         return(8);
     }
     pid = fork();
-    kill(getpid(), SIGUSR1);
-    kill(getpid(), SIGUSR2);
+    if (cnt == 0) {
+        kill(getpid(), SIGUSR1);
+        kill(getpid(), SIGUSR2);
+    }
     for (int i = 0; i < 4; ++i){
         if (pid > 0) {
             printf("Inside Parent, cnt = %d\n", cnt);
