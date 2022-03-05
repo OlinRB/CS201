@@ -84,6 +84,7 @@ int main() {
             //ptrLoop = (char *) shmat(memidLoop, 0, 0);
             printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
             shmdt(ptr);
+            kill(getpid(), SIGUSR1);
             kill(getpid(), SIGUSR2);
         }
     }
