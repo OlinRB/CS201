@@ -62,16 +62,13 @@ int main() {
         return(8);
     }
     pid = fork();
-    if (cnt == 0) {
-        kill(getpid(), SIGUSR1);
-        kill(getpid(), SIGUSR2);
-    }
     for (int i = 0; i < 4; ++i){
         if (pid > 0) {
-            printf("Inside Parent, cnt = %d\n", cnt);
-            while (!done) {
-                // Wait until reading is done
-            }
+            printf("Inside Parent, cnt = %d, done = %d\n", cnt, done);
+
+//            while (!done) {
+//                // Wait until reading is done
+//            }
             printf("I am the parent, pid: %d\n", getpid());
             ptr = (char *) shmat(memid, 0, 0);
             if (ptr == NULL) {
@@ -84,10 +81,10 @@ int main() {
             wait(NULL);
             kill(getpid(), SIGUSR1);
         } else {
-            printf("Inside Child, cnt = %d\n", cnt);
-            while (!done) {
-                // Wait until writing is done
-            }
+            printf("Inside Child, cnt = %d, done = %d\n", cnt, done);
+//            while (!done) {
+//                // Wait until writing is done
+//            }
             ptr = (char *) shmat(memid, 0, 0);
             //ptrLoop = (char *) shmat(memidLoop, 0, 0);
             printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
