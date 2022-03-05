@@ -12,7 +12,7 @@
 #include <sys/wait.h>
 #include <sys/shm.h>
 #define BUFFER_SIZE 32
-int done = 0;
+int done;
 
 
 void handler1(int signum) {
@@ -27,7 +27,7 @@ void handler1(int signum) {
         //printf("this is handler2(): got a signal %d\n", signum);
         //done = 1;
     }
-    done = 0;
+    done = 1;
 
 }
 
