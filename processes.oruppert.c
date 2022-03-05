@@ -55,7 +55,7 @@ int main() {
         action.sa_handler = handler;
         sigaction(SIGUSR1, &action, NULL);
         printf("\nI am the parent and my pid is: %d\n", getpid());
-        while (run == 1) {
+        while (run) {
             while (loop);
             loop = 1;
             ptr = (char *) shmat(memid, 0, 0);
@@ -87,7 +87,7 @@ int main() {
             }
             printf("I am the child and I am reading this from shared memory: %s\n", ptr);
             writing = 1;
-            if (strcmp("loop", ptr) == 0) {
+            if (strcmp("done", ptr) == 0) {
                 printf("Exiting");
                 run = 0;
                 return 0;
