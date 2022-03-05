@@ -80,11 +80,11 @@ int main() {
             printf("Parent is writing '%s' to the shared memory\n", buffer);
             strcpy(buffer, (const char *) (wordList + cnt));
             strcpy(ptr, buffer);
+            ++cnt;
             kill(pid, SIGUSR2);
             if (strcmp("done", ptr) == 0)
                 going = 0;
         }
-        ++cnt;
         wait(NULL);
     } else {
         pid = getpid();
