@@ -47,18 +47,30 @@ int main() {
     char wordList[4][BUFFER_SIZE] = {"hello","from", "Olin", "done"};
 
     // Create fork
+    int parentPID = getpid();
     int pid = fork();
     if (pid < 0) {
         printf("Fork failed");
         return (8);
     }
 
-    run = 1;
+    // Set up signals
+    int parentPID;
     if (pid > 0) {
         // Parent
         action.sa_handler = handler;
         sigaction(SIGUSR1, &action, NULL);
         printf("\nI am the parent and my pid is: %d\n", getpid());
+    } else {
+        // Child
+        pid = getpid();
+        action.sa_handler = handler;
+        printf("I am the child and my pid is %d\n", pid);
+        sigaction(SIGUSR2, &action, NULL);
+    }
+
+    run = 1;
+    if (pid > 0) {
         while (run) {
             while (!done);
             done = 0;
@@ -78,12 +90,7 @@ int main() {
         }
         wait(NULL);
     } else {
-        // Child
-        pid = getpid();
-        action.sa_handler = handler;
-        printf("I am the child and my pid is %d\n", pid);
-        sigaction(SIGUSR2, &action, NULL);
-        kill(getppid(), SIGUSR1);
+        kill(parentPID, SIGUSR1);
         while (run) {
             while (!finished);
             ptr = (char *) shmat(memid,0,0);
@@ -98,7 +105,7 @@ int main() {
                 run = 0;
                 return 0;
             } else {
-                kill(getppid(), SIGUSR1);
+                kill(parentPID, SIGUSR1);
                 shmdt(ptr);
             }
 
