@@ -43,7 +43,9 @@ int main() {
     char buffer[BUFFER_SIZE];
     char wordList[4][BUFFER_SIZE] = {"hello","from", "jason", "done"};
 
-    strcpy(buffer, (const char *) wordList);
+    //strcpy(buffer, (const char *) wordList);
+    strcpy(buffer, "done");
+
 
     memid = shmget(key, BUFFER_SIZE, IPC_EXCL | 0666);
     if (memid < 0) {
