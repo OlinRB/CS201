@@ -40,6 +40,7 @@ int main() {
         return(8);
     }
 
+    // Signals
     struct sigaction action;
     memset(&action, 0, sizeof(struct sigaction));
 
@@ -56,11 +57,12 @@ int main() {
     run = 1;
     if (pid > 0) {
         // Parent
+        // Assign signals
         action.sa_handler = handler;
         sigaction(SIGUSR1, &action, NULL);
         printf("\nI am the parent and my pid is: %d\n", getpid());
         while (run) {
-            while (!done);
+            while (!done) {}
             ptr = (char *) shmat(memid, 0, 0);
             if (ptr == NULL) {
                 printf("shmat() failed\n");
@@ -72,6 +74,7 @@ int main() {
             ++cnt;
             // Signal child
             kill(pid, SIGUSR2);
+            // End when word == done
             if (strcmp("done", ptr) == 0)
                 run = 0;
             done = 0;
@@ -79,24 +82,26 @@ int main() {
         wait(NULL);
     } else {
         // Child
+        // Assign signals
         pid = getpid();
         action.sa_handler = handler;
         printf("I am the child and my pid is %d\n", pid);
         sigaction(SIGUSR2, &action, NULL);
         kill(getppid(), SIGUSR1);
         while (run) {
-            while (!stillWriting);
+            while (!stillWriting) {}
             ptr = (char *) shmat(memid,0,0);
             if (ptr == NULL) {
                 printf("shmat() failed\n");
                 return (8);
             }
             printf("I am the child and I am reading this from shared memory: %s\n", ptr);
+            // End when word == done
             if (strcmp("done", ptr) == 0) {
-                printf("Exiting");
                 run = 0;
                 return 0;
             } else {
+                // Signal parent
                 kill(getppid(), SIGUSR1);
                 shmdt(ptr);
             }
