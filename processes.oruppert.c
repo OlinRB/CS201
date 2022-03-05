@@ -14,7 +14,7 @@
 #define BUFFER_SIZE 32
 int loop;
 int run;
-int writing;
+int finished;
 int cnt = 0;
 
 void handler(int signum) {
@@ -24,7 +24,7 @@ void handler(int signum) {
     }
     if (signum == SIGUSR2) {
         //printf("\nGot SIGUSR2, PID: %d\n", getpid());
-        writing = 0;
+        finished = 1;
     }
 }
 
@@ -79,14 +79,14 @@ int main() {
         sigaction(SIGUSR2, &action, NULL);
         kill(getppid(), SIGUSR1);
         while (run) {
-            while (writing);
+            while (!finished);
             ptr = (char *) shmat(memid,0,0);
             if (ptr == NULL) {
                 printf("shmat() failed\n");
                 return (8);
             }
             printf("I am the child and I am reading this from shared memory: %s\n", ptr);
-            writing = 1;
+            finished = 0;
             if (strcmp("done", ptr) == 0) {
                 printf("Exiting");
                 run = 0;
