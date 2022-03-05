@@ -55,7 +55,6 @@ int main() {
     }
 
     // Set up signals
-    int parentPID;
     if (pid > 0) {
         // Parent
         action.sa_handler = handler;
