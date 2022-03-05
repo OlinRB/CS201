@@ -18,14 +18,14 @@ int cnt = 0;
 void handler1(int signum) {
     ++cnt;
     if (signum == SIGUSR1) {
-        printf("\nGot SIGUSR1, PID: %d\n", getpid());
+        //printf("\nGot SIGUSR1, PID: %d\n", getpid());
         if (cnt % 2 == 0)
             done = 0;
         else
             done = 1;
     }
     if (signum == SIGUSR2) {
-        printf("\nGot SIGUSR2, PID: %d\n", getpid());
+        //printf("\nGot SIGUSR2, PID: %d\n", getpid());
         if (cnt % 2 != 0)
             done = 0;
         else
@@ -80,6 +80,7 @@ int main() {
             strcpy(ptr, buffer);
             wait(NULL);
             kill(getpid(), SIGUSR1);
+            kill(getpid(), SIGUSR2);
         } else {
             printf("Inside Child, cnt = %d, done = %d\n", cnt, done);
 //            while (!done) {
@@ -89,6 +90,7 @@ int main() {
             //ptrLoop = (char *) shmat(memidLoop, 0, 0);
             printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
             shmdt(ptr);
+            kill(getpid(), SIGUSR1);
             kill(getpid(), SIGUSR2);
         }
     }
