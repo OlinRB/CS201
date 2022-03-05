@@ -12,7 +12,7 @@
 #include <sys/wait.h>
 #include <sys/shm.h>
 #define BUFFER_SIZE 32
-int done;
+int reading;
 int run;
 int finished;
 int cnt = 0;
@@ -20,7 +20,7 @@ int cnt = 0;
 void handler(int signum) {
     if (signum == SIGUSR1) {
         //printf("\nGot SIGUSR1, PID: %d\n", getpid());
-        done = 1;
+        reading = 0;
     }
     if (signum == SIGUSR2) {
         //printf("\nGot SIGUSR2, PID: %d\n", getpid());
@@ -37,7 +37,7 @@ int main() {
     int key = IPC_PRIVATE;
     char *ptr;
     char buffer[BUFFER_SIZE];
-    char wordList[4][BUFFER_SIZE] = {"hello","from", "Olin", "loop"};
+    char wordList[4][BUFFER_SIZE] = {"hello","from", "Olin", "reading"};
 
     memid = shmget(key, BUFFER_SIZE, IPC_EXCL | 0666);
     if (memid < 0) {
@@ -56,8 +56,8 @@ int main() {
         sigaction(SIGUSR1, &action, NULL);
         printf("\nI am the parent and my pid is: %d\n", getpid());
         while (run) {
-            while (!done);
-            done = 0;
+            while (reading);
+            reading = 1;
             ptr = (char *) shmat(memid, 0, 0);
             if (ptr == NULL) {
                 printf("shmat() failed\n");
@@ -68,7 +68,7 @@ int main() {
             strcpy(ptr, buffer);
             ++cnt;
             kill(pid, SIGUSR2);
-            if (strcmp("loop", ptr) == 0)
+            if (strcmp("done", ptr) == 0)
                 run = 0;
         }
         wait(NULL);
