@@ -27,6 +27,7 @@ void handler1(int signum) {
         //printf("this is handler2(): got a signal %d\n", signum);
         //done = 1;
     }
+    done = 0;
 
 }
 
