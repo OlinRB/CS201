@@ -98,7 +98,7 @@ int main() {
         action.sa_handler = handler;
         printf("I am the child and my pid is %d\n", pid);
         sigaction(SIGUSR2, &action, NULL);
-        kill(parentPID, SIGUSR1);
+        kill(getppid(), SIGUSR1);
         while (run) {
             while (!finished);
             ptr = (char *) shmat(memid,0,0);
@@ -113,7 +113,7 @@ int main() {
                 run = 0;
                 return 0;
             } else {
-                kill(parentPID, SIGUSR1);
+                kill(getppid(), SIGUSR1);
                 shmdt(ptr);
             }
 
