@@ -60,6 +60,7 @@ int main() {
     pid = fork();
     for (int i = 0; i < 4; ++i){
         if (pid > 0) {
+            printf("Inside Parent\n");
             while (!done) {
                 // Wait until reading is done
             }
@@ -75,6 +76,7 @@ int main() {
             wait(NULL);
             kill(getpid(), SIGUSR1);
         } else {
+            printf("Inside Child\n");
             while (!done) {
                 // Wait until writing is done
             }
