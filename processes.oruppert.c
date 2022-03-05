@@ -45,7 +45,7 @@ int main() {
     memset(&action, 0, sizeof(struct sigaction));
 
     // Word list
-    char wordList[4][BUFFER_SIZE] = {"hello","from", "Olin", "childReady"};
+    char wordList[4][BUFFER_SIZE] = {"hello","from", "Olin", "done"};
 
     // Create fork
     int pid = fork();
