@@ -61,7 +61,6 @@ int main() {
         printf("\nI am the parent and my pid is: %d\n", getpid());
         while (run) {
             while (!done);
-            done = 0;
             ptr = (char *) shmat(memid, 0, 0);
             if (ptr == NULL) {
                 printf("shmat() failed\n");
@@ -75,6 +74,7 @@ int main() {
             kill(pid, SIGUSR2);
             if (strcmp("done", ptr) == 0)
                 run = 0;
+            done = 0;
         }
         wait(NULL);
     } else {
@@ -92,7 +92,6 @@ int main() {
                 return (8);
             }
             printf("I am the child and I am reading this from shared memory: %s\n", ptr);
-            stillWriting = 0;
             if (strcmp("done", ptr) == 0) {
                 printf("Exiting");
                 run = 0;
@@ -101,6 +100,7 @@ int main() {
                 kill(getppid(), SIGUSR1);
                 shmdt(ptr);
             }
+            stillWriting = 0;
 
         }
     }
