@@ -16,27 +16,27 @@ int done;
 int going;
 int finished;
 
+void handler(int signum) {
+    if (signum == SIGUSR1) {
+        //printf("\nGot SIGUSR1, PID: %d\n", getpid());
+        done = 1;
+    }
+    if (signum == SIGUSR2) {
+        //printf("\nGot SIGUSR2, PID: %d\n", getpid());
+        finished = 1;
+    }
+
+}
+
 //void handler1(int signum) {
-//    if (signum == SIGUSR1) {
-//        //printf("\nGot SIGUSR1, PID: %d\n", getpid());
-//        done = 1;
-//    }
-//    if (signum == SIGUSR2) {
-//        //printf("\nGot SIGUSR2, PID: %d\n", getpid());
-//        finished = 1;
-//    }
-//
+//    printf("Parent got signal %d\n", signum);
+//    done = 1;
 //}
-
-void handler1(int signum) {
-    printf("Parent got signal %d", signum);
-    done = 1;
-}
-
-void handler2(int signum) {
-    printf("Child got signal %d", signum);
-    finished = 1;
-}
+//
+//void handler2(int signum) {
+//    printf("Child got signal %d\n", signum);
+//    finished = 1;
+//}
 
 int main() {
     going = 1;
@@ -65,7 +65,7 @@ int main() {
     }
 
     if (pid > 0) {
-        action.sa_handler = handler1;
+        action.sa_handler = handler;
         sigaction(SIGUSR1, &action, NULL);
         printf("Inside parent, pid: %d\n", getpid());
         while (going==1) {
@@ -87,7 +87,7 @@ int main() {
         wait(NULL);
     } else {
         pid = getpid();
-        action.sa_handler = handler2;
+        action.sa_handler = handler;
         printf("I am the child and my PID is %d\n", pid);
         sigaction(SIGUSR2, &action, NULL);
         kill(getppid(), SIGUSR1);
