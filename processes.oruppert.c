@@ -25,7 +25,6 @@ void handler(int signum) {
         //printf("\nGot SIGUSR2, PID: %d\n", getpid());
         finished = 1;
     }
-
 }
 
 //void handler1(int signum) {
@@ -49,8 +48,8 @@ int main() {
     char buffer[BUFFER_SIZE];
     char wordList[4][BUFFER_SIZE] = {"hello","from", "jason", "done"};
 
-    //strcpy(buffer, (const char *) wordList);
-    strcpy(buffer, "done");
+    strcpy(buffer, (const char *) wordList);
+    //strcpy(buffer, "done");
 
     memid = shmget(key, BUFFER_SIZE, IPC_EXCL | 0666);
     if (memid < 0) {
@@ -69,20 +68,22 @@ int main() {
         sigaction(SIGUSR1, &action, NULL);
         printf("Inside parent, pid: %d\n", getpid());
         while (going==1) {
-            while (! done );
-            done = 0;
-            ptr = (char *) shmat(memid, 0, 0);
-            if (ptr == NULL) {
-                printf("shmat() failed\n");
-                return (8);
-            }
+            for (int i = 1; i < 4; ++i) {
+                while (!done);
+                done = 0;
+                ptr = (char *) shmat(memid, 0, 0);
+                if (ptr == NULL) {
+                    printf("shmat() failed\n");
+                    return (8);
+                }
 
-            printf("Parent is writing '%s' to the shared memory\n", buffer);
-            //strcpy(buffer, (const char *) (wordList + i));
-            strcpy(ptr, buffer);
-            kill(pid, SIGUSR2);
-            if (strcmp("done", ptr) == 0)
-                going = 0;
+                printf("Parent is writing '%s' to the shared memory\n", buffer);
+                strcpy(buffer, (const char *) (wordList + i));
+                strcpy(ptr, buffer);
+                kill(pid, SIGUSR2);
+                if (strcmp("done", ptr) == 0)
+                    going = 0;
+            }
         }
         wait(NULL);
     } else {
