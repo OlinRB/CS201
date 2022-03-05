@@ -12,19 +12,19 @@
 #include <sys/wait.h>
 #include <sys/shm.h>
 #define BUFFER_SIZE 32
-int done;
+int childReady;
 int run;
-int stillWriting;
+int parentReady;
 int cnt = 0;
 
 void handler(int signum) {
     if (signum == SIGUSR1) {
         //printf("\nGot SIGUSR1, PID: %d\n", getpid());
-        done = 1;
+        childReady = 1;
     }
     if (signum == SIGUSR2) {
         //printf("\nGot SIGUSR2, PID: %d\n", getpid());
-        stillWriting = 1;
+        parentReady = 1;
     }
 }
 
@@ -45,7 +45,7 @@ int main() {
     memset(&action, 0, sizeof(struct sigaction));
 
     // Word list
-    char wordList[4][BUFFER_SIZE] = {"hello","from", "Olin", "done"};
+    char wordList[4][BUFFER_SIZE] = {"hello","from", "Olin", "childReady"};
 
     // Create fork
     int pid = fork();
@@ -62,7 +62,9 @@ int main() {
         sigaction(SIGUSR1, &action, NULL);
         printf("\nI am the parent and my pid is: %d\n", getpid());
         while (run) {
-            while (!done) {}
+            while (!childReady) {
+                // Wait for child
+            }
             ptr = (char *) shmat(memid, 0, 0);
             if (ptr == NULL) {
                 printf("shmat() failed\n");
@@ -74,10 +76,10 @@ int main() {
             ++cnt;
             // Signal child
             kill(pid, SIGUSR2);
-            // End when word == done
+            // End when word == childReady
             if (strcmp("done", ptr) == 0)
                 run = 0;
-            done = 0;
+            childReady = 0;
         }
         wait(NULL);
     } else {
@@ -89,14 +91,16 @@ int main() {
         sigaction(SIGUSR2, &action, NULL);
         kill(getppid(), SIGUSR1);
         while (run) {
-            while (!stillWriting) {}
+            while (!parentReady) {
+                // Wait for parent
+            }
             ptr = (char *) shmat(memid,0,0);
             if (ptr == NULL) {
                 printf("shmat() failed\n");
                 return (8);
             }
             printf("I am the child and I am reading this from shared memory: %s\n", ptr);
-            // End when word == done
+            // End when word == childReady
             if (strcmp("done", ptr) == 0) {
                 run = 0;
                 return 0;
@@ -105,7 +109,7 @@ int main() {
                 kill(getppid(), SIGUSR1);
                 shmdt(ptr);
             }
-            stillWriting = 0;
+            parentReady = 0;
 
         }
     }
