@@ -18,14 +18,16 @@ int done;
 void handler1(int signum) {
     if (signum == SIGUSR1) {
         printf("\nGot SIGUSR1, PID: %d\n", getpid());
+        done = 1;
 
         //printf("this is handler1(): got a signal %d\n", signum);
     }
     if (signum == SIGUSR2) {
         printf("\nGot SIGUSR2, PID: %d\n", getpid());
         //printf("this is handler2(): got a signal %d\n", signum);
+        done = 1;
     }
-    done = 1;
+
 }
 
 int main() {
@@ -58,6 +60,9 @@ int main() {
     pid = fork();
     for (int i = 0; i < 4; ++i){
         if (pid > 0) {
+            while (!done) {
+                // Wait until reading is done
+            }
             printf("I am the parent, pid: %d\n", getpid());
             ptr = (char *) shmat(memid, 0, 0);
             if (ptr == NULL) {
@@ -70,13 +75,15 @@ int main() {
             wait(NULL);
             kill(getpid(), SIGUSR1);
         } else {
+            while (!done) {
+                // Wait until writing is done
+            }
             ptr = (char *) shmat(memid, 0, 0);
             //ptrLoop = (char *) shmat(memidLoop, 0, 0);
             printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
             shmdt(ptr);
             kill(getpid(), SIGUSR2);
         }
-        while (!done);
     }
 
     printf("done!\n");
