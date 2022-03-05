@@ -55,13 +55,15 @@ int main() {
     sigaction(SIGUSR1, &action, NULL);
     sigaction(SIGUSR2, &action, NULL);
 
-    done = 1;
+
     memid = shmget(key, BUFFER_SIZE, IPC_EXCL | 0666);
     if (memid < 0) {
         printf("shmget() failed\n");
         return(8);
     }
     pid = fork();
+    kill(getpid(), SIGUSR1);
+    kill(getpid(), SIGUSR2);
     for (int i = 0; i < 4; ++i){
         if (pid > 0) {
             printf("Inside Parent, cnt = %d\n", cnt);
