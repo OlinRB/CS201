@@ -29,29 +29,32 @@ void handler(int signum) {
 }
 
 int main() {
-    run = 1;
-    int result;
-    int pid;
-    struct sigaction action;
+    // Shared memory
     int memid;
     int key = IPC_PRIVATE;
     char *ptr;
     char buffer[BUFFER_SIZE];
-    char wordList[4][BUFFER_SIZE] = {"hello","from", "Olin", "done"};
-
     memid = shmget(key, BUFFER_SIZE, IPC_EXCL | 0666);
     if (memid < 0) {
         printf("shmget() failed\n");
         return(8);
     }
     memset(&action, 0, sizeof(struct sigaction));
-    pid = fork();
+
+    // Word list
+    char wordList[4][BUFFER_SIZE] = {"hello","from", "Olin", "done"};
+
+    // Create fork
+    struct sigaction action;
+    int pid = fork();
     if (pid < 0) {
         printf("Fork failed");
         return (8);
     }
 
+    run = 1;
     if (pid > 0) {
+        // Parent
         action.sa_handler = handler;
         sigaction(SIGUSR1, &action, NULL);
         printf("\nI am the parent and my pid is: %d\n", getpid());
@@ -67,12 +70,14 @@ int main() {
             printf("Parent is writing '%s' to the shared memory\n", buffer);
             strcpy(ptr, buffer);
             ++cnt;
+            // Signal child
             kill(pid, SIGUSR2);
             if (strcmp("done", ptr) == 0)
                 run = 0;
         }
         wait(NULL);
     } else {
+        // Child
         pid = getpid();
         action.sa_handler = handler;
         printf("I am the child and my pid is %d\n", pid);
@@ -97,7 +102,6 @@ int main() {
             }
 
         }
-
     }
 
     shmdt(ptr);
