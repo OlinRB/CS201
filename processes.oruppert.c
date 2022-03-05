@@ -52,7 +52,7 @@ int main() {
     sigaction(SIGUSR1, &action, NULL);
     sigaction(SIGUSR2, &action, NULL);
 
-    done = 0;
+    done = 1;
     memid = shmget(key, BUFFER_SIZE, IPC_EXCL | 0666);
     if (memid < 0) {
         printf("shmget() failed\n");
