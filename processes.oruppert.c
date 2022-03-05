@@ -15,7 +15,7 @@
 int done;
 int going;
 int finished;
-int cnt = 1;
+int cnt = 0;
 
 void handler(int signum) {
     if (signum == SIGUSR1) {
@@ -49,7 +49,7 @@ int main() {
     char buffer[BUFFER_SIZE];
     char wordList[4][BUFFER_SIZE] = {"hello","from", "jason", "done"};
 
-    strcpy(buffer, (const char *) wordList);
+    //strcpy(buffer, (const char *) wordList);
     //strcpy(buffer, "done");
 
     memid = shmget(key, BUFFER_SIZE, IPC_EXCL | 0666);
@@ -67,7 +67,7 @@ int main() {
     if (pid > 0) {
         action.sa_handler = handler;
         sigaction(SIGUSR1, &action, NULL);
-        printf("Inside parent, pid: %d\n", getpid());
+        printf("\nI am the parent and my pid is: %d\n", getpid());
         while (going==1) {
             while (! done );
             done = 0;
@@ -76,9 +76,8 @@ int main() {
                 printf("shmat() failed\n");
                 return (8);
             }
-
-            printf("Parent is writing '%s' to the shared memory\n", buffer);
             strcpy(buffer, (const char *) (wordList + cnt));
+            printf("Parent is writing '%s' to the shared memory\n", buffer);
             strcpy(ptr, buffer);
             ++cnt;
             kill(pid, SIGUSR2);
@@ -89,7 +88,7 @@ int main() {
     } else {
         pid = getpid();
         action.sa_handler = handler;
-        printf("I am the child and my PID is %d\n", pid);
+        printf("I am the child and my pid is %d\n", pid);
         sigaction(SIGUSR2, &action, NULL);
         kill(getppid(), SIGUSR1);
         while (going) {
