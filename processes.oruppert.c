@@ -86,6 +86,7 @@ int main() {
             strcpy(buffer, (const char *) (wordList + i));
             strcpy(ptr, buffer);
             wait(NULL);
+            signal(SIGUSR2, handler1);
             kill(childPID, SIGUSR1);
         } else {
             printf("Inside Child, PID = %d\n", childPID);
@@ -96,6 +97,7 @@ int main() {
             //ptrLoop = (char *) shmat(memidLoop, 0, 0);
             printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
             shmdt(ptr);
+            signal(SIGUSR1, handler1);
             kill(parentPID, SIGUSR2);
         }
     }
