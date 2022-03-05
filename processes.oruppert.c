@@ -57,7 +57,7 @@ int main() {
         printf("\nI am the parent and my pid is: %d\n", getpid());
         while (run) {
             while (!done);
-            loop = 0;
+            done = 0;
             ptr = (char *) shmat(memid, 0, 0);
             if (ptr == NULL) {
                 printf("shmat() failed\n");
