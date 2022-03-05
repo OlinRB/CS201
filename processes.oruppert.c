@@ -12,7 +12,7 @@
 #include <sys/wait.h>
 #include <sys/shm.h>
 #define BUFFER_SIZE 32
-int loop;
+int done;
 int run;
 int finished;
 int cnt = 0;
@@ -20,7 +20,7 @@ int cnt = 0;
 void handler(int signum) {
     if (signum == SIGUSR1) {
         //printf("\nGot SIGUSR1, PID: %d\n", getpid());
-        loop = 0;
+        done = 1;
     }
     if (signum == SIGUSR2) {
         //printf("\nGot SIGUSR2, PID: %d\n", getpid());
@@ -56,8 +56,8 @@ int main() {
         sigaction(SIGUSR1, &action, NULL);
         printf("\nI am the parent and my pid is: %d\n", getpid());
         while (run) {
-            while (loop);
-            loop = 1;
+            while (!done);
+            loop = 0;
             ptr = (char *) shmat(memid, 0, 0);
             if (ptr == NULL) {
                 printf("shmat() failed\n");
