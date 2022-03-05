@@ -15,6 +15,7 @@
 int done;
 int going;
 int finished;
+int cnt = 1;
 
 void handler(int signum) {
     if (signum == SIGUSR1) {
@@ -69,22 +70,21 @@ int main() {
         printf("Inside parent, pid: %d\n", getpid());
         while (going==1) {
             while (! done );
-            for (int i = 1; i < 4; ++i) {
-                done = 0;
-                ptr = (char *) shmat(memid, 0, 0);
-                if (ptr == NULL) {
-                    printf("shmat() failed\n");
-                    return (8);
-                }
-
-                printf("Parent is writing '%s' to the shared memory\n", buffer);
-                strcpy(buffer, (const char *) (wordList + i));
-                strcpy(ptr, buffer);
-                kill(pid, SIGUSR2);
-                if (strcmp("done", ptr) == 0)
-                    going = 0;
+            done = 0;
+            ptr = (char *) shmat(memid, 0, 0);
+            if (ptr == NULL) {
+                printf("shmat() failed\n");
+                return (8);
             }
+
+            printf("Parent is writing '%s' to the shared memory\n", buffer);
+            strcpy(buffer, (const char *) (wordList + cnt));
+            strcpy(ptr, buffer);
+            kill(pid, SIGUSR2);
+            if (strcmp("done", ptr) == 0)
+                going = 0;
         }
+        ++cnt;
         wait(NULL);
     } else {
         pid = getpid();
