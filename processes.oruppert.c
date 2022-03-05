@@ -39,14 +39,10 @@ void handler2(int signum) {
 }
 
 int main() {
-    // Constants
     going = 1;
     int result;
     int pid;
-
     struct sigaction action;
-
-    // Memory
     int memid;
     int key = IPC_PRIVATE;
     char *ptr;
@@ -56,31 +52,35 @@ int main() {
     //strcpy(buffer, (const char *) wordList);
     strcpy(buffer, "done");
 
-
     memid = shmget(key, BUFFER_SIZE, IPC_EXCL | 0666);
     if (memid < 0) {
         printf("shmget() failed\n");
         return(8);
     }
     memset(&action, 0, sizeof(struct sigaction));
-
     pid = fork();
-    int i = 3;
+    if (pid < 0) {
+        printf("Fork failed");
+        return (8);
+    }
+
     if (pid > 0) {
         action.sa_handler = handler1;
         sigaction(SIGUSR1, &action, NULL);
         printf("Inside parent, pid: %d\n", getpid());
         while (going==1) {
-            while (!done);
+            while (! done );
             done = 0;
             ptr = (char *) shmat(memid, 0, 0);
             if (ptr == NULL) {
                 printf("shmat() failed\n");
                 return (8);
             }
+
             printf("Parent is writing '%s' to the shared memory\n", buffer);
             //strcpy(buffer, (const char *) (wordList + i));
             strcpy(ptr, buffer);
+            kill(pid, SIGUSR2);
             if (strcmp("done", ptr) == 0)
                 going = 0;
         }
