@@ -49,7 +49,7 @@ int main() {
     strcpy(buffer, "hello");
     // Signals
     int pid;
-    printf("\nParents PID: %d\n\n", getpid());
+    int parentPID = getpid();
     struct sigaction action;
     memset(&action, 0, sizeof(struct sigaction));
     action.sa_handler = handler1;
@@ -62,7 +62,12 @@ int main() {
         printf("shmget() failed\n");
         return(8);
     }
+    int childPID;
     pid = fork();
+    // Get PIDS
+    if (pid == 0)
+        childPID = getpid();
+
     for (int i = 0; i < 4; ++i){
         if (pid > 0) {
             printf("Inside Parent, cnt = %d, done = %d\n", cnt, done);
@@ -70,7 +75,7 @@ int main() {
 //            while (!done) {
 //                // Wait until reading is done
 //            }
-            printf("I am the parent, pid: %d\n", getpid());
+            printf("I am the parent, pid: %d\n", parentPID);
             ptr = (char *) shmat(memid, 0, 0);
             if (ptr == NULL) {
                 printf("shmat() failed\n");
@@ -80,7 +85,7 @@ int main() {
             strcpy(buffer, (const char *) (wordList + i));
             strcpy(ptr, buffer);
             wait(NULL);
-            kill(getpid(), SIGUSR1);
+            kill(childPID, SIGUSR1);
         } else {
             printf("Inside Child, cnt = %d, done = %d\n", cnt, done);
 //            while (!done) {
@@ -90,7 +95,7 @@ int main() {
             //ptrLoop = (char *) shmat(memidLoop, 0, 0);
             printf("I am the child, and I read this from the shared memory: '%s'\n", ptr);
             shmdt(ptr);
-            kill(getpid(), SIGUSR2);
+            kill(parentPID, SIGUSR2);
         }
     }
 
