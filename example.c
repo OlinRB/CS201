@@ -12,7 +12,7 @@
 #include <sys/wait.h>
 #include <sys/shm.h>
 #define BUFFER_SIZE 32
-int done;
+int loop;
 
 
 void handler1(int signum) {
@@ -24,7 +24,7 @@ void handler1(int signum) {
         printf("\nGot SIGUSR2\n");
         //printf("this is handler2(): got a signal %d\n", signum);
     }
-    done = 1;
+    loop = 1;
 }
 
 int main() {
@@ -48,7 +48,7 @@ int main() {
     sigaction(SIGUSR1, &action, NULL);
     sigaction(SIGUSR2, &action, NULL);
 
-    done = 0;
+    loop = 0;
     memid = shmget(key, BUFFER_SIZE, IPC_EXCL | 0666);
     //memidLoop = shmget(key, BUFFER_SIZE, IPC_EXCL | 0666);
     if (memid < 0) {
@@ -89,10 +89,10 @@ int main() {
             //shmdt(ptrLoop);
             kill(getpid(), SIGUSR2);
         }
-        while (!done);
+        while (!loop);
     }
 
-    printf("done!\n");
+    printf("loop!\n");
     return 0;
 }
 
