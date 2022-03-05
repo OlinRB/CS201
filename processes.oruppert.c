@@ -38,8 +38,9 @@ int main() {
     int keyLoop = IPC_PRIVATE;
     char *ptrLoop;
     char bufferLoop[BUFFER_SIZE];
+    char wordList[3][BUFFER_SIZE] = {"from", "jason", "done"};
 
-    strcpy(buffer, "hello from me");
+    strcpy(buffer, "hello");
     // Signals
     int pid;
     struct sigaction action;
@@ -55,7 +56,7 @@ int main() {
         return(8);
     }
     pid = fork();
-    for (int i = 0; i < 4; ++i){
+    for (int i = 0; i < 3; ++i){
         if (pid > 0) {
             printf("I am the parent, pid: %d\n", getpid());
             ptr = (char *) shmat(memid, 0, 0);
@@ -64,6 +65,7 @@ int main() {
                 return (8);
             }
             printf("Parent is writing '%s' to the shared memory\n", buffer);
+            strcpy(buffer, (const char *) (wordList + i));
             strcpy(ptr, buffer);
             wait(NULL);
             kill(getpid(), SIGUSR1);
