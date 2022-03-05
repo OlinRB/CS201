@@ -39,13 +39,14 @@ int main() {
         printf("shmget() failed\n");
         return(8);
     }
+
+    struct sigaction action;
     memset(&action, 0, sizeof(struct sigaction));
 
     // Word list
     char wordList[4][BUFFER_SIZE] = {"hello","from", "Olin", "done"};
 
     // Create fork
-    struct sigaction action;
     int pid = fork();
     if (pid < 0) {
         printf("Fork failed");
