@@ -71,7 +71,7 @@ int main() {
                 return (8);
             }
             strcpy(buffer, (const char *) (wordList + cnt));
-            printf("Parent is writing '%s' to the shared memory\n", buffer);
+            printf("parent is writing '%s' to the shared memory\n", buffer);
             strcpy(ptr, buffer);
             ++cnt;
             // Signal child
@@ -101,7 +101,7 @@ int main() {
                 printf("shmat() failed\n");
                 return (8);
             }
-            printf("I am the child and I am reading this from shared memory: %s\n", ptr);
+            printf("I am the child, and I am reading this from shared memory: %s\n", ptr);
             // End when word == stillReading
             if (strcmp("done", ptr) == 0) {
                 run = 0;
@@ -111,10 +111,8 @@ int main() {
                 shmdt(ptr);
                 stillWriting = 0;
             }
-
         }
     }
-
     shmdt(ptr);
     shmctl(memid, IPC_RMID, NULL);
     return 0;
