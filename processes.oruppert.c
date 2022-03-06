@@ -78,7 +78,7 @@ int main() {
             kill(pid, SIGUSR2);
             // End when word == stillReading
             if (strcmp("done", ptr) == 0) {
-                //run = 0;
+                run = 0;
                 return 0;
             }
             stillReading = 0;
@@ -104,14 +104,13 @@ int main() {
             printf("I am the child and I am reading this from shared memory: %s\n", ptr);
             // End when word == stillReading
             if (strcmp("done", ptr) == 0) {
-                //run = 0;
+                run = 0;
                 return 0;
+            } else {            // Signal parent
+                kill(getppid(), SIGUSR1);
+                shmdt(ptr);
+                stillWriting = 0;
             }
-            // Signal parent
-            kill(getppid(), SIGUSR1);
-            shmdt(ptr);
-
-            stillWriting = 0;
 
         }
     }
