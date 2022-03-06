@@ -12,19 +12,19 @@
 #include <sys/wait.h>
 #include <sys/shm.h>
 #define BUFFER_SIZE 32
-int childReady;
+int done;
 int run;
-int parentReady;
+int stillWriting;
 int cnt = 0;
 
 void handler(int signum) {
     if (signum == SIGUSR1) {
         //printf("\nGot SIGUSR1, PID: %d\n", getpid());
-        childReady = 1;
+        done = 1;
     }
     if (signum == SIGUSR2) {
         //printf("\nGot SIGUSR2, PID: %d\n", getpid());
-        parentReady = 1;
+        stillWriting = 1;
     }
 }
 
@@ -62,7 +62,7 @@ int main() {
         sigaction(SIGUSR1, &action, NULL);
         printf("\nI am the parent and my pid is: %d\n", getpid());
         while (run) {
-            while (!childReady) {
+            while (!done) {
                 // Wait for child
             }
             ptr = (char *) shmat(memid, 0, 0);
@@ -76,10 +76,10 @@ int main() {
             ++cnt;
             // Signal child
             kill(pid, SIGUSR2);
-            // End when word == childReady
+            // End when word == done
             if (strcmp("done", ptr) == 0)
                 run = 0;
-            childReady = 0;
+            done = 0;
         }
         wait(NULL);
     } else {
@@ -91,7 +91,7 @@ int main() {
         sigaction(SIGUSR2, &action, NULL);
         kill(getppid(), SIGUSR1);
         while (run) {
-            while (!parentReady) {
+            while (!stillWriting) {
                 // Wait for parent
             }
             ptr = (char *) shmat(memid,0,0);
@@ -100,7 +100,7 @@ int main() {
                 return (8);
             }
             printf("I am the child and I am reading this from shared memory: %s\n", ptr);
-            // End when word == childReady
+            // End when word == done
             if (strcmp("done", ptr) == 0) {
                 run = 0;
                 return 0;
@@ -109,7 +109,7 @@ int main() {
                 kill(getppid(), SIGUSR1);
                 shmdt(ptr);
             }
-            parentReady = 0;
+            stillWriting = 0;
 
         }
     }
