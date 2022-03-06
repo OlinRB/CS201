@@ -12,6 +12,8 @@
 #include <sys/wait.h>
 #include <sys/shm.h>
 #define BUFFER_SIZE 32
+
+// Globals
 int stillReading;
 int stillWriting;
 int run;
@@ -106,7 +108,8 @@ int main() {
             if (strcmp("done", ptr) == 0) {
                 run = 0;
                 return 0;
-            } else {            // Signal parent
+            } else {
+                // Signal parent
                 kill(getppid(), SIGUSR1);
                 shmdt(ptr);
                 stillWriting = 0;
