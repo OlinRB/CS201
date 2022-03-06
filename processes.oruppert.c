@@ -12,8 +12,6 @@
 #include <sys/wait.h>
 #include <sys/shm.h>
 #define BUFFER_SIZE 32
-
-// Globals
 int stillReading;
 int stillWriting;
 int run;
@@ -73,7 +71,7 @@ int main() {
                 return (8);
             }
             strcpy(buffer, (const char *) (wordList + cnt));
-            printf("parent is writing '%s' to the shared memory\n", buffer);
+            printf("Parent is writing '%s' to the shared memory\n", buffer);
             strcpy(ptr, buffer);
             ++cnt;
             // Signal child
@@ -103,13 +101,12 @@ int main() {
                 printf("shmat() failed\n");
                 return (8);
             }
-            printf("I am the child, and I am reading this from shared memory: %s\n", ptr);
+            printf("I am the child and I am reading this from shared memory: %s\n", ptr);
             // End when word == stillReading
             if (strcmp("done", ptr) == 0) {
                 run = 0;
                 return 0;
-            } else {
-                // Signal parent
+            } else {            // Signal parent
                 kill(getppid(), SIGUSR1);
                 shmdt(ptr);
                 stillWriting = 0;
