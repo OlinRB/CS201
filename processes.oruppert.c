@@ -110,7 +110,6 @@ int main() {
                 // Signal parent
                 kill(getppid(), SIGUSR1);
                 shmdt(ptr);
-
                 stillWriting = 0;
             }
 
