@@ -12,15 +12,15 @@
 #include <sys/wait.h>
 #include <sys/shm.h>
 #define BUFFER_SIZE 32
-int done;
-int run;
+int stillReading;
 int stillWriting;
+int run;
 int cnt = 0;
 
 void handler(int signum) {
     if (signum == SIGUSR1) {
         //printf("\nGot SIGUSR1, PID: %d\n", getpid());
-        done = 1;
+        stillReading = 1;
     }
     if (signum == SIGUSR2) {
         //printf("\nGot SIGUSR2, PID: %d\n", getpid());
@@ -62,7 +62,7 @@ int main() {
         sigaction(SIGUSR1, &action, NULL);
         printf("\nI am the parent and my pid is: %d\n", getpid());
         while (run) {
-            while (!done) {
+            while (!stillReading) {
                 // Wait for child
             }
             ptr = (char *) shmat(memid, 0, 0);
@@ -76,10 +76,10 @@ int main() {
             ++cnt;
             // Signal child
             kill(pid, SIGUSR2);
-            // End when word == done
+            // End when word == stillReading
             if (strcmp("done", ptr) == 0)
                 run = 0;
-            done = 0;
+            stillReading = 0;
         }
         wait(NULL);
     } else {
@@ -100,7 +100,7 @@ int main() {
                 return (8);
             }
             printf("I am the child and I am reading this from shared memory: %s\n", ptr);
-            // End when word == done
+            // End when word == stillReading
             if (strcmp("done", ptr) == 0) {
                 run = 0;
                 return 0;
