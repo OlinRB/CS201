@@ -106,13 +106,17 @@ int main() {
             if (strcmp("done", ptr) == 0) {
                 run = 0;
                 return 0;
-            } else {            // Signal parent
+            } else {
+                // Signal parent
                 kill(getppid(), SIGUSR1);
                 shmdt(ptr);
+
                 stillWriting = 0;
             }
+
         }
     }
+
     shmdt(ptr);
     shmctl(memid, IPC_RMID, NULL);
     return 0;
