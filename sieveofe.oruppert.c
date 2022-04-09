@@ -15,6 +15,7 @@
 
 #define NUM_THREADS 5
 #define NUM_NUMS 15
+#define DONE = 255
 #define NUM_ELEMENTS 1000
 #define RANGE 1000000
 
@@ -82,7 +83,7 @@ void nonThreaded(void *param) {
             ++startingNum;
     }
     for (int i = 1; i <= NUM_NUMS; ++i) {
-        if (sieve->arr[i] == -1) {
+        if (sieve->arr[i] == DONE) {
             printf("%d = ", i+1);
             printf("Prime | ");
         }
