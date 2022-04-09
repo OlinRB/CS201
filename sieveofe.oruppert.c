@@ -14,7 +14,7 @@
 
 
 #define NUM_THREADS 5
-#define NUM_NUMS 20
+#define NUM_NUMS 15
 #define NUM_ELEMENTS 1000
 #define RANGE 1000000
 
@@ -34,12 +34,6 @@ typedef struct {
     char arr[NUM_NUMS];
 } SieveStruct;
 
-int A[NUM_ELEMENTS];
-
-//-----------------------------------------------------------------
-// This is the function that computers the max over a range of the
-// global array A[]. The SumStruct passed through param tells this
-// function over which values to do the max.
 
 void *runner(void *param) {
     SumStruct *data;
@@ -56,38 +50,71 @@ void *runner(void *param) {
 
 
 // Non threaded implementation
-void nonThreaded(char *numArr) {
-    char arr[NUM_NUMS];
-    arr = (char[] *) numArr;
-    for (int i = 0; i < NUM_NUMS; ++i) {
-        printf("%d ", arr[i]);
+void nonThreaded(void *param) {
+    SieveStruct *sieve;
+    sieve = (SieveStruct *) param;
+    int done = 0;
+    int startingNum = 2;
+    while (!done) {
+        for (int p = 0; p < NUM_NUMS; ++p) {
+            printf("%d ", sieve->arr[p]);
+        }
+        printf("\n");
+        // Find multiples of startNum
+        printf("Number: %d, Multiples: ", startingNum);
+        int prime = 1;
+        for (int i = startingNum * 2; i <= NUM_NUMS; ++i) {
+            if (i % startingNum == 0) {
+                prime = 0;
+                printf("%d, ", i);
+                sieve->arr[i-1] = 0;
+            }
+        }
+        // Set myNumber as completed (Mutex section)
+        if (sieve->arr[startingNum-1] != 0)
+            sieve->arr[startingNum-1] = -1;
+
+        printf("\n");
+        ++startingNum;
+        if (startingNum == NUM_NUMS)
+            done = 1;
+        while (startingNum == 0)
+            ++startingNum;
+    }
+    for (int i = 1; i <= NUM_NUMS; ++i) {
+        if (sieve->arr[i] == -1) {
+            printf("%d = ", i+1);
+            printf("Prime | ");
+        }
     }
 }
 
 
 int main(int argc, char *argv[]) {
-    SumStruct data[NUM_THREADS];   // holds data we want to give to child thread
-    pthread_t tid[NUM_THREADS];    // thread identifier
-    int maxVal;
-    int i;
+    SieveStruct sieve;
 
     // Create an array of char of size m
     char numberArr[NUM_NUMS];
     // Populate array with 1s
     for (int i = 0; i < NUM_NUMS; ++i) {
-        numberArr[i] = 1;
+        sieve.arr[i] = 1;
     }
-    nonThreaded(numberArr);
-    // set up bounds for the threads
-    for (int i = 0; i < NUM_THREADS; ++i) {
-        data[i].id = i;
-    }
+    sieve.sVal = 2;
+    nonThreaded(&sieve);
 
-    data[0].lowVal = 0;
-    data[0].highVal = NUM_ELEMENTS/2;
 
-    data[1].lowVal = NUM_ELEMENTS/2 + 1;
-    data[1].highVal = NUM_ELEMENTS-1;
+
+
+//    // set up bounds for the threads
+//    for (int i = 0; i < NUM_THREADS; ++i) {
+//        data[i].id = i;
+//    }
+//
+//    data[0].lowVal = 0;
+//    data[0].highVal = NUM_ELEMENTS/2;
+//
+//    data[1].lowVal = NUM_ELEMENTS/2 + 1;
+//    data[1].highVal = NUM_ELEMENTS-1;
 
 
 
@@ -104,12 +131,12 @@ int main(int argc, char *argv[]) {
 //        pthread_join(tid[i], NULL);
 //    }
 
-    // gather data from the individual results
-    maxVal = data[0].maxVal;
-    for (i=0; i<NUM_THREADS; ++i) {
-        if (data[i].maxVal > maxVal)
-            maxVal = data[i].maxVal;
-    }
+//    // gather data from the individual results
+//    maxVal = data[0].maxVal;
+//    for (i=0; i<NUM_THREADS; ++i) {
+//        if (data[i].maxVal > maxVal)
+//            maxVal = data[i].maxVal;
+//    }
 
 //    printf("maximum value over the whole array is %d\n", maxVal);
     return 0;
