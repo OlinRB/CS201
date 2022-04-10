@@ -138,7 +138,7 @@ void *mutexTest(void * param) {
     pthread_mutex_lock(&mutex);
 
     printf("Waiting for 10 seconds\n");
-    sleep(10);
+    _sleep(10);
 
     pthread_mutex_unlock(&mutex);
 
