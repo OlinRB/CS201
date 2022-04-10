@@ -13,8 +13,8 @@
 #include <pthread.h>
 
 
-#define NUM_THREADS 20
-#define NUM_NUMS 1000000
+#define NUM_THREADS 10
+#define NUM_NUMS 1000
 #define DONE = 255
 #define NUM_ELEMENTS 1000
 #define RANGE 1000000
@@ -50,12 +50,6 @@ void *threadedSieve(void *param) {
             if (startingNum > NUM_NUMS-1)
                 done = 1;
         }
-//        for (int p = 0; p < NUM_NUMS; ++p) {
-//            printf("%d ", sieve->arr[p]);
-//        }
-//        printf("\n");
-        // Find multiples of startNum
-        //printf("Number: %d, Multiples: ", startingNum);
         for (int i = startingNum * 2; i <= NUM_NUMS; ++i) {
             if (i % startingNum == 0) {
                 sieve->arr[i-1] = 0;
