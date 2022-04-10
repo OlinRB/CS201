@@ -13,8 +13,8 @@
 #include <pthread.h>
 
 
-#define NUM_THREADS 3
-#define NUM_NUMS 10
+#define NUM_THREADS 20
+#define NUM_NUMS 1000000
 #define DONE = 255
 #define NUM_ELEMENTS 1000
 #define RANGE 1000000
@@ -38,13 +38,11 @@ typedef struct {
 
 
 void *threadedSieve(void *param) {
-    printf("Thread here\n");
     SieveStruct *sieve;
     sieve = (SieveStruct *) param;
     int done = 0;
     int startingNum = sieve->sVal;
     pthread_mutex_t mutex = sieve->mutex;
-    //printf("%d\n", startingNum);
     while (!done) {
         // Set starting num
         while (sieve->arr[startingNum-1] == -1 || sieve->arr[startingNum-1] == 0) {
@@ -58,25 +56,21 @@ void *threadedSieve(void *param) {
 //        printf("\n");
         // Find multiples of startNum
         //printf("Number: %d, Multiples: ", startingNum);
-        int prime = 1;
         for (int i = startingNum * 2; i <= NUM_NUMS; ++i) {
             if (i % startingNum == 0) {
-                prime = 0;
-                //printf("%d, ", i);
                 sieve->arr[i-1] = 0;
             }
         }
+
         // Set myNumber as completed (Mutex section)
 
         int val = pthread_mutex_lock(&mutex);
         while (val != 0)
             val = pthread_mutex_trylock(&mutex);
-        //printf("%d", val);
         if (sieve->arr[startingNum-1] != 0) {
             sieve->arr[startingNum - 1] = -1;
         }
         pthread_mutex_unlock(&mutex);
-        //printf("\n");
         ++startingNum;
         if (startingNum == NUM_NUMS)
             done = 1;
@@ -138,7 +132,7 @@ void *mutexTest(void * param) {
     pthread_mutex_lock(&mutex);
 
     printf("Waiting for 10 seconds\n");
-    _sleep(10);
+    //_sleep(10);
 
     pthread_mutex_unlock(&mutex);
 
@@ -165,8 +159,8 @@ int main(int argc, char *argv[]) {
 
     // Create array of threads
 
-    pthread_t boss;
-    pthread_create(&boss, NULL, mutexTest, &sieve);
+    //pthread_t boss;
+    //pthread_create(&boss, NULL, mutexTest, &sieve);
     pthread_t threads[NUM_THREADS];
     for (int i = 0; i < NUM_THREADS; ++i) {
         pthread_create(&threads[i], NULL, threadedSieve, &sieve);
