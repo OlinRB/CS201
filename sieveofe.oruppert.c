@@ -13,8 +13,8 @@
 #include <pthread.h>
 
 
-#define NUM_THREADS 5
-#define NUM_NUMS 15
+#define NUM_THREADS 3
+#define NUM_NUMS 10
 #define DONE = 255
 #define NUM_ELEMENTS 1000
 #define RANGE 1000000
@@ -29,6 +29,7 @@ typedef struct {
 } SumStruct;
 
 typedef struct {
+    pthread_mutex_t mutex;
     int lowerBound;
     int upperBound;
     int sVal;
@@ -36,13 +37,53 @@ typedef struct {
 } SieveStruct;
 
 
-void *runner(void *param) {
-    SumStruct *data;
-    int i, maxVal;
+void *threadedSieve(void *param) {
+    printf("Thread here\n");
+    SieveStruct *sieve;
+    sieve = (SieveStruct *) param;
+    int done = 0;
+    int startingNum = sieve->sVal;
+    pthread_mutex_t mutex = sieve->mutex;
+    //printf("%d\n", startingNum);
+    while (!done) {
+        // Set starting num
+        while (sieve->arr[startingNum-1] == -1 || sieve->arr[startingNum-1] == 0) {
+            ++startingNum;
+            if (startingNum > NUM_NUMS-1)
+                done = 1;
+        }
+//        for (int p = 0; p < NUM_NUMS; ++p) {
+//            printf("%d ", sieve->arr[p]);
+//        }
+//        printf("\n");
+        // Find multiples of startNum
+        //printf("Number: %d, Multiples: ", startingNum);
+        int prime = 1;
+        for (int i = startingNum * 2; i <= NUM_NUMS; ++i) {
+            if (i % startingNum == 0) {
+                prime = 0;
+                //printf("%d, ", i);
+                sieve->arr[i-1] = 0;
+            }
+        }
+        // Set myNumber as completed (Mutex section)
 
-    data = (SumStruct *) param;
+        int val = pthread_mutex_lock(&mutex);
+        while (val != 0)
+            val = pthread_mutex_trylock(&mutex);
+        //printf("%d", val);
+        if (sieve->arr[startingNum-1] != 0) {
+            sieve->arr[startingNum - 1] = -1;
+        }
+        pthread_mutex_unlock(&mutex);
+        //printf("\n");
+        ++startingNum;
+        if (startingNum == NUM_NUMS)
+            done = 1;
+        while (startingNum == 0)
+            ++startingNum;
+    }
 
-    printf("Thread number: %d\n", data->id);
 
     pthread_exit(NULL);
 }
@@ -82,18 +123,37 @@ void nonThreaded(void *param) {
         while (startingNum == 0)
             ++startingNum;
     }
-    for (int i = 1; i <= NUM_NUMS; ++i) {
-        if (sieve->arr[i] == DONE) {
-            printf("%d = ", i+1);
-            printf("Prime | ");
-        }
-    }
 }
 
 
-int main(int argc, char *argv[]) {
-    SieveStruct sieve;
+void *mutexTest(void * param) {
+    printf("Boss here\n");
+    SieveStruct *sieve;
+    sieve = (SieveStruct *) param;
+    int done = 0;
+    int startingNum = sieve->sVal;
+    pthread_mutex_t mutex = sieve->mutex;
 
+    // Lock for 10 seconds and then work
+    pthread_mutex_lock(&mutex);
+
+    printf("Waiting for 10 seconds\n");
+    _sleep(10);
+
+    pthread_mutex_unlock(&mutex);
+
+    pthread_exit(NULL);
+
+}
+
+int main(int argc, char *argv[]) {
+    // Create Struct
+    SieveStruct sieve;
+    // Create Mutex
+    pthread_mutex_t mutex;
+    pthread_mutex_init(&mutex, NULL);
+    // Add mutex to sieve
+    sieve.mutex = mutex;
     // Create an array of char of size m
     char numberArr[NUM_NUMS];
     // Populate array with 1s
@@ -101,44 +161,28 @@ int main(int argc, char *argv[]) {
         sieve.arr[i] = 1;
     }
     sieve.sVal = 2;
-    nonThreaded(&sieve);
+    //nonThreaded(&sieve);
 
+    // Create array of threads
 
+    pthread_t boss;
+    pthread_create(&boss, NULL, mutexTest, &sieve);
+    pthread_t threads[NUM_THREADS];
+    for (int i = 0; i < NUM_THREADS; ++i) {
+        pthread_create(&threads[i], NULL, threadedSieve, &sieve);
+    }
+    for (int i = 0; i < NUM_THREADS; ++i) {
+        pthread_join(threads[i], NULL);
+    }
 
+    // Print out primes
+    printf("\n");
+    for (int i = 1; i <= NUM_NUMS; ++i) {
+        if (sieve.arr[i] == -1) {
+            printf("%d = ", i+1);
+            printf("Prime | ");
+        }
+    }
 
-//    // set up bounds for the threads
-//    for (int i = 0; i < NUM_THREADS; ++i) {
-//        data[i].id = i;
-//    }
-//
-//    data[0].lowVal = 0;
-//    data[0].highVal = NUM_ELEMENTS/2;
-//
-//    data[1].lowVal = NUM_ELEMENTS/2 + 1;
-//    data[1].highVal = NUM_ELEMENTS-1;
-
-
-
-
-
-//    // create and start the threads
-//    for (i=0; i<NUM_THREADS; ++i) {
-//        // create and start a child thread
-//        pthread_create(&tid[i], NULL, runner, &data[i]);
-//    }
-//
-//    // wait for the child threads to terminate
-//    for (i=0; i<NUM_THREADS; ++i) {
-//        pthread_join(tid[i], NULL);
-//    }
-
-//    // gather data from the individual results
-//    maxVal = data[0].maxVal;
-//    for (i=0; i<NUM_THREADS; ++i) {
-//        if (data[i].maxVal > maxVal)
-//            maxVal = data[i].maxVal;
-//    }
-
-//    printf("maximum value over the whole array is %d\n", maxVal);
     return 0;
 }
