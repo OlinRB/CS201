@@ -5,7 +5,7 @@
 // the max of the two partial max values.
 //
 // Compile this on silk this way:
-// $ gcc pthreads-example.c -lpthread
+// $ gcc sieveofe.oruppert.c -lpthread
 //
 // Unfortunately, you won't be able to run this on a Windows computer.
 #include <stdlib.h>
@@ -138,7 +138,7 @@ void *mutexTest(void * param) {
     pthread_mutex_lock(&mutex);
 
     printf("Waiting for 10 seconds\n");
-    _sleep(10);
+    sleep(10);
 
     pthread_mutex_unlock(&mutex);
 
