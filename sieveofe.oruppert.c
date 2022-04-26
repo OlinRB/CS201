@@ -14,7 +14,7 @@
 
 
 #define NUM_THREADS 10
-#define NUM_NUMS 1000
+#define NUM_NUMS 10000
 #define DONE = 255
 #define NUM_ELEMENTS 1000
 #define RANGE 1000000
