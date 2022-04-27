@@ -6,10 +6,26 @@
 #include <ctype.h>
 
 #define MAXWORDLEN 64
+#define NUMVALS 26
+#define FILENAME "words_file.dat"
 
 //--------------------------------------------------------
 // return 1 if any chararacters are non-alphabetic;
 // otherwise return 0
+
+long checkFileSize(FILE *fp) {
+    int rc;
+    long filesize;
+
+    rc = fseek(fp, 0, SEEK_END);
+    if (rc != 0) {
+        printf("fseek() failed\n");
+        return -1;
+    }
+
+    filesize = ftell(fp);
+    return filesize;
+}
 
 int checkWord(char *word) {
     int i, len;
@@ -86,6 +102,16 @@ int testUtils() {
     return 0;
 }
 
+int testFileFunctions() {
+////    Try a simple test first, where you insert a single word, starting with ‘n’ for example. Count how many words
+////    start with ‘n’ (there should be one). Count how many words start with ‘a’ (there should be zero). Examine
+////    your file using od.
+////            Then, delete the file and make a new testcase: insert a word starting with ‘n’, and then a word starting
+////    with ‘a’, and then another word starting with ‘n’. Examine your file using od, and use the functions you’ve
+////    written to be sure you’re seeing the correct results.
+
+}
+
 //-------------------------------------
 
 int insertWord(FILE *fp, char *word) {
@@ -127,5 +153,67 @@ int countWords(FILE *fp, char letter, int *count) {
 
 
 int main() {
-  testUtils();
-}
+    // Open or create file
+    FILE *fp;
+    int fileExists, rc, i, num, numRead, numValuesToRead;
+    long filesize, value, pos;
+
+    // try to open a file
+    // - if the file exists, we'll be able to access it
+    // - if the file does not exist, then create it
+
+    fileExists = 0;
+    fp = fopen(FILENAME, "r+"); // r+ means read and write access, for a file
+    if (fp != NULL) {           // that already exists
+        printf("success, file '%s' already exists\n", FILENAME);
+        fileExists = 1;
+    }
+
+    if ( ! fileExists ) {
+        fp = fopen(FILENAME, "w+");  // w+ means read and write access, for a file
+        if (fp == NULL) {            // that does not exist
+            printf("ERROR: cannot open file '%s'\n", FILENAME);
+            return 8;
+        } else {
+            printf("success, created new file '%s'\n", FILENAME);
+        }
+    }
+    //printf("%d",fileExists);
+//    Try a simple test first, where you insert a single word, starting with ‘n’ for example. Count how many words
+//    start with ‘n’ (there should be one). Count how many words start with ‘a’ (there should be zero). Examine
+//    your file using od.
+//            Then, delete the file and make a new testcase: insert a word starting with ‘n’, and then a word starting
+//    with ‘a’, and then another word starting with ‘n’. Examine your file using od, and use the functions you’ve
+//    written to be sure you’re seeing the correct results.
+
+    // Check file size
+    filesize = checkFileSize(fp);
+    if (filesize < 0) {
+        printf("ERROR: checkFileSize() failed\n");
+        fclose(fp);
+        return 8;
+    }
+    printf("current size of file is %ld bytes\n", filesize);
+    // If file size == 0, Add longs to start of file (26)
+    // if the file is empty, then write 5 long values
+    if (filesize == 0) {
+        // don't need to seek to the beginning: already there, since file is empty
+        value = 0;
+        for (i=0; i<NUMVALS; ++i) {
+            num = fwrite(&value, sizeof(long), 1, fp);
+            if (num != 1) {
+                printf("ERROR: fwrite() failed to write a value\n");
+                fclose(fp);
+                return 8;
+            } else {
+                printf("success: wrote the value %ld\n", value);
+            }
+
+            value = value + 2;
+        }
+    // Write word to file
+
+
+    //testUtils();
+
+}}
