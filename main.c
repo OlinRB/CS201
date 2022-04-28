@@ -212,27 +212,26 @@ int insertWord(FILE *fp, char *word) {
         while (iterator < filesize) {
             // Print all values from file
             // Read word from file
-
-            if (iterator > sizeof (long) * NUMVALS) {
-                fread(&tempWord, iterator, 1, fp);
-                iterator += sizeof(tempWord);
-                // Read pointer from file
-                fread(&ptr, iterator, 1, fp);
-                iterator += sizeof(long);
-                printf("Word read: | %s |, ptr = %lld\n", tempWord, ptr);
-            } else {
-                fread(&data, sizeof (long), 1, fp);
-                printf("Read in value: %lld\n", data);
-                iterator += sizeof(long);
-                printf("Iterator = %d\n", iterator);
-            }
+//
+//            if (iterator > sizeof (long) * NUMVALS) {
+//                fread(&tempWord, iterator, 1, fp);
+//                iterator += sizeof(tempWord);
+//                // Read pointer from file
+//                fread(&ptr, iterator, 1, fp);
+//                iterator += sizeof(long);
+//                printf("Word read: | %s |, ptr = %lld\n", tempWord, ptr);
+//            } else {
+//                fread(&data, sizeof (long), 1, fp);
+//                printf("Read in value: %lld\n", data);
+//                iterator += sizeof(long);
+//                printf("Iterator = %d\n", iterator);
+//            }
 
 
         }
     }
     // Seek to beginning
     setFile(fp, 0);
-    long value;
     for (int i=0; i<26; ++i) {
         int num = fread(&value, sizeof(long), 1, fp);
         if (num == 1) {
