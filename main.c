@@ -165,7 +165,7 @@ int insertWord(FILE *fp, char *word) {
     // If num == 1 read was successful
     if (num == 1) {
         printf("value == %lld\n", value);
-        if (value == 14) {
+        if (value == 0) {
             // Write word to end of file and replace 0 with byte location
             int filesize = checkFileSize(fp);
             // Go to end of file to write word
@@ -207,16 +207,17 @@ int insertWord(FILE *fp, char *word) {
     int filesize = checkFileSize(fp);
     char tempWord[MAXWORDLEN + 1];
     long long ptr;
-    while (iterator < filesize) {
-        // Read word from file
-        fread(&tempWord, iterator, 1, fp);
-        iterator += sizeof(tempWord);
-        // Read pointer from file
-        fread(&ptr, iterator, 1, fp);
-        iterator += sizeof(long long);
-        printf("Word read: | %s |, ptr = %lld\n", tempWord, ptr);
+    if (filesize > iterator) {
+        while (iterator < filesize) {
+            // Read word from file
+            fread(&tempWord, iterator, 1, fp);
+            iterator += sizeof(tempWord);
+            // Read pointer from file
+            fread(&ptr, iterator, 1, fp);
+            iterator += sizeof(long long);
+            printf("Word read: | %s |, ptr = %lld\n", tempWord, ptr);
 
-
+        }
     }
 
 
@@ -292,7 +293,7 @@ int main() {
     // if the file is empty, then write 5 long values
     if (filesize == 0) {
         // don't need to seek to the beginning: already there, since file is empty
-        value = 1;
+        value = 0;
         for (i = 0; i < NUMVALS; ++i) {
             num = fwrite(&value, sizeof(long long), 1, fp);
             if (num != 1) {
@@ -302,7 +303,7 @@ int main() {
             } else {
                 printf("success: wrote the value %ld\n", value);
             }
-            value += 1;
+            //value += 1;
         }
 
     }
