@@ -230,6 +230,17 @@ int insertWord(FILE *fp, char *word) {
 
         }
     }
+    long value;
+    for (int i=0; i<26; ++i) {
+        int num = fread(&value, sizeof(long), 1, fp);
+        if (num == 1) {
+            printf("read this value: %ld\n", value);
+        } else {
+            printf("ERROR: fread() failed to read a value\n");
+            fclose(fp);
+            return 8;
+        }
+    }
 
 
     return success;
