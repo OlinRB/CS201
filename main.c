@@ -230,6 +230,8 @@ int insertWord(FILE *fp, char *word) {
 
         }
     }
+    // Seek to beginning
+    setFile(fp, 0);
     long value;
     for (int i=0; i<26; ++i) {
         int num = fread(&value, sizeof(long), 1, fp);
