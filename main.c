@@ -5,7 +5,7 @@
 #include <string.h>
 #include <ctype.h>
 
-#define MAXWORDLEN 64
+#define MAXWORDLEN 31
 #define NUMVALS 26
 #define FILENAME "words_file.dat"
 
@@ -114,10 +114,52 @@ int testFileFunctions() {
 
 //-------------------------------------
 
-int insertWord(FILE *fp, char *word) {
+
+typedef struct {
+    char word[1+MAXWORDLEN];
+    long long nextpos;
+} Record;
+
+//int getStartingIndex(FILE *fp, int position) {
+//    // I know that all of the values in the file are longs
+//    numValuesToRead = filesize / sizeof(long long);
+//    printf("expect to read %d long values\n", numValuesToRead);
+//
+//    for (int i = 0; i < numValuesToRead; ++i) {
+//        num = fread(&value, sizeof(long long), 1, fp);
+//        if (num == 1) {
+//            printf("read this value: %ld\n", value);
+//        } else {
+//            printf("ERROR: fread() failed to read a value\n");
+//            fclose(fp);
+//            return 8;
+//        }
+//    }
+//
+//};
+
+int insertWord(FILE *fp, Record *word) {
 ////    This will insert a word into the file and update the data structures in the file, as described in the explanatory
 ////    slides. Return zero if there are no errors; otherwise return nonzero.
 ////            Use the functions checkWord() and convertToLower() (see below).
+    // Determine where to jump in first 208 bytes of file
+    char alpha[27] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+                      'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+    // Determine where to write file
+    char firstLetter = word->word[0];
+    int letterIndex;
+    for (int i = 0; i < 26; ++i) {
+        if (firstLetter == alpha[i])
+            letterIndex = i * sizeof (long long);
+    }
+    printf("The starting letter index is: %d", letterIndex);
+
+    // Now read file at position to see if word with letter exists in file yet
+
+
+
+
+
     int x = 1;
     return x;
 }
@@ -199,8 +241,8 @@ int main() {
     if (filesize == 0) {
         // don't need to seek to the beginning: already there, since file is empty
         value = 0;
-        for (i=0; i<NUMVALS; ++i) {
-            num = fwrite(&value, sizeof(long), 1, fp);
+        for (i = 0; i < NUMVALS; ++i) {
+            num = fwrite(&value, sizeof(long long), 1, fp);
             if (num != 1) {
                 printf("ERROR: fwrite() failed to write a value\n");
                 fclose(fp);
@@ -208,12 +250,18 @@ int main() {
             } else {
                 printf("success: wrote the value %ld\n", value);
             }
-
-            value = value + 2;
         }
-    // Write word to file
 
+    }
+
+    // Save word and next pos to struct
+    Record word1;
+    strcpy(word1.word, "nardles");
+    word1.nextpos = 0;
+
+    // Write word to file
+    insertWord(fp, &word1);
 
     //testUtils();
 
-}}
+}

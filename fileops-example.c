@@ -75,7 +75,7 @@ int main() {
         // don't need to seek to the beginning: already there, since file is empty
         value = 0;
         for (i=0; i<NUMVALS; ++i) {
-            num = fwrite(&value, sizeof(long), 1, fp);
+            num = fwrite(&value, sizeof(long long), 1, fp);
             if (num != 1) {
                 printf("ERROR: fwrite() failed to write a value\n");
                 fclose(fp);
@@ -114,11 +114,11 @@ int main() {
         }
 
         // I know that all of the values in the file are longs
-        numValuesToRead = filesize / sizeof(long);
+        numValuesToRead = filesize / sizeof(long long);
         printf("expect to read %d long values\n", numValuesToRead);
 
         for (i=0; i<numValuesToRead; ++i) {
-            num = fread(&value, sizeof(long), 1, fp);
+            num = fread(&value, sizeof(long long), 1, fp);
             if (num == 1) {
                 printf("read this value: %ld\n", value);
             } else {
@@ -130,7 +130,7 @@ int main() {
 
         // now, seek to the one of the middle values
         if (numValuesToRead >= 4) {
-            pos = (numValuesToRead / 2) * sizeof(long);
+            pos = (numValuesToRead / 2) * sizeof(long long);
             printf("will seek to position %ld and read a value\n", pos);
 
             rc = fseek(fp, pos, SEEK_SET);
