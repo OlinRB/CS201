@@ -164,14 +164,19 @@ int insertWord(FILE *fp, char *word) {
     long num = fread(&value, sizeof(long long), 1, fp);
     // If num == 1 read was successful
     if (num == 1) {
-        printf("testing value find, value == %lld", value);
+        printf("value == %lld\n", value);
         if (value == 0) {
             // Write word to end of file and replace 0 with byte location
-            fwrite(&inputWord, sizeof (inputWord), 1, fp);
+            int num = fwrite(&inputWord, sizeof (inputWord), 1, fp);
+            if (num != 1)
+                printf("Error on write\n");
+            else
+                printf("Word written successfully to file\n");
 
         } else {
             // There is already a word with such a letter
             // Seek to this work to read in the next pointer (if it exists)
+            printf("Word already exists\n");
 
         }
 
@@ -253,7 +258,7 @@ int main() {
     // if the file is empty, then write 5 long values
     if (filesize == 0) {
         // don't need to seek to the beginning: already there, since file is empty
-        value = 1;
+        value = 0;
         for (i = 0; i < NUMVALS; ++i) {
             num = fwrite(&value, sizeof(long long), 1, fp);
             if (num != 1) {
@@ -263,7 +268,7 @@ int main() {
             } else {
                 printf("success: wrote the value %ld\n", value);
             }
-            value += 1;
+            //value += 1;
         }
 
     }
