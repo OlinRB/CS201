@@ -120,70 +120,68 @@ typedef struct {
     long long nextpos;
 } Record;
 
-//int getStartingIndex(FILE *fp, int position) {
-//    // I know that all of the values in the file are longs
-//    numValuesToRead = filesize / sizeof(long long);
-//    printf("expect to read %d long values\n", numValuesToRead);
-//
-//    for (int i = 0; i < numValuesToRead; ++i) {
-//        num = fread(&value, sizeof(long long), 1, fp);
-//        if (num == 1) {
-//            printf("read this value: %ld\n", value);
-//        } else {
-//            printf("ERROR: fread() failed to read a value\n");
-//            fclose(fp);
-//            return 8;
-//        }
-//    }
-//
-//};
 
-int insertWord(FILE *fp, Record *word) {
+int setFile(FILE *fp, long long locationIndex) {
+    int rc = fseek(fp, locationIndex, SEEK_SET);
+    if (rc != 0) {
+        printf("fseek() failed\n");
+        fclose(fp);
+        return rc;
+    }
+    return rc;
+}
+
+
+int insertWord(FILE *fp, char *word) {
 ////    This will insert a word into the file and update the data structures in the file, as described in the explanatory
 ////    slides. Return zero if there are no errors; otherwise return nonzero.
 ////            Use the functions checkWord() and convertToLower() (see below).
     // Determine where to jump in first 208 bytes of file
     char alpha[27] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
                       'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+    int success = 0;
     // Determine where to write file
-    char firstLetter = word->word[0];
-    long letterIndex;
+    char firstLetter = word[0];
+    char inputWord[MAXWORDLEN + 1];
+    strcpy(inputWord, word);
+
+    // Get letter index
+    long long letterIndex;
     for (int i = 0; i < 26; ++i) {
         if (firstLetter == alpha[i])
             letterIndex = i * sizeof (long long);
     }
-    printf("The starting letter index is: %ld\n", letterIndex);
-    // must seek back to the beginning
-    int rc = fseek(fp, 0, SEEK_SET);
-    if (rc != 0) {
-        printf("fseek() failed\n");
-        fclose(fp);
-        return rc;
-    }
-    // file already exists; read long value at specified index
-    rc = fseek(fp, 0, SEEK_SET);
-    if (rc != 0) {
-        printf("fseek() failed\n");
-        fclose(fp);
-        return rc;
-    }
-    // Seek to location
-    printf("Seeking to location: %d\n", letterIndex);
-    rc = fseek(fp, letterIndex, SEEK_SET);
-    if (rc != 0) {
-        printf("fseek() to pos %ld failed\n", letterIndex);
-        fclose(fp);
-        return rc;
-    }
-    // Extract long val
-    long long value;
-    //printf("value == %lld\n", value);
-    long num = fread(&value, sizeof(long), 1, fp);
-    if (num == 1)
-        printf("read this value: %lld\n", value);
 
-    int x = 1;
-    return x;
+    // file already exists; read long value at specified index
+    // Seek to beginning of file
+    setFile(fp, 0);
+
+    // Seek to location
+    //printf("Seeking to location: %d\n", letterIndex);
+    setFile(fp, letterIndex);
+    long long value;
+
+    long num = fread(&value, sizeof(long long), 1, fp);
+    // If num == 1 read was successful
+    if (num == 1) {
+        printf("testing value find, value == %lld", value);
+        if (value == 0) {
+            // Write word to end of file and replace 0 with byte location
+            fwrite(&inputWord, sizeof (inputWord), 1, fp);
+
+        } else {
+            // There is already a word with such a letter
+            // Seek to this work to read in the next pointer (if it exists)
+
+        }
+
+    } else {
+        printf("Read not successful");
+        success = 1;
+    }
+
+
+    return success;
 
 }
 
@@ -221,7 +219,7 @@ int main() {
     // Open or create file
     FILE *fp;
     int fileExists, rc, i, num, numRead, numValuesToRead;
-    long filesize, value, pos;
+    long long filesize, value, pos;
 
     // try to open a file
     // - if the file exists, we'll be able to access it
@@ -243,14 +241,6 @@ int main() {
             printf("success, created new file '%s'\n", FILENAME);
         }
     }
-    //printf("%d",fileExists);
-//    Try a simple test first, where you insert a single word, starting with ‘n’ for example. Count how many words
-//    start with ‘n’ (there should be one). Count how many words start with ‘a’ (there should be zero). Examine
-//    your file using od.
-//            Then, delete the file and make a new testcase: insert a word starting with ‘n’, and then a word starting
-//    with ‘a’, and then another word starting with ‘n’. Examine your file using od, and use the functions you’ve
-//    written to be sure you’re seeing the correct results.
-
     // Check file size
     filesize = checkFileSize(fp);
     if (filesize < 0) {
@@ -284,7 +274,7 @@ int main() {
     word1.nextpos = 0;
 
     // Write word to file
-    insertWord(fp, &word1);
+    insertWord(fp, "nardles");
 
     //testUtils();
 
