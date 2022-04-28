@@ -178,7 +178,6 @@ int insertWord(FILE *fp, char *word) {
             // There is already a word with such a letter
             // Seek to this work to read in the next pointer (if it exists)
             printf("Word already exists\n");
-
         }
 
     } else {
@@ -259,7 +258,7 @@ int main() {
     // if the file is empty, then write 5 long values
     if (filesize == 0) {
         // don't need to seek to the beginning: already there, since file is empty
-        value = 0;
+        value = 1;
         for (i = 0; i < NUMVALS; ++i) {
             num = fwrite(&value, sizeof(long long), 1, fp);
             if (num != 1) {
@@ -269,7 +268,7 @@ int main() {
             } else {
                 printf("success: wrote the value %ld\n", value);
             }
-            //value += 1;
+            value += 1;
         }
 
     }
