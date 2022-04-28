@@ -158,48 +158,48 @@ int insertWord(FILE *fp, char *word) {
 
 //    // Seek to location
 //    //printf("Seeking to location: %d\n", letterIndex);
-//    setFile(fp, letterIndex);
-//    long value;
-//
-//    long num = fread(&value, sizeof(long), 1, fp);
-//    // If num == 1 read was successful
-//    if (num == 1) {
-//        printf("value == %lld\n", value);
-//        if (value == 0) {
-//            // Write word to end of file and replace 0 with byte location
-//            int filesize = checkFileSize(fp);
-//            // Go to end of file to write word
-//            setFile(fp, filesize);
-//            fwrite(&inputWord, sizeof(inputWord), 1, fp);
-//            // Determine where word starts
-//            filesize = checkFileSize(fp);
-//            long wordStarts = filesize - (MAXWORDLEN + 1);
-//            // Go to the end of the file to write the pointer to the next word
-//            setFile(fp, filesize);
-//            // Write pointer as 0
-//            long long ptr = 0;
-//            num = fwrite(&ptr, sizeof(long), 1, fp);
-////            // Now write starting location of word at letter location within first 26 bytes
-////            setFile(fp, 0);
-////            fwrite(&wordStarts, letterIndex, 1, fp);
-////            // Set file back to start
-////            setFile(fp, 0);
-//
-//            if (num != 1)
-//                printf("Error on write\n");
-//            else
-//                printf("Word written successfully to file\n");
-//
-//        } else {
-//            // There is already a word with such a letter
-//            // Seek to this work to read in the next pointer (if it exists)
-//            printf("Word already exists\n");
-//        }
-//
-//    } else {
-//        printf("Read not successful");
-//        success = 1;
-//    }
+    setFile(fp, letterIndex);
+    long value;
+
+    long num = fread(&value, sizeof(long), 1, fp);
+    // If num == 1 read was successful
+    if (num == 14) {
+        printf("value == %lld\n", value);
+        if (value == 0) {
+            // Write word to end of file and replace 0 with byte location
+            int filesize = checkFileSize(fp);
+            // Go to end of file to write word
+            setFile(fp, filesize);
+            fwrite(&inputWord, sizeof(inputWord), 1, fp);
+            // Determine where word starts
+            filesize = checkFileSize(fp);
+            long wordStarts = filesize - (MAXWORDLEN + 1);
+            // Go to the end of the file to write the pointer to the next word
+            setFile(fp, filesize);
+            // Write pointer as 0
+            long long ptr = 0;
+            num = fwrite(&ptr, sizeof(long), 1, fp);
+//            // Now write starting location of word at letter location within first 26 bytes
+//            setFile(fp, 0);
+//            fwrite(&wordStarts, letterIndex, 1, fp);
+//            // Set file back to start
+//            setFile(fp, 0);
+
+            if (num != 1)
+                printf("Error on write\n");
+            else
+                printf("Word written successfully to file\n");
+
+        } else {
+            // There is already a word with such a letter
+            // Seek to this work to read in the next pointer (if it exists)
+            printf("Word already exists\n");
+        }
+
+    } else {
+        printf("Read not successful");
+        success = 1;
+    }
     // Set file to beginning
     setFile(fp, 0);
     printf("Printing all data\n\n");
