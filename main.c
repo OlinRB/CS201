@@ -207,7 +207,7 @@ int insertWord(FILE *fp, char *word) {
     int filesize = checkFileSize(fp);
     char tempWord[MAXWORDLEN + 1];
     long long ptr = 0;
-    long long data;
+    long data;
     if (filesize > iterator) {
         while (iterator < filesize) {
             // Print all values from file
@@ -221,10 +221,10 @@ int insertWord(FILE *fp, char *word) {
                 iterator += sizeof(long long);
                 printf("Word read: | %s |, ptr = %lld\n", tempWord, ptr);
             } else {
-                printf("Inside else\n");
-                fread(&data, iterator, 1, fp);
+                fread(&data, sizeof (long long), 1, fp);
                 printf("Read in value: %lld\n", data);
                 iterator += sizeof(long long);
+                printf("Iterator = %d\n", iterator);
             }
 
 
