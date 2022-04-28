@@ -167,7 +167,8 @@ int insertWord(FILE *fp, char *word) {
         printf("value == %lld\n", value);
         if (value == 0) {
             // Write word to end of file and replace 0 with byte location
-            int num = fwrite(&inputWord, sizeof (inputWord), 1, fp);
+            int filesize = checkFileSize(fp);
+            int num = fwrite(&inputWord, filesize, 1, fp);
             if (num != 1)
                 printf("Error on write\n");
             else
