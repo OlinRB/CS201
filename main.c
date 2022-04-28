@@ -121,7 +121,7 @@ typedef struct {
 } Record;
 
 
-int setFile(FILE *fp, long long locationIndex) {
+int setFile(FILE *fp, long locationIndex) {
     int rc = fseek(fp, locationIndex, SEEK_SET);
     if (rc != 0) {
         printf("fseek() failed\n");
@@ -146,84 +146,84 @@ int insertWord(FILE *fp, char *word) {
     strcpy(inputWord, word);
 
     // Get letter index
-    long long letterIndex;
+    long letterIndex;
     for (int i = 0; i < 26; ++i) {
         if (firstLetter == alpha[i])
-            letterIndex = i * sizeof (long long);
+            letterIndex = i * sizeof (long);
     }
 
     // file already exists; read long value at specified index
     // Seek to beginning of file
     setFile(fp, 0);
 
-    // Seek to location
-    //printf("Seeking to location: %d\n", letterIndex);
-    setFile(fp, letterIndex);
-    long long value;
-
-    long num = fread(&value, sizeof(long long), 1, fp);
-    // If num == 1 read was successful
-    if (num == 1) {
-        printf("value == %lld\n", value);
-        if (value == 0) {
-            // Write word to end of file and replace 0 with byte location
-            int filesize = checkFileSize(fp);
-            // Go to end of file to write word
-            setFile(fp, filesize);
-            fwrite(&inputWord, sizeof(inputWord), 1, fp);
-            // Determine where word starts
-            filesize = checkFileSize(fp);
-            long long wordStarts = filesize - (MAXWORDLEN + 1);
-            // Go to the end of the file to write the pointer to the next word
-            setFile(fp, filesize);
-            // Write pointer as 0
-            long long ptr = 0;
-            num = fwrite(&ptr, sizeof(long long), 1, fp);
-//            // Now write starting location of word at letter location within first 26 bytes
-//            setFile(fp, 0);
-//            fwrite(&wordStarts, letterIndex, 1, fp);
-//            // Set file back to start
-//            setFile(fp, 0);
-
-            if (num != 1)
-                printf("Error on write\n");
-            else
-                printf("Word written successfully to file\n");
-
-        } else {
-            // There is already a word with such a letter
-            // Seek to this work to read in the next pointer (if it exists)
-            printf("Word already exists\n");
-        }
-
-    } else {
-        printf("Read not successful");
-        success = 1;
-    }
+//    // Seek to location
+//    //printf("Seeking to location: %d\n", letterIndex);
+//    setFile(fp, letterIndex);
+//    long value;
+//
+//    long num = fread(&value, sizeof(long), 1, fp);
+//    // If num == 1 read was successful
+//    if (num == 1) {
+//        printf("value == %lld\n", value);
+//        if (value == 0) {
+//            // Write word to end of file and replace 0 with byte location
+//            int filesize = checkFileSize(fp);
+//            // Go to end of file to write word
+//            setFile(fp, filesize);
+//            fwrite(&inputWord, sizeof(inputWord), 1, fp);
+//            // Determine where word starts
+//            filesize = checkFileSize(fp);
+//            long wordStarts = filesize - (MAXWORDLEN + 1);
+//            // Go to the end of the file to write the pointer to the next word
+//            setFile(fp, filesize);
+//            // Write pointer as 0
+//            long long ptr = 0;
+//            num = fwrite(&ptr, sizeof(long), 1, fp);
+////            // Now write starting location of word at letter location within first 26 bytes
+////            setFile(fp, 0);
+////            fwrite(&wordStarts, letterIndex, 1, fp);
+////            // Set file back to start
+////            setFile(fp, 0);
+//
+//            if (num != 1)
+//                printf("Error on write\n");
+//            else
+//                printf("Word written successfully to file\n");
+//
+//        } else {
+//            // There is already a word with such a letter
+//            // Seek to this work to read in the next pointer (if it exists)
+//            printf("Word already exists\n");
+//        }
+//
+//    } else {
+//        printf("Read not successful");
+//        success = 1;
+//    }
     // Set file to beginning
     setFile(fp, 0);
     printf("Printing all data\n\n");
     int iterator = 0;
     int filesize = checkFileSize(fp);
     char tempWord[MAXWORDLEN + 1];
-    long long ptr = 0;
+    long ptr = 0;
     long data;
     if (filesize > iterator) {
         while (iterator < filesize) {
             // Print all values from file
             // Read word from file
 
-            if (iterator > sizeof (long long) * NUMVALS) {
+            if (iterator > sizeof (long) * NUMVALS) {
                 fread(&tempWord, iterator, 1, fp);
                 iterator += sizeof(tempWord);
                 // Read pointer from file
                 fread(&ptr, iterator, 1, fp);
-                iterator += sizeof(long long);
+                iterator += sizeof(long);
                 printf("Word read: | %s |, ptr = %lld\n", tempWord, ptr);
             } else {
-                fread(&data, sizeof (long long), 1, fp);
+                fread(&data, sizeof (long), 1, fp);
                 printf("Read in value: %lld\n", data);
-                iterator += sizeof(long long);
+                iterator += sizeof(long);
                 printf("Iterator = %d\n", iterator);
             }
 
@@ -270,7 +270,7 @@ int main() {
     // Open or create file
     FILE *fp;
     int fileExists, rc, i, num, numRead, numValuesToRead;
-    long long filesize, value, pos;
+    long filesize, value, pos;
 
     // try to open a file
     // - if the file exists, we'll be able to access it
@@ -304,9 +304,9 @@ int main() {
     // if the file is empty, then write 5 long values
     if (filesize == 0) {
         // don't need to seek to the beginning: already there, since file is empty
-        value = 0;
+        value = 1;
         for (i = 0; i < NUMVALS; ++i) {
-            num = fwrite(&value, sizeof(long long), 1, fp);
+            num = fwrite(&value, sizeof(long), 1, fp);
             if (num != 1) {
                 printf("ERROR: fwrite() failed to write a value\n");
                 fclose(fp);
@@ -314,7 +314,7 @@ int main() {
             } else {
                 printf("success: wrote the value %ld\n", value);
             }
-            //value += 1;
+            value += 1;
         }
 
     }
