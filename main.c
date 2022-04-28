@@ -165,10 +165,12 @@ int insertWord(FILE *fp, char *word) {
     // If num == 1 read was successful
     if (num == 1) {
         printf("value == %lld\n", value);
-        if (value == 0) {
+        if (value == 14) {
             // Write word to end of file and replace 0 with byte location
             int filesize = checkFileSize(fp);
-            int num = fwrite(&inputWord, filesize, 1, fp);
+            // Go to end of file to write word
+            setFile(fp, filesize);
+            int num = fwrite(&inputWord, sizeof(inputWord), 1, fp);
             if (num != 1)
                 printf("Error on write\n");
             else
