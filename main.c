@@ -147,21 +147,44 @@ int insertWord(FILE *fp, Record *word) {
                       'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
     // Determine where to write file
     char firstLetter = word->word[0];
-    int letterIndex;
+    long letterIndex;
     for (int i = 0; i < 26; ++i) {
         if (firstLetter == alpha[i])
             letterIndex = i * sizeof (long long);
     }
-    printf("The starting letter index is: %d", letterIndex);
-
-    // Now read file at position to see if word with letter exists in file yet
-
-
-
-
+    printf("The starting letter index is: %ld\n", letterIndex);
+    // must seek back to the beginning
+    int rc = fseek(fp, 0, SEEK_SET);
+    if (rc != 0) {
+        printf("fseek() failed\n");
+        fclose(fp);
+        return rc;
+    }
+    // file already exists; read long value at specified index
+    rc = fseek(fp, 0, SEEK_SET);
+    if (rc != 0) {
+        printf("fseek() failed\n");
+        fclose(fp);
+        return rc;
+    }
+    // Seek to location
+    printf("Seeking to location: %d\n", letterIndex);
+    rc = fseek(fp, letterIndex, SEEK_SET);
+    if (rc != 0) {
+        printf("fseek() to pos %ld failed\n", letterIndex);
+        fclose(fp);
+        return rc;
+    }
+    // Extract long val
+    long long value;
+    //printf("value == %lld\n", value);
+    long num = fread(&value, sizeof(long), 1, fp);
+    if (num == 1)
+        printf("read this value: %lld\n", value);
 
     int x = 1;
     return x;
+
 }
 
 int countWords(FILE *fp, char letter, int *count) {
@@ -240,7 +263,7 @@ int main() {
     // if the file is empty, then write 5 long values
     if (filesize == 0) {
         // don't need to seek to the beginning: already there, since file is empty
-        value = 0;
+        value = 1;
         for (i = 0; i < NUMVALS; ++i) {
             num = fwrite(&value, sizeof(long long), 1, fp);
             if (num != 1) {
@@ -250,6 +273,7 @@ int main() {
             } else {
                 printf("success: wrote the value %ld\n", value);
             }
+            value += 1;
         }
 
     }
