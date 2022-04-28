@@ -163,7 +163,7 @@ int insertWord(FILE *fp, char *word) {
 
     long num = fread(&value, sizeof(long), 1, fp);
     // If num == 1 read was successful
-    if (num == 14) {
+    if (num == 1) {
         printf("value == %lld\n", value);
         if (value == 0) {
             // Write word to end of file and replace 0 with byte location
@@ -208,8 +208,8 @@ int insertWord(FILE *fp, char *word) {
     char tempWord[MAXWORDLEN + 1];
     long ptr = 0;
     long data;
-    if (filesize > iterator) {
-        while (iterator < filesize) {
+//    if (filesize > iterator) {
+//        while (iterator < filesize) {
             // Print all values from file
             // Read word from file
 //
