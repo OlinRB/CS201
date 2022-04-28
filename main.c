@@ -200,6 +200,23 @@ int insertWord(FILE *fp, char *word) {
         printf("Read not successful");
         success = 1;
     }
+    // Set file to beginning
+    setFile(fp, 0);
+    printf("Printing all words and indexes after 26 bytes\n\n");
+    int iterator = sizeof(long long) * NUMVALS;
+    int filesize = checkFileSize(fp);
+    char tempWord[MAXWORDLEN + 1];
+    long long ptr;
+    while (iterator < filesize) {
+        // Read word from file
+        fread(&tempWord, iterator, 1, fp);
+        iterator += sizeof(tempWord);
+        // Read pointer from file
+        fread(&ptr, iterator, 1, fp);
+        printf("Word read: | %s |, ptr = %lld", tempWord, ptr);
+
+
+    }
 
 
     return success;
