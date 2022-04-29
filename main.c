@@ -117,7 +117,7 @@ int testFileFunctions() {
 
 typedef struct {
     char word[1+MAXWORDLEN];
-    long long nextpos;
+    long nextpos;
 } Record;
 
 
@@ -192,8 +192,18 @@ int insertWord(FILE *fp, char *word) {
 
         } else {
             // There is already a word with such a letter
-            // Seek to this work to read in the next pointer (if it exists)
-            printf("Word already exists\n");
+            // Seek to this word to read in the next pointer (if it exists)
+            // Seek to value
+            setFile(fp, value);
+            Record newWord;
+            fread(&newWord.word, sizeof(newWord.word), 1, fp);
+            fread(&newWord.nextpos, sizeof (newWord.nextpos), 1, fp);
+            while (newWord.nextpos != 0) {
+                setFile(fp, newWord.nextpos);
+                fread(&newWord.word, sizeof(newWord.word), 1, fp);
+                fread(&newWord.nextpos, sizeof (newWord.nextpos), 1, fp);
+                printf("Read in next word | %s |", newWord.word);
+            }
         }
 
     } else {
@@ -332,6 +342,8 @@ int main() {
 
     // Write word to file
     insertWord(fp, "nardles");
+    insertWord(fp, "middle");
+    insertWord(fp, "nard0");
 
     //testUtils();
 
