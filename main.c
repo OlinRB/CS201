@@ -261,7 +261,7 @@ int insertWord(FILE *fp, char *word) {
                     fread(&tempRecord, sizeof(Record), 1, fp);
                 }
                 long filesize = checkFileSize(fp);
-                printf("\nFilesize = %ld\n", filesize);
+                //printf("\nFilesize = %ld\n", filesize);
                 // Write pointer to last word with identical letter
                 setFile(fp, prevPos + 32);
                 fwrite(&filesize, sizeof(long), 1, fp);
@@ -292,23 +292,28 @@ int countWords(FILE *fp, char letter, int *count) {
     // Get letter index
     char alpha[27] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
                       'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+    int wordCnt = *count;
     // Get letter index
     long letterIndex;
     // Check if char is char
     if (isalpha(letter) == 0)
-        return 0;
-    // Set char to low
+        return 1;
+    // Set char to lower case
     char lowLetter = tolower(letter);
-    printf("\nlowLetter = %c\n", lowLetter);
 
+    // Find letter index
     for (int i = 0; i < 26; ++i) {
-        if (letter == alpha[i])
+        if (lowLetter == alpha[i])
             letterIndex = i * sizeof (long);
     }
 
-    // file already exists; read long value at specified index
-    // Seek to beginning of file
-    setFile(fp, 0);
+    // Check if file exists
+    int fileExists = 0;
+    fp = fopen(FILENAME, "r+"); // r+ means read and write access, for a file
+    if (fp == NULL) {           // that already exists
+        printf("ERROR -> File does not exist\n", FILENAME);
+        return 1;
+    }
 
     // Seek to location
     setFile(fp, letterIndex);
@@ -317,12 +322,21 @@ int countWords(FILE *fp, char letter, int *count) {
     long num = fread(&value, sizeof(long), 1, fp);
     // If num == 1 read was successful
     if (num == 1) {
+        // Case for no words with starting letter in file
         if (value == 0) {
-
-            int cnt = 0;
-
-            int x = 1;
-            return x;
+            return 0;
+        } else {
+            // Case for at least one word in file, read in until ptr == 0
+            wordCnt += 1;
+            setFile(fp, value);
+            Record tempRecord;
+            fread(&tempRecord, sizeof(Record), 1, fp);
+            while (tempRecord.nextpos != 0) {
+                // set to new position
+                setFile(fp, tempRecord.nextpos);
+                fread(&tempRecord, sizeof(Record), 1, fp);
+                wordCnt += 1;
+            }
         }
     }
     return 0;
@@ -415,7 +429,9 @@ int main() {
     insertWord(fp, "aword");
     //printFileData(fp);
     int cnt;
-    countWords(fp, 'A', &cnt);
+    char testLetter = 'A';
+    countWords(fp, testLetter, &cnt);
+    printf("\nThere are %d words with the letter %c\n", cnt, testLetter);
     //testUtils();
 
 }
