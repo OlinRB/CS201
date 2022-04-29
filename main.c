@@ -242,7 +242,6 @@ int insertWord(FILE *fp, char *word) {
             return 8;
         }
     }
-    setFile(fp, checkFileSize(fp));
     // Try to read in word from file
     fread(&tempWord, 32, 1, fp);
     iterator += sizeof(tempWord);
