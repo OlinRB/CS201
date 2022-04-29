@@ -394,6 +394,7 @@ int main() {
     insertWord(fp, "node");
     insertWord(fp, "next");
     insertWord(fp, "manother");
+    insertWord(fp, "aword");
     printFileData(fp);
 
     //testUtils();
