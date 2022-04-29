@@ -228,8 +228,8 @@ int insertWord(FILE *fp, char *word) {
 //            }
 
 
-        }
-    }
+//        }
+//    }
     // Seek to beginning
     setFile(fp, 0);
     for (int i=0; i<26; ++i) {
