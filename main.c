@@ -143,28 +143,29 @@ void printFileData(FILE *fp) {
     long value;
     // Seek to beginning
     setFile(fp, 0);
-    for (int i=0; i<26; ++i) {
-        int num = fread(&value, sizeof(long), 1, fp);
-        if (num == 1) {
-            printf("read this value: %ld\n", value);
-        } else {
-            printf("ERROR: fread() failed to read a value\n");
-            fclose(fp);
-            return 8;
-        }
-    }
+//    for (int i=0; i<26; ++i) {
+//        int num = fread(&value, sizeof(long), 1, fp);
+//        if (num == 1) {
+//            printf("read this value: %ld\n", value);
+//        } else {
+//            printf("ERROR: fread() failed to read a value\n");
+//            fclose(fp);
+//            //return 8;
+//        }
+//    }
     int done = 0;
     int reading;
     iterator = sizeof(long) * NUMVALS;
+    // get filesize
+    filesize = checkFileSize(fp);
+    setFile(fp, 0);
     // Set file to end of char longs
     setFile(fp, iterator);
-    while (1) {
+    while (iterator <= filesize) {
         printf("Iterator = %ld\n", iterator);
         // Try to read in word from file
         reading = fread(&tempWord, 32, 1, fp);
         iterator += sizeof(tempWord);
-        if (!reading)
-            break;
         // Read pointer from file
         fread(&ptr, iterator, 1, fp);
         iterator += sizeof(long);
