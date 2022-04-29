@@ -267,6 +267,7 @@ int insertWord(FILE *fp, char *word) {
                 // reset pointer
                 tempWord.nextpos = filesize;
                 setFile(fp, value);
+                strcpy(tempWord.word, "Testing overwrite");
                 fwrite(&tempWord, sizeof(Record), 1, fp);
                 printf("\nDuplicate first letter word written starting at %ld\n", filesize);
                 printf("First word |%s| second word |%s|", storedWord.word, newWord.word);
