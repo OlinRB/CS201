@@ -174,7 +174,7 @@ void printFileData(FILE *fp) {
         printf("Word read: | %s |, ptr = %ld\n", inputRecord.word, inputRecord.nextpos);
         fileIndex += 40;
     }
-    printf("fileIndex = %d", fileIndex);
+    printf("fileIndex = %d\n", fileIndex);
 }
 
 int insertWord(FILE *fp, char *word) {
