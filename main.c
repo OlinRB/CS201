@@ -217,8 +217,8 @@ int insertWord(FILE *fp, char *word) {
             setFile(fp, filesize);
             fwrite(&inputWord, sizeof(inputWord), 1, fp);
             // Determine where word starts
-            filesize = checkFileSize(fp);
-            long wordStarts = filesize - (MAXWORDLEN + 1);
+            //filesize = checkFileSize(fp);
+            long wordStarts = filesize;
             // Go to the end of the file to write the pointer to the next word
             //setFile(fp, filesize);
             // Write pointer as 0
