@@ -346,6 +346,7 @@ int main() {
     insertWord(fp, "nardles");
     insertWord(fp, "middle");
     insertWord(fp, "nardo");
+    insertWord(fp, "nardo");
 
     //testUtils();
 
