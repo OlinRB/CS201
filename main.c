@@ -122,6 +122,9 @@ typedef struct {
 
 
 int setFile(FILE *fp, long locationIndex) {
+    // Reset to start
+    fseek(fp, 0, SEEK_SET);
+    // Set to location
     int rc = fseek(fp, locationIndex, SEEK_SET);
     if (rc != 0) {
         printf("fseek() failed\n");
@@ -258,8 +261,13 @@ int insertWord(FILE *fp, char *word) {
                 fwrite(&newWord, sizeof(Record), 1, fp);
                 // Update pointer on first word to point to next word
                 setFile(fp, 0);
-                setFile(fp, value + 32);
-                fwrite(&filesize, sizeof(long), 1, fp);
+                setFile(fp, value);
+                Record tempWord;
+                fread(&tempWord, sizeof(Record), 1, fp);
+                // reset pointer
+                tempWord.nextpos = filesize;
+                setFile(fp, value);
+                fwrite(&tempWord, sizeof(Record), 1, fp);
                 printf("\nDuplicate first letter word written starting at %ld\n", filesize);
                 printf("First word |%s| second word |%s|", storedWord.word, newWord.word);
             } else {
