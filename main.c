@@ -178,11 +178,11 @@ void printFileData(FILE *fp) {
     fread(&tempWord, 32, 1, fp);
     fread(&value, sizeof(long), 1, fp);
     printf("Word read: | %s |, ptr = %ld\n", tempWord, ptr);
-    setFile(fp, 248);
+    //setFile(fp, 248);
     fread(&tempWord, 32, 1, fp);
     fread(&value, sizeof(long), 1, fp);
     printf("Word read: | %s |, ptr = %ld\n", tempWord, ptr);
-    setFile(fp, 288);
+    //setFile(fp, 288);
     fread(&tempWord, 32, 1, fp);
     fread(&value, sizeof(long), 1, fp);
     printf("Word read: | %s |, ptr = %ld\n", tempWord, ptr);
@@ -266,7 +266,7 @@ int insertWord(FILE *fp, char *word) {
                 setFile(fp, 0);
                 setFile(fp, value + sizeof(inputWord));
                 fwrite(&filesize, sizeof(long), 1, fp);
-                printf("Duplicate first letter word written starting at %ld\n", filesize);
+                printf("\nDuplicate first letter word written starting at %ld\n", filesize);
                 printf("First word |%s| second word |%s|", newWord.word, inputWord);
             } else {
                 // if pointer is not zero, must traverse linked list until 0
