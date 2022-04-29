@@ -181,7 +181,7 @@ int insertWord(FILE *fp, char *word) {
             num = fwrite(&ptr, sizeof(long), 1, fp);
             // Now write starting location of word at letter location within first 26 bytes
             setFile(fp, 0);
-            fwrite(&wordStarts, letterIndex, 1, fp);
+            //fwrite(&wordStarts, letterIndex, 1, fp);
             // Set file back to start
             setFile(fp, 0);
 
