@@ -237,6 +237,7 @@ int insertWord(FILE *fp, char *word) {
     // Set file to end of char longs
     setFile(fp, iterator);
     while (1) {
+        printf("Iterator = %ld\n", iterator);
         // Try to read in word from file
         reading = fread(&tempWord, 32, 1, fp);
         iterator += sizeof(tempWord);
@@ -346,7 +347,7 @@ int main() {
     insertWord(fp, "nardles");
     insertWord(fp, "middle");
     insertWord(fp, "nardo");
-    insertWord(fp, "nardo");
+    insertWord(fp, "new");
 
     //testUtils();
 
