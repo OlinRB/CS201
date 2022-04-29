@@ -140,6 +140,7 @@ void printFileData(FILE *fp) {
     char tempWord[MAXWORDLEN + 1];
     long ptr = 0;
     long data;
+    long value;
     // Seek to beginning
     setFile(fp, 0);
     for (int i=0; i<26; ++i) {
