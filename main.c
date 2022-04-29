@@ -142,16 +142,16 @@ void printFileData(FILE *fp) {
     long data;
     // Seek to beginning
     setFile(fp, 0);
-//    for (int i=0; i<26; ++i) {
-//        int num = fread(&value, sizeof(long), 1, fp);
-//        if (num == 1) {
-//            printf("read this value: %ld\n", value);
-//        } else {
-//            printf("ERROR: fread() failed to read a value\n");
-//            fclose(fp);
-//            return 8;
-//        }
-//    }
+    for (int i=0; i<26; ++i) {
+        int num = fread(&value, sizeof(long), 1, fp);
+        if (num == 1) {
+            printf("read this value: %ld\n", value);
+        } else {
+            printf("ERROR: fread() failed to read a value\n");
+            fclose(fp);
+            return 8;
+        }
+    }
     int done = 0;
     int reading;
     iterator = sizeof(long) * NUMVALS;
