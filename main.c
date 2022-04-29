@@ -198,11 +198,11 @@ int insertWord(FILE *fp, char *word) {
             Record newWord;
             fread(&newWord.word, sizeof(newWord.word), 1, fp);
             fread(&newWord.nextpos, sizeof (newWord.nextpos), 1, fp);
+            setFile(fp, newWord.nextpos);
             while (newWord.nextpos != 0) {
-                setFile(fp, newWord.nextpos);
                 fread(&newWord.word, sizeof(newWord.word), 1, fp);
                 fread(&newWord.nextpos, sizeof (newWord.nextpos), 1, fp);
-                printf("Read in next word | %s |", newWord.word);
+                printf("Read in next word | %s |\n", newWord.word);
             }
         }
 
