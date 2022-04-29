@@ -430,7 +430,7 @@ int main() {
     insertWord(fp, "aword");
     printFileData(fp);
     int cnt;
-    char testLetter = 'A';
+    char testLetter = 'n';
     countWords(fp, testLetter, &cnt);
     printf("\nThere are %d words with the letter %c\n", cnt, testLetter);
     //testUtils();
