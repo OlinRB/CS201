@@ -365,7 +365,7 @@ int main() {
     // Write word to file
     insertWord(fp, "nardles");
     insertWord(fp, "middle");
-    insertWord(fp, "black");
+    insertWord(fp, "nblack");
     insertWord(fp, "new");
     printFileData(fp);
 
