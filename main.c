@@ -242,11 +242,14 @@ int insertWord(FILE *fp, char *word) {
             return 8;
         }
     }
-    int reading = 1;
+    int done = 0;
+    int reading;
     setFile(fp, sizeof(long) * NUMVALS);
-    while (reading) {
+    while (!done) {
         // Try to read in word from file
         reading = fread(&tempWord, 32, 1, fp);
+        if (!reading)
+            done = 1;
         iterator += sizeof(tempWord);
         // Read pointer from file
         fread(&ptr, iterator, 1, fp);
