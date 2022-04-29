@@ -181,7 +181,7 @@ int insertWord(FILE *fp, char *word) {
             num = fwrite(&ptr, sizeof(long), 1, fp);
             // Now write starting location of word at letter location within first 26 bytes
             setFile(fp, 0);
-            //fwrite(&wordStarts, letterIndex, 1, fp);
+            fwrite(&wordStarts, letterIndex, 1, fp);
             // Set file back to start
             setFile(fp, 0);
 
@@ -208,28 +208,6 @@ int insertWord(FILE *fp, char *word) {
     char tempWord[MAXWORDLEN + 1];
     long ptr = 0;
     long data;
-//    if (filesize > iterator) {
-//        while (iterator < filesize) {
-            // Print all values from file
-            // Read word from file
-//
-//            if (iterator > sizeof (long) * NUMVALS) {
-//                fread(&tempWord, iterator, 1, fp);
-//                iterator += sizeof(tempWord);
-//                // Read pointer from file
-//                fread(&ptr, iterator, 1, fp);
-//                iterator += sizeof(long);
-//                printf("Word read: | %s |, ptr = %lld\n", tempWord, ptr);
-//            } else {
-//                fread(&data, sizeof (long), 1, fp);
-//                printf("Read in value: %lld\n", data);
-//                iterator += sizeof(long);
-//                printf("Iterator = %d\n", iterator);
-//            }
-
-
-//        }
-//    }
     // Seek to beginning
     setFile(fp, 0);
     for (int i=0; i<26; ++i) {
