@@ -131,6 +131,45 @@ int setFile(FILE *fp, long locationIndex) {
     return rc;
 }
 
+void printFileData(FILE *fp) {
+    // Set file to beginning
+    setFile(fp, 0);
+    printf("\n----READING DATA------\n");
+    long iterator = 0;
+    int filesize = checkFileSize(fp);
+    char tempWord[MAXWORDLEN + 1];
+    long ptr = 0;
+    long data;
+    // Seek to beginning
+    setFile(fp, 0);
+//    for (int i=0; i<26; ++i) {
+//        int num = fread(&value, sizeof(long), 1, fp);
+//        if (num == 1) {
+//            printf("read this value: %ld\n", value);
+//        } else {
+//            printf("ERROR: fread() failed to read a value\n");
+//            fclose(fp);
+//            return 8;
+//        }
+//    }
+    int done = 0;
+    int reading;
+    iterator = sizeof(long) * NUMVALS;
+    // Set file to end of char longs
+    setFile(fp, iterator);
+    while (1) {
+        printf("Iterator = %ld\n", iterator);
+        // Try to read in word from file
+        reading = fread(&tempWord, 32, 1, fp);
+        iterator += sizeof(tempWord);
+        if (!reading)
+            break;
+        // Read pointer from file
+        fread(&ptr, iterator, 1, fp);
+        iterator += sizeof(long);
+        printf("Word read: | %s |, ptr = %ld\n", tempWord, ptr);
+    }
+}
 
 int insertWord(FILE *fp, char *word) {
 ////    This will insert a word into the file and update the data structures in the file, as described in the explanatory
@@ -164,7 +203,7 @@ int insertWord(FILE *fp, char *word) {
     long num = fread(&value, sizeof(long), 1, fp);
     // If num == 1 read was successful
     if (num == 1) {
-        printf("value == %ld\n", value);
+        //printf("value == %ld\n", value);
         if (value == 0) {
             // Write word to end of file and replace 0 with byte location
             int filesize = checkFileSize(fp);
@@ -211,43 +250,6 @@ int insertWord(FILE *fp, char *word) {
         printf("Read not successful");
         success = 1;
     }
-    // Set file to beginning
-    setFile(fp, 0);
-    printf("\nPrinting all data\n");
-    long iterator = 0;
-    int filesize = checkFileSize(fp);
-    char tempWord[MAXWORDLEN + 1];
-    long ptr = 0;
-    long data;
-    // Seek to beginning
-    setFile(fp, 0);
-//    for (int i=0; i<26; ++i) {
-//        int num = fread(&value, sizeof(long), 1, fp);
-//        if (num == 1) {
-//            printf("read this value: %ld\n", value);
-//        } else {
-//            printf("ERROR: fread() failed to read a value\n");
-//            fclose(fp);
-//            return 8;
-//        }
-//    }
-    int done = 0;
-    int reading;
-    iterator = sizeof(long) * NUMVALS;
-    // Set file to end of char longs
-    setFile(fp, iterator);
-    while (1) {
-        printf("Iterator = %ld\n", iterator);
-        // Try to read in word from file
-        reading = fread(&tempWord, 32, 1, fp);
-        iterator += sizeof(tempWord);
-        if (!reading)
-            break;
-        // Read pointer from file
-        fread(&ptr, iterator, 1, fp);
-        iterator += sizeof(long);
-        printf("Word read: | %s |, ptr = %ld\n", tempWord, ptr);
-        }
 
 
 
@@ -348,6 +350,7 @@ int main() {
     insertWord(fp, "middle");
     insertWord(fp, "nardo");
     insertWord(fp, "new");
+    printFileData(fp);
 
     //testUtils();
 
