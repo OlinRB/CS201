@@ -167,19 +167,14 @@ void printFileData(FILE *fp) {
 
     // In while loop
     int fileIndex = 208;
+    printf("\nFilesize = %d\n", filesize);
     setFile(fp, 208);
     while (fileIndex <= filesize) {
         fread(&inputRecord, sizeof(Record), 1, fp);
         printf("Word read: | %s |, ptr = %ld\n", inputRecord.word, inputRecord.nextpos);
         fileIndex += 40;
     }
-
-//    fread(&inputRecord, sizeof(Record), 1, fp);
-//    printf("Word read: | %s |, ptr = %ld\n", inputRecord.word, inputRecord.nextpos);
-//    fread(&inputRecord, sizeof(Record), 1, fp);
-//    printf("Word read: | %s |, ptr = %ld\n", inputRecord.word, inputRecord.nextpos);
-//    fread(&inputRecord, sizeof(Record), 1, fp);
-//    printf("Word read: | %s |, ptr = %ld\n", inputRecord.word, inputRecord.nextpos);
+    printf("fileIndex = %d", fileIndex);
 }
 
 int insertWord(FILE *fp, char *word) {
@@ -370,7 +365,7 @@ int main() {
     insertWord(fp, "nardles");
     insertWord(fp, "middle");
     insertWord(fp, "nardo");
-    //insertWord(fp, "new");
+    insertWord(fp, "new");
     printFileData(fp);
 
     //testUtils();
