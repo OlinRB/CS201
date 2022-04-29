@@ -232,16 +232,16 @@ int insertWord(FILE *fp, char *word) {
 //    }
     // Seek to beginning
     setFile(fp, 0);
-//    for (int i=0; i<26; ++i) {
-//        int num = fread(&value, sizeof(long), 1, fp);
-//        if (num == 1) {
-//            printf("read this value: %ld\n", value);
-//        } else {
-//            printf("ERROR: fread() failed to read a value\n");
-//            fclose(fp);
-//            return 8;
-//        }
-//    }
+    for (int i=0; i<26; ++i) {
+        int num = fread(&value, sizeof(long), 1, fp);
+        if (num == 1) {
+            printf("read this value: %ld\n", value);
+        } else {
+            printf("ERROR: fread() failed to read a value\n");
+            fclose(fp);
+            return 8;
+        }
+    }
     setFile(fp, checkFileSize(fp));
     // Try to read in word from file
     fread(&tempWord, 32, 1, fp);
