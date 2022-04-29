@@ -267,9 +267,29 @@ int insertWord(FILE *fp, char *word) {
                 printf("\nDuplicate first letter word written starting at %ld\n", filesize);
                 printf("First word |%s| second word |%s|", newWord.word, "test");
             } else {
-                // if pointer is not zero, must traverse linked list until 0
+                // if pointer is not zero, must traverse linked list ptr == 0
                 // Seek to value
-                setFile(fp, value);
+//                setFile(fp, value);
+//                Record tempRecord;
+//                long prevPos;
+//                fread(&tempRecord, sizeof(Record), 1, fp);
+//                while (tempRecord.nextpos != 0) {
+//                    // set to new position
+//                    setFile(fp, tempRecord.nextpos);
+//                    prevPos = tempRecord.nextpos;
+//                    fread(&tempRecord, sizeof(Record), 1, fp);
+//                }
+//                long filesize = checkFileSize(fp);
+//                // Write pointer to last word with identical letter
+//                setFile(fp, prevPos + 32);
+//                fwrite(&prevPos, sizeof(long), 1, fp);
+//
+//                // Now write new word to end of file
+//                setFile(fp, filesize);
+//                newWord.nextpos = 0;
+//                fwrite(&newWord, sizeof(Record), 1, fp);
+
+
             }
         }
 
@@ -376,7 +396,7 @@ int main() {
     insertWord(fp, "nardles");
     insertWord(fp, "middle");
     insertWord(fp, "nardo");
-    insertWord(fp, "marco");
+    insertWord(fp, "node");
     printFileData(fp);
 
     //testUtils();
