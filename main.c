@@ -159,42 +159,27 @@ void printFileData(FILE *fp) {
     // get filesize
     filesize = checkFileSize(fp);
     setFile(fp, 0);
-    // Set file to end of char longs
-//    while (iterator <= filesize) {
-//        setFile(fp, iterator);
-//        printf("Iterator = %ld\n", iterator);
-//        // Try to read in word from file
-//        reading = fread(&tempWord, 32, 1, fp);
-//        iterator += sizeof(tempWord);
-//        // Read pointer from file
-//        fread(&ptr, iterator, 1, fp);
-//        iterator += sizeof(long);
-//        printf("Word read: | %s |, ptr = %ld\n", tempWord, ptr);
-//        setFile(fp, 0);
-//    }
-
     // Read in words manually
-    setFile(fp, 208);
-//    fread(&tempWord, 32, 1, fp);
-//    fread(&value, sizeof(long), 1, fp);
-//    printf("Word read: | %s |, ptr = %ld\n", tempWord, ptr);
-//    //setFile(fp, 248);
-//    fread(&tempWord, 32, 1, fp);
-//    fread(&value, sizeof(long), 1, fp);
-//    printf("Word read: | %s |, ptr = %ld\n", tempWord, ptr);
-//    //setFile(fp, 288);
-//    fread(&tempWord, 32, 1, fp);
-//    fread(&value, sizeof(long), 1, fp);
-//    printf("Word read: | %s |, ptr = %ld\n", tempWord, ptr);
+
 
     // With struct
     Record inputRecord;
-    fread(&inputRecord, sizeof(Record), 1, fp);
-    printf("Word read: | %s |, ptr = %ld\n", inputRecord.word, inputRecord.nextpos);
-    fread(&inputRecord, sizeof(Record), 1, fp);
-    printf("Word read: | %s |, ptr = %ld\n", inputRecord.word, inputRecord.nextpos);
-    fread(&inputRecord, sizeof(Record), 1, fp);
-    printf("Word read: | %s |, ptr = %ld\n", inputRecord.word, inputRecord.nextpos);
+
+    // In while loop
+    int fileIndex = 208;
+    setFile(fp, 208);
+    while (fileIndex <= filesize) {
+        fread(&inputRecord, sizeof(Record), 1, fp);
+        printf("Word read: | %s |, ptr = %ld\n", inputRecord.word, inputRecord.nextpos);
+        fileIndex += 40;
+    }
+
+//    fread(&inputRecord, sizeof(Record), 1, fp);
+//    printf("Word read: | %s |, ptr = %ld\n", inputRecord.word, inputRecord.nextpos);
+//    fread(&inputRecord, sizeof(Record), 1, fp);
+//    printf("Word read: | %s |, ptr = %ld\n", inputRecord.word, inputRecord.nextpos);
+//    fread(&inputRecord, sizeof(Record), 1, fp);
+//    printf("Word read: | %s |, ptr = %ld\n", inputRecord.word, inputRecord.nextpos);
 }
 
 int insertWord(FILE *fp, char *word) {
