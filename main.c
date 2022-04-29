@@ -292,7 +292,8 @@ int countWords(FILE *fp, char letter, int *count) {
     // Get letter index
     char alpha[27] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
                       'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
-    int wordCnt = *count;
+    *count += 1;
+
     // Get letter index
     long letterIndex;
     // Check if char is char
