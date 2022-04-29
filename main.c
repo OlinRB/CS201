@@ -122,6 +122,8 @@ typedef struct {
 
 
 int setFile(FILE *fp, long locationIndex) {
+    // Set to start
+    fseek(fp, 0, SEEK_SET);
     int rc = fseek(fp, locationIndex, SEEK_SET);
     if (rc != 0) {
         printf("fseek() failed\n");
@@ -229,11 +231,13 @@ int insertWord(FILE *fp, char *word) {
 //            // Write pointer as 0
 //            long long ptr = 0;
 //            num = fwrite(&ptr, sizeof(long), 1, fp);
-//            // Now write starting location of word at letter location within first 26 bytes
-//            setFile(fp, letterIndex);
-//            fwrite(&wordStarts, sizeof(long), 1, fp);
-//            // Set file back to start
-//            setFile(fp, 0);
+
+            // Now write starting location of word at letter location within first 26 bytes
+            setFile(fp, letterIndex);
+            long wordStarts = filesize;
+            fwrite(&wordStarts, sizeof(long), 1, fp);
+            // Set file back to start
+            setFile(fp, 0);
 
             if (num != 1)
                 printf("Error on write\n");
