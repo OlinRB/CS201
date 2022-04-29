@@ -261,7 +261,7 @@ int insertWord(FILE *fp, char *word) {
                 setFile(fp, value + 32);
                 fwrite(&filesize, sizeof(long), 1, fp);
                 printf("\nDuplicate first letter word written starting at %ld\n", filesize);
-                printf("First word |%s| second word |%s|", storedWord.word, newWord);
+                printf("First word |%s| second word |%s|", newWord.word, "test");
             } else {
                 // if pointer is not zero, must traverse linked list until 0
             }
