@@ -280,10 +280,10 @@ int insertWord(FILE *fp, char *word) {
                     fread(&tempRecord, sizeof(Record), 1, fp);
                 }
                 long filesize = checkFileSize(fp);
-                printf("Filesize = %ld\n", filesize);
+                printf("\nFilesize = %ld\n", filesize);
                 // Write pointer to last word with identical letter
                 setFile(fp, prevPos + 32);
-                fwrite(&prevPos, sizeof(long), 1, fp);
+                fwrite(&filesize, sizeof(long), 1, fp);
 
                 // Now write new word to end of file
                 setFile(fp, filesize);
