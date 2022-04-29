@@ -236,7 +236,7 @@ int insertWord(FILE *fp, char *word) {
     iterator = sizeof(long) * NUMVALS;
     // Set file to end of char longs
     setFile(fp, iterator);
-    while (iterator < filesize) {
+    while (1) {
         // Try to read in word from file
         reading = fread(&tempWord, 32, 1, fp);
         iterator += sizeof(tempWord);
