@@ -164,8 +164,8 @@ int insertWord(FILE *fp, char *word) {
     long num = fread(&value, sizeof(long), 1, fp);
     // If num == 1 read was successful
     if (num == 1) {
-        printf("value == %lld\n", value);
-        if (value == 0) {
+        printf("value == %ld\n", value);
+        if (value == 14) {
             // Write word to end of file and replace 0 with byte location
             int filesize = checkFileSize(fp);
             // Go to end of file to write word
