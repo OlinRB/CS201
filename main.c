@@ -233,6 +233,8 @@ int insertWord(FILE *fp, char *word) {
     }
     int done = 0;
     int reading;
+    // Set file to end of char longs
+    setFile(fp, sizeof(long) * NUMVALS);
     while (!done) {
         // Try to read in word from file
         reading = fread(&tempWord, 32, 1, fp);
