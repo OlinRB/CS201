@@ -160,8 +160,8 @@ void printFileData(FILE *fp) {
     filesize = checkFileSize(fp);
     setFile(fp, 0);
     // Set file to end of char longs
-    setFile(fp, iterator);
     while (iterator <= filesize) {
+        setFile(fp, iterator);
         printf("Iterator = %ld\n", iterator);
         // Try to read in word from file
         reading = fread(&tempWord, 32, 1, fp);
@@ -170,6 +170,7 @@ void printFileData(FILE *fp) {
         fread(&ptr, iterator, 1, fp);
         iterator += sizeof(long);
         printf("Word read: | %s |, ptr = %ld\n", tempWord, ptr);
+        setFile(fp, 0);
     }
 }
 
@@ -349,7 +350,7 @@ int main() {
 
     // Write word to file
     insertWord(fp, "nardles");
-    //insertWord(fp, "middle");
+    insertWord(fp, "middle");
     insertWord(fp, "nardo");
     insertWord(fp, "new");
     printFileData(fp);
