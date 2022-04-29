@@ -172,6 +172,12 @@ void printFileData(FILE *fp) {
         printf("Word read: | %s |, ptr = %ld\n", tempWord, ptr);
         setFile(fp, 0);
     }
+
+    // Read in words manually
+    setFile(fp, 208);
+    fread(&tempWord, 32, 1, fp);
+    fread(&value, sizeof(long), 1, fp);
+    printf("Word read: | %s |, ptr = %ld\n", tempWord, ptr);
 }
 
 int insertWord(FILE *fp, char *word) {
