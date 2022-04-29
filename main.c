@@ -165,7 +165,7 @@ int insertWord(FILE *fp, char *word) {
     // If num == 1 read was successful
     if (num == 1) {
         printf("value == %ld\n", value);
-        if (value == 14) {
+        if (value == 0) {
             // Write word to end of file and replace 0 with byte location
             int filesize = checkFileSize(fp);
             // Go to end of file to write word
@@ -198,12 +198,13 @@ int insertWord(FILE *fp, char *word) {
             Record newWord;
             fread(&newWord.word, sizeof(newWord.word), 1, fp);
             fread(&newWord.nextpos, sizeof (newWord.nextpos), 1, fp);
-            setFile(fp, newWord.nextpos);
-            while (newWord.nextpos != 0) {
-                fread(&newWord.word, sizeof(newWord.word), 1, fp);
-                fread(&newWord.nextpos, sizeof (newWord.nextpos), 1, fp);
-                printf("Read in next word | %s |\n", newWord.word);
-            }
+            printf("Read in next word | %s |\n", newWord.word);
+//            setFile(fp, newWord.nextpos);
+//            while (newWord.nextpos != 0) {
+//                fread(&newWord.word, sizeof(newWord.word), 1, fp);
+//                fread(&newWord.nextpos, sizeof (newWord.nextpos), 1, fp);
+//                printf("Read in next word | %s |\n", newWord.word);
+//            }
         }
 
     } else {
@@ -320,7 +321,7 @@ int main() {
     // if the file is empty, then write 5 long values
     if (filesize == 0) {
         // don't need to seek to the beginning: already there, since file is empty
-        value = 1;
+        value = 0;
         for (i = 0; i < NUMVALS; ++i) {
             num = fwrite(&value, sizeof(long), 1, fp);
             if (num != 1) {
@@ -330,7 +331,7 @@ int main() {
             } else {
                 //printf("success: wrote the value %ld\n", value);
             }
-            value += 1;
+            //value += 1;
         }
 
     }
