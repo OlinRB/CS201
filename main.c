@@ -266,16 +266,9 @@ int insertWord(FILE *fp, char *word) {
                 setFile(fp, 0);
                 setFile(fp, value + sizeof(inputWord));
                 fwrite(&filesize, sizeof(long), 1, fp);
-                printf("Duplicate first letter word written starting at %ld", filesize);
+                printf("Duplicate first letter word written starting at %ld\n", filesize);
+                printf("First word |%s| second word |%s|", newWord.word, inputWord);
             }
-
-            printf("Read in next word | %s |\n", newWord.word);
-//            setFile(fp, newWord.nextpos);
-//            while (newWord.nextpos != 0) {
-//                fread(&newWord.word, sizeof(newWord.word), 1, fp);
-//                fread(&newWord.nextpos, sizeof (newWord.nextpos), 1, fp);
-//                printf("Read in next word | %s |\n", newWord.word);
-//            }
         }
 
     } else {
