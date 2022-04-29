@@ -339,6 +339,7 @@ int countWords(FILE *fp, char letter, int *count) {
             }
         }
     }
+    printf("\nThere are %d words with the letter %c\n", wordCnt, letter);
     return 0;
 }
 
