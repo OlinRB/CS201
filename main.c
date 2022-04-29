@@ -214,7 +214,7 @@ int insertWord(FILE *fp, char *word) {
     // Set file to beginning
     setFile(fp, 0);
     printf("Printing all data\n\n");
-    int iterator = 0;
+    long iterator = 0;
     int filesize = checkFileSize(fp);
     char tempWord[MAXWORDLEN + 1];
     long ptr = 0;
@@ -233,9 +233,10 @@ int insertWord(FILE *fp, char *word) {
     }
     int done = 0;
     int reading;
+    iterator = sizeof(long) * NUMVALS;
     // Set file to end of char longs
-    setFile(fp, sizeof(long) * NUMVALS);
-    while (!done) {
+    setFile(fp, iterator);
+    while (iterator < filesize) {
         // Try to read in word from file
         reading = fread(&tempWord, 32, 1, fp);
         if (!reading)
@@ -345,7 +346,7 @@ int main() {
 
     // Write word to file
     insertWord(fp, "nardles");
-    //insertWord(fp, "middle");
+    insertWord(fp, "middle");
     insertWord(fp, "nard0");
 
     //testUtils();
