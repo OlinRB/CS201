@@ -270,8 +270,6 @@ int insertWord(FILE *fp, char *word) {
                 setFile(fp, filesize);
                 newWord.nextpos = 0;
                 fwrite(&newWord, sizeof(Record), 1, fp);
-
-
             }
         }
 
@@ -290,9 +288,41 @@ int countWords(FILE *fp, char letter, int *count) {
 ////    though that letter is actually an alphabetic character—if it isn’t, then return 1. If any errors occur, return
 ////            nonzero. Otherwise, return zero and set the count parameter to the number of words in the file that start
 ////    with letter.
-//
-    int x = 1;
-    return x;
+
+    // Get letter index
+    char alpha[27] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+                      'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+    // Get letter index
+    long letterIndex;
+    // Check if char is char
+    printf("is letter = %d\n", isalpha(letter));
+    char lowLetter = tolower(letter);
+
+    for (int i = 0; i < 26; ++i) {
+        if (letter == alpha[i])
+            letterIndex = i * sizeof (long);
+    }
+
+    // file already exists; read long value at specified index
+    // Seek to beginning of file
+    setFile(fp, 0);
+
+    // Seek to location
+    setFile(fp, letterIndex);
+    long value;
+
+    long num = fread(&value, sizeof(long), 1, fp);
+    // If num == 1 read was successful
+    if (num == 1) {
+        if (value == 0) {
+
+            int cnt = 0;
+
+            int x = 1;
+            return x;
+        }
+    }
+    return 0;
 }
 
 //char **getWords(FILE *fp, char letter) {
@@ -380,8 +410,9 @@ int main() {
     insertWord(fp, "next");
     insertWord(fp, "manother");
     insertWord(fp, "aword");
-    printFileData(fp);
-
+    //printFileData(fp);
+    int cnt;
+    countWords(fp, "a", &cnt);
     //testUtils();
 
 }
