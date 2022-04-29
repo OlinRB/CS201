@@ -295,8 +295,11 @@ int countWords(FILE *fp, char letter, int *count) {
     // Get letter index
     long letterIndex;
     // Check if char is char
-    printf("is letter = %d\n", isalpha(letter));
+    if (isalpha(letter) == 0)
+        return 0;
+    // Set char to low
     char lowLetter = tolower(letter);
+    printf("\nlowLetter = %c\n", lowLetter);
 
     for (int i = 0; i < 26; ++i) {
         if (letter == alpha[i])
