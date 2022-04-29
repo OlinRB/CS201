@@ -171,7 +171,7 @@ void printFileData(FILE *fp) {
     int fileIndex = 208;
     printf("\nFilesize = %d\n", filesize);
     setFile(fp, 208);
-    while (fileIndex <= filesize) {
+    while (fileIndex < filesize) {
         fread(&inputRecord, sizeof(Record), 1, fp);
         printf("Word read: | %s |, ptr = %ld\n", inputRecord.word, inputRecord.nextpos);
         fileIndex += 40;
@@ -268,6 +268,8 @@ int insertWord(FILE *fp, char *word) {
                 printf("First word |%s| second word |%s|", newWord.word, "test");
             } else {
                 // if pointer is not zero, must traverse linked list until 0
+                // Seek to value
+                setFile(fp, value);
             }
         }
 
