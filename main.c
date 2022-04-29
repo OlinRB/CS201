@@ -254,6 +254,21 @@ int insertWord(FILE *fp, char *word) {
             Record newWord;
             fread(&newWord.word, sizeof(newWord.word), 1, fp);
             fread(&newWord.nextpos, sizeof (newWord.nextpos), 1, fp);
+            // If pointer is zero add word to end of file
+            if (newWord.nextpos == 0) {
+                long filesize = checkFileSize(fp);
+                setFile(fp, 0);
+                // seek to end of file
+                setFile(fp, filesize);
+                // Write to end of file
+                fwrite(&inputWord, sizeof(inputWord), 1, fp);
+                // Update pointer on first word to point to next word
+                setFile(fp, 0);
+                setFile(fp, value + sizeof(inputWord));
+                fwrite(&filesize, sizeof(long), 1, fp);
+                printf("Duplicate first letter word written starting at %ld", filesize);
+            }
+
             printf("Read in next word | %s |\n", newWord.word);
 //            setFile(fp, newWord.nextpos);
 //            while (newWord.nextpos != 0) {
