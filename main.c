@@ -412,7 +412,7 @@ int main() {
     insertWord(fp, "aword");
     //printFileData(fp);
     int cnt;
-    countWords(fp, 'a', &cnt);
+    countWords(fp, '0', &cnt);
     //testUtils();
 
 }
