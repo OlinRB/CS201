@@ -427,7 +427,7 @@ int main() {
     insertWord(fp, "next");
     insertWord(fp, "manother");
     insertWord(fp, "aword");
-    //printFileData(fp);
+    printFileData(fp);
     int cnt;
     char testLetter = 'A';
     countWords(fp, testLetter, &cnt);
