@@ -265,8 +265,7 @@ int insertWord(FILE *fp, char *word) {
                 // Update pointer on first word to point to next word
                 setFile(fp, 0);
                 setFile(fp, value + sizeof(inputWord));
-                long temp = 69;
-                fwrite(&temp, sizeof(long), 1, fp);
+                fwrite(&filesize, sizeof(long), 1, fp);
                 printf("Duplicate first letter word written starting at %ld\n", filesize);
                 printf("First word |%s| second word |%s|", newWord.word, inputWord);
             }
