@@ -232,24 +232,27 @@ int insertWord(FILE *fp, char *word) {
 //    }
     // Seek to beginning
     setFile(fp, 0);
-//    for (int i=0; i<26; ++i) {
-//        int num = fread(&value, sizeof(long), 1, fp);
-//        if (num == 1) {
-//            printf("read this value: %ld\n", value);
-//        } else {
-//            printf("ERROR: fread() failed to read a value\n");
-//            fclose(fp);
-//            return 8;
-//        }
-//    }
-    setFile(fp, sizeof (long) * NUMVALS);
-    // Try to read in word from file
-    fread(&tempWord, 32, 1, fp);
-    iterator += sizeof(tempWord);
-    // Read pointer from file
-    fread(&ptr, iterator, 1, fp);
-    iterator += sizeof(long);
-    printf("Word read: | %s |, ptr = %ld\n", tempWord, ptr);
+    for (int i=0; i<26; ++i) {
+        int num = fread(&value, sizeof(long), 1, fp);
+        if (num == 1) {
+            printf("read this value: %ld\n", value);
+        } else {
+            printf("ERROR: fread() failed to read a value\n");
+            fclose(fp);
+            return 8;
+        }
+    }
+    int reading = 1;
+    setFile(fp, sizeof(long) * NUMVALS);
+    while (reading) {
+        // Try to read in word from file
+        reading = fread(&tempWord, 32, 1, fp);
+        iterator += sizeof(tempWord);
+        // Read pointer from file
+        fread(&ptr, iterator, 1, fp);
+        iterator += sizeof(long);
+        printf("Word read: | %s |, ptr = %ld\n", tempWord, ptr);
+    }
 
 
 
@@ -333,7 +336,7 @@ int main() {
                 fclose(fp);
                 return 8;
             } else {
-                printf("success: wrote the value %ld\n", value);
+                //printf("success: wrote the value %ld\n", value);
             }
             value += 1;
         }
