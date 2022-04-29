@@ -242,13 +242,11 @@ int insertWord(FILE *fp, char *word) {
         iterator += sizeof(tempWord);
         if (!reading)
             done = 1;
-        if (!done) {
-            // Read pointer from file
-            fread(&ptr, iterator, 1, fp);
-            iterator += sizeof(long);
-            printf("Word read: | %s |, ptr = %ld\n", tempWord, ptr);
+        // Read pointer from file
+        fread(&ptr, iterator, 1, fp);
+        iterator += sizeof(long);
+        printf("Word read: | %s |, ptr = %ld\n", tempWord, ptr);
         }
-    }
 
 
 
