@@ -295,8 +295,6 @@ int insertWord(FILE *fp, char *word) {
         success = 1;
     }
 
-
-
     return success;
 
 }
@@ -395,6 +393,7 @@ int main() {
     insertWord(fp, "nardo");
     insertWord(fp, "node");
     insertWord(fp, "next");
+    insertWord(fp, "manother");
     printFileData(fp);
 
     //testUtils();
