@@ -347,7 +347,7 @@ int main() {
     // Write word to file
     insertWord(fp, "nardles");
     insertWord(fp, "middle");
-    insertWord(fp, "nard0");
+    insertWord(fp, "nardo");
 
     //testUtils();
 
