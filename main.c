@@ -269,25 +269,25 @@ int insertWord(FILE *fp, char *word) {
             } else {
                 // if pointer is not zero, must traverse linked list ptr == 0
                 // Seek to value
-//                setFile(fp, value);
-//                Record tempRecord;
-//                long prevPos;
-//                fread(&tempRecord, sizeof(Record), 1, fp);
-//                while (tempRecord.nextpos != 0) {
-//                    // set to new position
-//                    setFile(fp, tempRecord.nextpos);
-//                    prevPos = tempRecord.nextpos;
-//                    fread(&tempRecord, sizeof(Record), 1, fp);
-//                }
-//                long filesize = checkFileSize(fp);
-//                // Write pointer to last word with identical letter
-//                setFile(fp, prevPos + 32);
-//                fwrite(&prevPos, sizeof(long), 1, fp);
-//
-//                // Now write new word to end of file
-//                setFile(fp, filesize);
-//                newWord.nextpos = 0;
-//                fwrite(&newWord, sizeof(Record), 1, fp);
+                setFile(fp, value);
+                Record tempRecord;
+                long prevPos;
+                fread(&tempRecord, sizeof(Record), 1, fp);
+                while (tempRecord.nextpos != 0) {
+                    // set to new position
+                    setFile(fp, tempRecord.nextpos);
+                    prevPos = tempRecord.nextpos;
+                    fread(&tempRecord, sizeof(Record), 1, fp);
+                }
+                long filesize = checkFileSize(fp);
+                // Write pointer to last word with identical letter
+                setFile(fp, prevPos + 32);
+                fwrite(&prevPos, sizeof(long), 1, fp);
+
+                // Now write new word to end of file
+                setFile(fp, filesize);
+                newWord.nextpos = 0;
+                fwrite(&newWord, sizeof(Record), 1, fp);
 
 
             }
