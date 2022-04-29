@@ -292,7 +292,7 @@ int countWords(FILE *fp, char letter, int *count) {
     // Get letter index
     char alpha[27] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
                       'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
-    *count = 1;
+    *count = 0;
     int wordCnt = 0;
     // Get letter index
     long letterIndex;
@@ -328,7 +328,7 @@ int countWords(FILE *fp, char letter, int *count) {
             return 0;
         } else {
             // Case for at least one word in file, read in until ptr == 0
-            wordCnt += 1;
+            *count += 1;
             setFile(fp, value);
             Record tempRecord;
             fread(&tempRecord, sizeof(Record), 1, fp);
@@ -336,7 +336,7 @@ int countWords(FILE *fp, char letter, int *count) {
                 // set to new position
                 setFile(fp, tempRecord.nextpos);
                 fread(&tempRecord, sizeof(Record), 1, fp);
-                wordCnt += 1;
+                *count += 1;
             }
         }
     }
