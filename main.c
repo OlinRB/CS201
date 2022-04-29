@@ -186,9 +186,10 @@ int insertWord(FILE *fp, char *word) {
                       'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
     int success = 0;
     // Determine where to write file
+    Record newWord;
+    strcpy(newWord.word, word);
     char firstLetter = word[0];
-    char inputWord[MAXWORDLEN + 1];
-    strcpy(inputWord, word);
+    //char inputWord[MAXWORDLEN + 1];
 
     // Get letter index
     long letterIndex;
@@ -215,20 +216,24 @@ int insertWord(FILE *fp, char *word) {
             int filesize = checkFileSize(fp);
             // Go to end of file to write word
             setFile(fp, filesize);
-            fwrite(&inputWord, sizeof(inputWord), 1, fp);
-            // Determine where word starts
-            //filesize = checkFileSize(fp);
-            long wordStarts = filesize;
-            // Go to the end of the file to write the pointer to the next word
-            //setFile(fp, filesize);
-            // Write pointer as 0
-            long long ptr = 0;
-            num = fwrite(&ptr, sizeof(long), 1, fp);
-            // Now write starting location of word at letter location within first 26 bytes
-            setFile(fp, letterIndex);
-            fwrite(&wordStarts, sizeof(long), 1, fp);
-            // Set file back to start
-            setFile(fp, 0);
+            // Use struct instead and assume pointer is 0
+            newWord.nextpos = 0;
+            fwrite(&newWord, sizeof(Record), 1, fp);
+
+//            fwrite(&inputWord, sizeof(inputWord), 1, fp);
+//            // Determine where word starts
+//            //filesize = checkFileSize(fp);
+//            long wordStarts = filesize;
+//            // Go to the end of the file to write the pointer to the next word
+//            //setFile(fp, filesize);
+//            // Write pointer as 0
+//            long long ptr = 0;
+//            num = fwrite(&ptr, sizeof(long), 1, fp);
+//            // Now write starting location of word at letter location within first 26 bytes
+//            setFile(fp, letterIndex);
+//            fwrite(&wordStarts, sizeof(long), 1, fp);
+//            // Set file back to start
+//            setFile(fp, 0);
 
             if (num != 1)
                 printf("Error on write\n");
@@ -240,23 +245,23 @@ int insertWord(FILE *fp, char *word) {
             // Seek to this word to read in the next pointer (if it exists)
             // Seek to value
             setFile(fp, value);
-            Record newWord;
-            fread(&newWord.word, sizeof(newWord.word), 1, fp);
-            fread(&newWord.nextpos, sizeof (newWord.nextpos), 1, fp);
+            Record storedWord;
+            fread(&storedWord, sizeof(storedWord), 1, fp);
             // If pointer is zero add word to end of file
-            if (newWord.nextpos == 0) {
+            if (storedWord.nextpos == 0) {
                 long filesize = checkFileSize(fp);
                 setFile(fp, 0);
                 // seek to end of file
                 setFile(fp, filesize);
                 // Write to end of file
-                fwrite(&inputWord, sizeof(inputWord), 1, fp);
+                newWord.nextpos = 0;
+                fwrite(&newWord, sizeof(Record), 1, fp);
                 // Update pointer on first word to point to next word
                 setFile(fp, 0);
-                setFile(fp, value + sizeof(inputWord));
+                setFile(fp, value + 32);
                 fwrite(&filesize, sizeof(long), 1, fp);
                 printf("\nDuplicate first letter word written starting at %ld\n", filesize);
-                printf("First word |%s| second word |%s|", newWord.word, inputWord);
+                printf("First word |%s| second word |%s|", storedWord.word, newWord.word);
             } else {
                 // if pointer is not zero, must traverse linked list until 0
             }
