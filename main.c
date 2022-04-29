@@ -239,10 +239,10 @@ int insertWord(FILE *fp, char *word) {
     while (iterator < filesize) {
         // Try to read in word from file
         reading = fread(&tempWord, 32, 1, fp);
+        iterator += sizeof(tempWord);
         if (!reading)
             done = 1;
         if (!done) {
-            iterator += sizeof(tempWord);
             // Read pointer from file
             fread(&ptr, iterator, 1, fp);
             iterator += sizeof(long);
