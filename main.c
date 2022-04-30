@@ -404,12 +404,13 @@ char **getWords(FILE *fp, char letter) {
                 fread(&tempRecord, sizeof(Record), 1, fp);
                 i += 1;
                 wordArr[i] = tempRecord.word;
+                printf("Word = %s\n", tempRecord.word);
             }
         }
     }
-    for (int i = 0; i < 4; ++i) {
-        printf("Word #%d |%s|\n", i + 1, wordArr[i]);
-    }
+//    for (int i = 0; i < 4; ++i) {
+//        printf("Word #%d |%s|\n", i + 1, wordArr[i]);
+//    }
 
 
     return wordArr;
