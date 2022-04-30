@@ -351,7 +351,7 @@ char **getWords(FILE *fp, char letter) {
     int wordCnt;
     char **wordArr;
     int cnt = countWords(fp, letter, &wordCnt);
-    wordArr = (char **) malloc((wordCnt + 1) * sizeof(char *));
+    wordArr = (char **) malloc((wordCnt + 1) * sizeof(MAXWORDLEN + 1));
     if (cnt != 0) {
         wordArr[0] = NULL;
         return wordArr;
