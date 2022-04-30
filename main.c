@@ -407,7 +407,7 @@ char **getWords(FILE *fp, char letter) {
             }
         }
     }
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 4; ++i) {
         printf("Word #%d |%s|\n", i + 1, wordArr[i]);
     }
 
