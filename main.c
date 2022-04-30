@@ -212,8 +212,6 @@ int insertWord(FILE *fp, char *word) {
 
             if (num != 3)
                 printf("Error on write\n");
-            else
-                //printf("Word written successfully to file\n");
 
         } else {
             // There is already a word with such a letter
