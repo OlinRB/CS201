@@ -519,7 +519,7 @@ int testFileFunctions() {
     while (stringArr[i] != NULL) {
         printf("word[%d] is |%s|\n", i, stringArr[i]);
         if (!(strcmp(testArr[i], stringArr[i])))
-            testPassed = 1;
+            printf("testArr |%s|, stringArr |%s|\n", testArr[i], stringArr[i]);
         i += 1;
     }
     if (!testPassed)
