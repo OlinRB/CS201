@@ -404,6 +404,7 @@ char **getWords(FILE *fp, char letter) {
             wordArr[i] = word;
             printf("Word == |%s|, in array is |%s|, i == |%d|\n", tempRecord.word, wordArr[i], i);
             while (tempRecord.nextpos != 0) {
+                word = (char *) malloc((MAXWORDLEN + 1) * sizeof(char));
                 // set to new position
                 setFile(fp, tempRecord.nextpos);
                 fread(&tempRecord, sizeof(Record), 1, fp);
@@ -411,7 +412,6 @@ char **getWords(FILE *fp, char letter) {
                 strncpy(word, tempRecord.word, MAXWORDLEN+1);
                 //printf("word is |%s|\n", word);
                 wordArr[i] = word;
-                word = (char *) malloc((MAXWORDLEN + 1) * sizeof(char));
                 //wordArr[i] = tempRecord.word;
                 printf("Word == |%s|, in array is |%s|, i == |%d|\n", tempRecord.word, wordArr[i], i);
 
