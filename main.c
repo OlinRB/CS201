@@ -352,7 +352,7 @@ char **getWords(FILE *fp, char letter) {
     char **wordArr;
     int cnt = countWords(fp, letter, &wordCnt);
     wordArr = (char **) malloc((wordCnt + 1) * sizeof(char *));
-    if (cnt == 0) {
+    if (cnt != 0) {
         wordArr[0] = NULL;
         return wordArr;
     }
@@ -389,6 +389,8 @@ char **getWords(FILE *fp, char letter) {
         // Case for no words with starting letter in file
         if (value == 0) {
             wordArr[0] = NULL;
+            printf("val == 0");
+            return wordArr;
         } else {
             // Case for at least one word in file, read in until ptr == 0
             setFile(fp, value);
