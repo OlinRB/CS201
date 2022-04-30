@@ -213,7 +213,7 @@ int insertWord(FILE *fp, char *word) {
             if (num != 3)
                 printf("Error on write\n");
             else
-                printf("Word written successfully to file\n");
+                //printf("Word written successfully to file\n");
 
         } else {
             // There is already a word with such a letter
@@ -235,8 +235,8 @@ int insertWord(FILE *fp, char *word) {
                 setFile(fp, 0);
                 setFile(fp, value + 32);
                 fwrite(&filesize, sizeof(long), 1, fp);
-                printf("\nDuplicate first letter word written starting at %ld\n", filesize);
-                printf("First word |%s| second word |%s|", newWord.word, "test");
+                //printf("\nDuplicate first letter word written starting at %ld\n", filesize);
+                //printf("First word |%s| second word |%s|", newWord.word, "test");
             } else {
                 // if pointer is not zero, must traverse linked list ptr == 0
                 // Seek to value
@@ -390,7 +390,7 @@ char **getWords(FILE *fp, char letter) {
     if (num == 1) {
         // Case for no words with starting letter in file
         if (value == 0) {
-            return 0;
+            wordArr[0] = NULL;
         } else {
             // Case for at least one word in file, read in until ptr == 0
             setFile(fp, value);
@@ -481,11 +481,15 @@ int testFileFunctions() {
     //printf("\nThere are %d words with the letter %c\n", cnt, testLetter);
     if (cnt != 1)
         testPassed = 1;
+    else
+        printf("\nPASSED letter count with %c\n", testLetter);
     cnt = 0;
     testLetter = 'a';
     countWords(fp, testLetter, &cnt);
     if (cnt != 0)
         testPassed = 1;
+    else
+        printf("\nPASSED letter count with %c\n", testLetter);
 
     // Insert more words and test return array
     insertWord(fp, "middle");
@@ -494,13 +498,20 @@ int testFileFunctions() {
     insertWord(fp, "march");
     insertWord(fp, "python");
     char **stringArr;
-    testLetter = 'a';
+    cnt = 0;
+    testLetter = 'n';
+    countWords(fp, testLetter, &cnt);
+    if (cnt != 3)
+        testPassed = 1;
+    else
+        printf("\nPASSED letter count with %c\n", testLetter);
+
     stringArr = getWords(fp, testLetter);
     i = 0;
     while (stringArr[i] != NULL) {
         printf("word[%d] is |%s|\n", i, stringArr[i]);
     }
-    //printFileData(fp);
+    printFileData(fp);
 
 
 }
