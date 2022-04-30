@@ -517,9 +517,9 @@ int testFileFunctions() {
     char testArr[3][32] = {{"nardles"}, {"node"}, {"next"}};
     printf("\nPrinting words from returned array:\n");
     while (stringArr[i] != NULL) {
-        printf("word[%d] is |%s|\n", i, stringArr[i]);
-        //if ((strcmp(testArr[i], stringArr[i])))
-        printf("testArr |%s|, stringArr |%s|, strcmp = %d\n", testArr[i], stringArr[i], (strcmp(testArr[i], stringArr[i])));
+        printf("Return word[%d] is |%s|, expected result: |%s|\n", i, stringArr[i], testArr[i]);
+        if ((strcmp(testArr[i], stringArr[i])))
+            testPassed = 1;
         i += 1;
     }
     if (!testPassed)
