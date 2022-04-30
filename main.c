@@ -514,6 +514,7 @@ int testFileFunctions() {
     i = 0;
     while (stringArr[i] != NULL) {
         printf("word[%d] is |%s|\n", i, stringArr[i]);
+        i += 1
     }
     //printFileData(fp);
 
