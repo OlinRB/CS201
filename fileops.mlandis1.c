@@ -1,4 +1,6 @@
-// jdh CS201 S22
+#include "fileops.mlandis1.h"
+
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -101,11 +103,6 @@ int testUtils() {
 
     return 0;
 }
-
-typedef struct {
-    char word[1+MAXWORDLEN];
-    long nextpos;
-} Record;
 
 
 //-------------------------------------
@@ -217,6 +214,7 @@ int insertWord(FILE *fp, char *word) {
                 printf("Error on write\n");
 
         } else {
+
             // There is already a word with such a letter
             // Seek to this word to read in the next pointer (if it exists)
             // Seek to value
@@ -246,7 +244,6 @@ int insertWord(FILE *fp, char *word) {
                 long prevPos;
                 fread(&tempRecord, sizeof(Record), 1, fp);
                 while (tempRecord.nextpos != 0) {
-                    printf("Sticking point\n");
                     // set to new position
                     setFile(fp, tempRecord.nextpos);
                     prevPos = tempRecord.nextpos;
@@ -262,6 +259,7 @@ int insertWord(FILE *fp, char *word) {
                 setFile(fp, filesize);
                 newWord.nextpos = 0;
                 fwrite(&newWord, sizeof(Record), 1, fp);
+                printf("bhah\n");
             }
         }
 
@@ -444,7 +442,6 @@ int testFileFunctions() {
         printf("success, file '%s' already exists\n", FILENAME);
         fileExists = 1;
     }
-
     if ( ! fileExists ) {
         fp = fopen(FILENAME, "w+");  // w+ means read and write access, for a file
         if (fp == NULL) {            // that does not exist
@@ -465,6 +462,7 @@ int testFileFunctions() {
     // If file size == 0, Add longs to start of file (26)
     // if the file is empty, then write 5 long values
     if (filesize == 0) {
+        printf("got in");
         // don't need to seek to the beginning: already there, since file is empty
         value = 0;
         for (i = 0; i < NUMVALS; ++i) {
@@ -484,6 +482,7 @@ int testFileFunctions() {
 
     // Write word to file
     insertWord(fp, "nardles");
+    printf("yay\n");
     // Test word count and words with n
     int cnt;
     char testLetter = 'n';
