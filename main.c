@@ -405,6 +405,10 @@ char **getWords(FILE *fp, char letter) {
             }
         }
     }
+    for (int i = 0; i < 2; ++i) {
+        printf("Word #%d |%s|\n", i + 1, wordArr[i]);
+    }
+
 
     return wordArr;
 
@@ -509,7 +513,7 @@ int testFileFunctions() {
     while (stringArr[i] != NULL) {
         printf("word[%d] is |%s|\n", i, stringArr[i]);
     }
-    printFileData(fp);
+    //printFileData(fp);
 
 
 }
