@@ -516,6 +516,7 @@ int testFileFunctions() {
 
     stringArr = getWords(fp, testLetter);
     i = 0;
+    printf("index 0 -> %s\n", stringArr[0]);
     while (stringArr[i] != NULL) {
         printf("word[%d] is |%s|\n", i, stringArr[i]);
         i += 1;
