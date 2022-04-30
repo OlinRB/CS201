@@ -398,20 +398,21 @@ char **getWords(FILE *fp, char letter) {
             fread(&tempRecord, sizeof(Record), 1, fp);
             int i = 0;
             wordArr[i] = tempRecord.word;
+            printf("Word == %s, in array is %s\n", tempRecord.word, wordArr[i]);
             while (tempRecord.nextpos != 0) {
-                printf("Word == %s\n", tempRecord.word);
                 // set to new position
                 setFile(fp, tempRecord.nextpos);
                 fread(&tempRecord, sizeof(Record), 1, fp);
                 i += 1;
                 wordArr[i] = tempRecord.word;
+                printf("Word == %s, in array is %s\n", tempRecord.word, wordArr[i]);
 
             }
         }
     }
-    for (int i = 0; i < 3; ++i) {
-        printf("Word #%d |%s|\n", i + 1, wordArr[i]);
-    }
+//    for (int i = 0; i < 3; ++i) {
+//        printf("Word #%d |%s|\n", i + 1, wordArr[i]);
+//    }
 
 
     return wordArr;
