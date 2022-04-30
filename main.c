@@ -351,7 +351,7 @@ char **getWords(FILE *fp, char letter) {
     int wordCnt;
     char **wordArr;
     int cnt = countWords(fp, letter, &wordCnt);
-    wordArr = (char **) malloc((wordCnt + 1) * sizeof(MAXWORDLEN + 1));
+    wordArr = (char **) malloc((wordCnt + 1) * sizeof(char *));
     if (cnt != 0) {
         wordArr[0] = NULL;
         return wordArr;
@@ -397,20 +397,22 @@ char **getWords(FILE *fp, char letter) {
             Record tempRecord;
             fread(&tempRecord, sizeof(Record), 1, fp);
             int i = 0;
-            wordArr[i] = tempRecord.word;
+            //wordArr[i] = tempRecord.word;
+            strcpy(wordArr[i], tempRecord.word);
             printf("Word == |%s|, in array is |%s|, i == |%d|\n", tempRecord.word, wordArr[i], i);
             while (tempRecord.nextpos != 0) {
                 // set to new position
                 setFile(fp, tempRecord.nextpos);
                 fread(&tempRecord, sizeof(Record), 1, fp);
                 i += 1;
-                wordArr[i] = tempRecord.word;
+                strcpy(wordArr[i], tempRecord.word);
+                //wordArr[i] = tempRecord.word;
                 printf("Word == |%s|, in array is |%s|, i == |%d|\n", tempRecord.word, wordArr[i], i);
 
             }
-            for (int i = 0; i < 3; ++i) {
-                printf("in array is |%s|, i == |%d|\n", wordArr[i], i);
-            }
+//            for (int i = 0; i < 3; ++i) {
+//                printf("in array is |%s|, i == |%d|\n", wordArr[i], i);
+//            }
             return wordArr;
         }
     }
