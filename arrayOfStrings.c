@@ -75,7 +75,7 @@ int test(char *input) {
 }
 
 int main() {
-//    test("  now  is    the time ");
+    test("  now  is    the time ");
 //    test("now  is the time");
 //    test("");
 //    test("  ");

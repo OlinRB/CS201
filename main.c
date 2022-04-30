@@ -102,23 +102,13 @@ int testUtils() {
     return 0;
 }
 
-int testFileFunctions() {
-////    Try a simple test first, where you insert a single word, starting with ‘n’ for example. Count how many words
-////    start with ‘n’ (there should be one). Count how many words start with ‘a’ (there should be zero). Examine
-////    your file using od.
-////            Then, delete the file and make a new testcase: insert a word starting with ‘n’, and then a word starting
-////    with ‘a’, and then another word starting with ‘n’. Examine your file using od, and use the functions you’ve
-////    written to be sure you’re seeing the correct results.
-
-}
-
-//-------------------------------------
-
-
 typedef struct {
     char word[1+MAXWORDLEN];
     long nextpos;
 } Record;
+
+
+//-------------------------------------
 
 
 int setFile(FILE *fp, long locationIndex) {
@@ -340,11 +330,10 @@ int countWords(FILE *fp, char letter, int *count) {
             }
         }
     }
-    printf("\nThere are %d words with the letter %c\n", wordCnt, letter);
     return 0;
 }
 
-//char **getWords(FILE *fp, char letter) {
+char **getWords(FILE *fp, char letter) {
 ////    Get all of the words starting with the specified letter. Return them in an array of strings (remember: in C,
 ////    a string can be represented as a char*). If there are n words in the file that start with the specified letter,
 ////    then the array returned by this function will have n+1 entries, and the last entry will be NULL.
@@ -358,13 +347,79 @@ int countWords(FILE *fp, char letter, int *count) {
 ////    char **rtnval;
 ////    rtnval = (char **) malloc(sizeof(char *));
 ////    rtnval[0] = NULL;
-//
-//
-//}
+
+    // Get number of items with specificed letter to initialize array
+    // Declare array
+    int wordCnt;
+    char **wordArr;
+    int cnt = countWords(fp, letter, &wordCnt);
+    wordArr = (char **) malloc((wordCnt + 1) * sizeof(char *));
+    if (cnt != 0) {
+        wordArr[0] = NULL;
+        return wordArr;
+    }
+    // Get letter index
+    char alpha[27] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+                      'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+    long letterIndex;
+
+    // Set char to lower case
+    char lowLetter = tolower(letter);
+
+    // Find letter index
+    for (int i = 0; i < 26; ++i) {
+        if (lowLetter == alpha[i])
+            letterIndex = i * sizeof (long);
+    }
+
+    // Check if file exists
+    int fileExists = 0;
+    fp = fopen(FILENAME, "r+"); // r+ means read and write access, for a file
+    if (fp == NULL) {           // that already exists
+        printf("ERROR -> File does not exist\n", FILENAME);
+        wordArr[0] = NULL;
+        return wordArr;
+    }
+
+    // Seek to location
+    setFile(fp, letterIndex);
+    long value;
+
+    long num = fread(&value, sizeof(long), 1, fp);
+    // If num == 1 read was successful
+    if (num == 1) {
+        // Case for no words with starting letter in file
+        if (value == 0) {
+            return 0;
+        } else {
+            // Case for at least one word in file, read in until ptr == 0
+            setFile(fp, value);
+            Record tempRecord;
+            fread(&tempRecord, sizeof(Record), 1, fp);
+            int i = 1;
+            wordArr[i] = tempRecord.word;
+            while (tempRecord.nextpos != 0) {
+                // set to new position
+                setFile(fp, tempRecord.nextpos);
+                fread(&tempRecord, sizeof(Record), 1, fp);
+                i += 1;
+                wordArr[i] = tempRecord.word;
+            }
+        }
+    }
+
+    return wordArr;
 
 
-int main() {
-    // Open or create file
+}
+
+int testFileFunctions() {
+////    Try a simple test first, where you insert a single word, starting with ‘n’ for example. Count how many words
+////    start with ‘n’ (there should be one). Count how many words start with ‘a’ (there should be zero). Examine
+////    your file using od.
+////            Then, delete the file and make a new testcase: insert a word starting with ‘n’, and then a word starting
+////    with ‘a’, and then another word starting with ‘n’. Examine your file using od, and use the functions you’ve
+////    written to be sure you’re seeing the correct results.
     FILE *fp;
     int fileExists, rc, i, num, numRead, numValuesToRead;
     long filesize, value, pos;
@@ -411,29 +466,49 @@ int main() {
             } else {
                 //printf("success: wrote the value %ld\n", value);
             }
-            //value += 1;
         }
 
     }
 
-    // Save word and next pos to struct
-    Record word1;
-    strcpy(word1.word, "nardles");
-    word1.nextpos = 0;
+    int testPassed = 0;
 
     // Write word to file
     insertWord(fp, "nardles");
+    // Test word count and words with n
+    int cnt;
+    char testLetter = 'n';
+    countWords(fp, testLetter, &cnt);
+    //printf("\nThere are %d words with the letter %c\n", cnt, testLetter);
+    if (cnt != 1)
+        testPassed = 1;
+    cnt = 0;
+    testLetter = 'a';
+    countWords(fp, testLetter, &cnt);
+    if (cnt != 0)
+        testPassed = 1;
+
+    // Insert more words and test return array
     insertWord(fp, "middle");
-    insertWord(fp, "nardo");
     insertWord(fp, "node");
     insertWord(fp, "next");
-    insertWord(fp, "manother");
-    insertWord(fp, "aword");
-    printFileData(fp);
-    int cnt = 0;
-    char testLetter = 'm';
-    countWords(fp, testLetter, &cnt);
-    printf("\nThere are %d words with the letter %c\n", cnt, testLetter);
+    insertWord(fp, "march");
+    insertWord(fp, "python");
+    char **stringArr;
+    testLetter = 'a';
+    stringArr = getWords(fp, testLetter);
+    i = 0;
+    while (stringArr[i] != NULL) {
+        printf("word[%d] is |%s|\n", i, stringArr[i]);
+    }
+    //printFileData(fp);
+
+
+}
+
+
+int main() {
+    testFileFunctions();
+
     //testUtils();
 
 }
