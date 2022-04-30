@@ -409,7 +409,7 @@ char **getWords(FILE *fp, char letter) {
                 fread(&tempRecord, sizeof(Record), 1, fp);
                 i += 1;
                 strcpy(wordArr[i], tempRecord.word);
-                strncpy(word, &tempRecord.word);
+                strncpy(word, &tempRecord.word, MAXWORDLEN+1);
                 //printf("word is |%s|\n", word);
                 wordArr[i] = word;
                 //wordArr[i] = tempRecord.word;
