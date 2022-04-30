@@ -408,11 +408,12 @@ char **getWords(FILE *fp, char letter) {
                 printf("Word == |%s|, in array is |%s|, i == |%d|\n", tempRecord.word, wordArr[i], i);
 
             }
+            return wordArr;
         }
     }
-//    for (int i = 0; i < 3; ++i) {
-//        printf("Word #%d |%s|\n", i + 1, wordArr[i]);
-//    }
+    for (int i = 0; i < 3; ++i) {
+        printf("in array is |%s|, i == |%d|\n", wordArr[i], i);
+    }
 
 
     return wordArr;
