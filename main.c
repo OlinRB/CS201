@@ -171,9 +171,12 @@ int insertWord(FILE *fp, char *word) {
     char alpha[27] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
                       'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
     int success = 0;
+    // Change to lower case
+    char convertedWord[MAXWORDLEN+1];
+    convertToLower(word, convertedWord);
     // Determine where to write file
     Record newWord;
-    strcpy(newWord.word, word);
+    strcpy(newWord.word, convertedWord);
     char firstLetter = word[0];
 
     // Get letter index
@@ -503,6 +506,7 @@ int testFileFunctions() {
     insertWord(fp, "next");
     insertWord(fp, "march");
     insertWord(fp, "python");
+    insertWord(fp, "NOOdles");
     char **stringArr;
     cnt = 0;
     testLetter = 'n';
