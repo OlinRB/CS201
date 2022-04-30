@@ -399,11 +399,13 @@ char **getWords(FILE *fp, char letter) {
             int i = 0;
             wordArr[i] = tempRecord.word;
             while (tempRecord.nextpos != 0) {
+                printf("Word == %s\n", tempRecord.word);
                 // set to new position
                 setFile(fp, tempRecord.nextpos);
                 fread(&tempRecord, sizeof(Record), 1, fp);
                 i += 1;
                 wordArr[i] = tempRecord.word;
+
             }
         }
     }
