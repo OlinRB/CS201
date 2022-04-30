@@ -396,7 +396,7 @@ char **getWords(FILE *fp, char letter) {
             setFile(fp, value);
             Record tempRecord;
             fread(&tempRecord, sizeof(Record), 1, fp);
-            int i = 1;
+            int i = 0;
             wordArr[i] = tempRecord.word;
             while (tempRecord.nextpos != 0) {
                 // set to new position
@@ -404,13 +404,12 @@ char **getWords(FILE *fp, char letter) {
                 fread(&tempRecord, sizeof(Record), 1, fp);
                 i += 1;
                 wordArr[i] = tempRecord.word;
-                printf("Word = %s\n", tempRecord.word);
             }
         }
     }
-//    for (int i = 0; i < 4; ++i) {
-//        printf("Word #%d |%s|\n", i + 1, wordArr[i]);
-//    }
+    for (int i = 0; i < 3; ++i) {
+        printf("Word #%d |%s|\n", i + 1, wordArr[i]);
+    }
 
 
     return wordArr;
