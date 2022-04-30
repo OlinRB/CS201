@@ -400,9 +400,7 @@ char **getWords(FILE *fp, char letter) {
             char *word;
             word = (char *) malloc((MAXWORDLEN + 1) * sizeof(char));
             strncpy(word, tempRecord.word, MAXWORDLEN+1);
-            //printf("word is |%s|\n", word);
             wordArr[i] = word;
-            printf("Word == |%s|, in array is |%s|, i == |%d|\n", tempRecord.word, wordArr[i], i);
             while (tempRecord.nextpos != 0) {
                 word = (char *) malloc((MAXWORDLEN + 1) * sizeof(char));
                 // set to new position
@@ -410,20 +408,12 @@ char **getWords(FILE *fp, char letter) {
                 fread(&tempRecord, sizeof(Record), 1, fp);
                 i += 1;
                 strncpy(word, tempRecord.word, MAXWORDLEN+1);
-                //printf("word is |%s|\n", word);
                 wordArr[i] = word;
-                //wordArr[i] = tempRecord.word;
-                printf("Word == |%s|, in array is |%s|, i == |%d|\n", tempRecord.word, wordArr[i], i);
 
             }
-//            for (int i = 0; i < 3; ++i) {
-//                printf("in array is |%s|, i == |%d|\n", wordArr[i], i);
-//            }
             return wordArr;
         }
     }
-
-
     return wordArr;
 
 
@@ -524,11 +514,16 @@ int testFileFunctions() {
 
     stringArr = getWords(fp, testLetter);
     i = 0;
-    printf("Printing words from returned array:\n");
+    char testArr[3][32] = {{"nardles"}, {"node"}, {"next"}};
+    printf("\nPrinting words from returned array:\n");
     while (stringArr[i] != NULL) {
         printf("word[%d] is |%s|\n", i, stringArr[i]);
+        if (!(strcmp(testArr[i], stringArr[i])))
+            testPassed = 1;
         i += 1;
     }
+    if (!testPassed)
+        printf("\nPassed return array test\n");
     //printFileData(fp);
 
     return testPassed;
