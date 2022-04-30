@@ -408,11 +408,11 @@ char **getWords(FILE *fp, char letter) {
                 printf("Word == |%s|, in array is |%s|, i == |%d|\n", tempRecord.word, wordArr[i], i);
 
             }
+            for (int i = 0; i < 3; ++i) {
+                printf("in array is |%s|, i == |%d|\n", wordArr[i], i);
+            }
             return wordArr;
         }
-    }
-    for (int i = 0; i < 3; ++i) {
-        printf("in array is |%s|, i == |%d|\n", wordArr[i], i);
     }
 
 
@@ -516,7 +516,7 @@ int testFileFunctions() {
 
     stringArr = getWords(fp, testLetter);
     i = 0;
-    printf("index 0 -> %s\n", stringArr[0]);
+    printf("Printing words from returned array:\n");
     while (stringArr[i] != NULL) {
         printf("word[%d] is |%s|\n", i, stringArr[i]);
         i += 1;
