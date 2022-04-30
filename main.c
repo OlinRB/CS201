@@ -399,19 +399,19 @@ char **getWords(FILE *fp, char letter) {
             int i = 0;
             char *word;
             word = (char *) malloc((MAXWORDLEN + 1) * sizeof(char));
-
-            wordArr[i] = tempRecord.word;
-
+            strncpy(word, tempRecord.word, MAXWORDLEN+1);
+            //printf("word is |%s|\n", word);
+            wordArr[i] = word;
             printf("Word == |%s|, in array is |%s|, i == |%d|\n", tempRecord.word, wordArr[i], i);
             while (tempRecord.nextpos != 0) {
                 // set to new position
                 setFile(fp, tempRecord.nextpos);
                 fread(&tempRecord, sizeof(Record), 1, fp);
                 i += 1;
-                strcpy(wordArr[i], tempRecord.word);
-                strncpy(word, &tempRecord.word, MAXWORDLEN+1);
+                strncpy(word, tempRecord.word, MAXWORDLEN+1);
                 //printf("word is |%s|\n", word);
                 wordArr[i] = word;
+                word = (char *) malloc((MAXWORDLEN + 1) * sizeof(char));
                 //wordArr[i] = tempRecord.word;
                 printf("Word == |%s|, in array is |%s|, i == |%d|\n", tempRecord.word, wordArr[i], i);
 
