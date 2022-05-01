@@ -60,7 +60,7 @@ int convertToLower(char *word, char *convertedWord) {
 
 int test_tolower(char *word) {
     int len, i, val;
-    char newword[MAXWORDLEN + 1];
+    char newword[MAXWORDLEN];
 
     len = strlen(word);
     strcpy(newword, word);
@@ -173,10 +173,10 @@ int insertWord(FILE *fp, char *word) {
     int success = 0;
     // Change to lower case
     char convertedWord[MAXWORDLEN+1];
-    //convertToLower(word, convertedWord);
+    convertToLower(word, convertedWord);
     // Determine where to write file
     Record newWord;
-    strcpy(newWord.word, word);
+    strcpy(newWord.word, convertedWord);
     char firstLetter = word[0];
 
     // Get letter index
@@ -251,7 +251,7 @@ int insertWord(FILE *fp, char *word) {
                     // set to new position
                     setFile(fp, tempRecord.nextpos);
                     prevPos = tempRecord.nextpos;
-                    read = fread(&tempRecord, sizeof(Record), 1, fp);
+                    fread(&tempRecord, sizeof(Record), 1, fp);
                 }
                 long filesize = checkFileSize(fp);
                 //printf("\nFilesize = %ld\n", filesize);
@@ -504,9 +504,10 @@ int testFileFunctions() {
 
     // Insert more words and test return array
     insertWord(fp, "middle");
-    insertWord(fp, "NODE");
+    insertWord(fp, "node");
+    insertWord(fp, "next");
     insertWord(fp, "march");
-    insertWord(fp, "cprogramming");
+    insertWord(fp, "NOOdles");
     printFileData(fp);
     char **stringArr;
     cnt = 0;
