@@ -9,7 +9,7 @@
 
 #define MAXWORDLEN 31
 #define NUMVALS 26
-#define FILENAME "workkds_filet.dat"
+#define FILENAME "words_file.dat"
 
 //--------------------------------------------------------
 // return 1 if any chararacters are non-alphabetic;
