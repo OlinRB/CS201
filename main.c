@@ -519,7 +519,7 @@ int testFileFunctions() {
 
     stringArr = getWords(fp, testLetter);
     i = 0;
-    char testArr[3][32] = {{"nardles"}, {"node"}, {"next"}};
+    char testArr[2][32] = {{"nardles"}, {"node"}};
     printf("\nPrinting words from returned array:\n");
     while (stringArr[i] != NULL) {
         printf("Return word[%d] is |%s|, expected result: |%s|\n", i, stringArr[i], testArr[i]);
