@@ -9,7 +9,7 @@
 
 #define MAXWORDLEN 31
 #define NUMVALS 26
-#define FILENAME "words_file.dat"
+#define FILENAME "wordds_file.dat"
 
 //--------------------------------------------------------
 // return 1 if any chararacters are non-alphabetic;
@@ -514,7 +514,6 @@ int testFileFunctions() {
         printf("\nPASSED letter count with %c\n", testLetter);
 
     stringArr = getWords(fp, testLetter);
-    fclose(fp);
     i = 0;
     char testArr[3][32] = {{"nardles"}, {"node"}, {"next"}};
     printf("\nPrinting words from returned array:\n");
@@ -527,6 +526,7 @@ int testFileFunctions() {
     if (!testPassed)
         printf("\nPassed return array test\n");
     //printFileData(fp);
+    fclose(fp);
     return testPassed;
 }
 
