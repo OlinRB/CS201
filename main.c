@@ -506,7 +506,8 @@ int testFileFunctions() {
     insertWord(fp, "middle");
     insertWord(fp, "node");
     insertWord(fp, "march");
-    insertWord(fp, "next");
+    insertWord(fp, "NOODLES");
+    insertWord(fp, "cprogramming");
     printFileData(fp);
     char **stringArr;
     cnt = 0;
