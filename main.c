@@ -244,8 +244,10 @@ int insertWord(FILE *fp, char *word) {
                 setFile(fp, value);
                 Record tempRecord;
                 long prevPos;
-                fread(&tempRecord, sizeof(Record), 1, fp);
-                while (tempRecord.nextpos != 0) {
+                int read = fread(&tempRecord, sizeof(Record), 1, fp);
+                printf("First word is |%s| -> |%ld|", tempRecord.word,tempRecord.nextpos);
+                while (tempRecord.nextpos != 0 && read == 1) {
+
                     // set to new position
                     setFile(fp, tempRecord.nextpos);
                     prevPos = tempRecord.nextpos;
