@@ -509,6 +509,7 @@ int testFileFunctions() {
     insertWord(fp, "march");
     insertWord(fp, "python");
     insertWord(fp, "NOOdles");
+    printFileData(fp);
     char **stringArr;
     cnt = 0;
     testLetter = 'n';
