@@ -7,7 +7,7 @@
 
 #define MAXWORDLEN 31
 #define NUMVALS 26
-#define FILENAME "words_file.dat"
+#define FILENAME "wrd_fe.dat"
 
 //--------------------------------------------------------
 // return 1 if any chararacters are non-alphabetic;
@@ -254,7 +254,7 @@ int insertWord(FILE *fp, char *word) {
                 long filesize = checkFileSize(fp);
                 //printf("\nFilesize = %ld\n", filesize);
                 // Write pointer to last word with identical letter
-                setFile(fp, prevPos + 32);
+                setFile(fp, prevPos + sizeof(Record));
                 fwrite(&filesize, sizeof(long), 1, fp);
 
                 // Now write new word to end of file

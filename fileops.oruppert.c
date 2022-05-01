@@ -259,7 +259,6 @@ int insertWord(FILE *fp, char *word) {
                 setFile(fp, filesize);
                 newWord.nextpos = 0;
                 fwrite(&newWord, sizeof(Record), 1, fp);
-                printf("bhah\n");
             }
         }
 
@@ -462,7 +461,6 @@ int testFileFunctions() {
     // If file size == 0, Add longs to start of file (26)
     // if the file is empty, then write 5 long values
     if (filesize == 0) {
-        printf("got in");
         // don't need to seek to the beginning: already there, since file is empty
         value = 0;
         for (i = 0; i < NUMVALS; ++i) {
@@ -482,7 +480,6 @@ int testFileFunctions() {
 
     // Write word to file
     insertWord(fp, "nardles");
-    printf("yay\n");
     // Test word count and words with n
     int cnt;
     char testLetter = 'n';
@@ -517,6 +514,7 @@ int testFileFunctions() {
         printf("\nPASSED letter count with %c\n", testLetter);
 
     stringArr = getWords(fp, testLetter);
+    fclose(fp);
     i = 0;
     char testArr[3][32] = {{"nardles"}, {"node"}, {"next"}};
     printf("\nPrinting words from returned array:\n");
