@@ -173,10 +173,10 @@ int insertWord(FILE *fp, char *word) {
     int success = 0;
     // Change to lower case
     char convertedWord[MAXWORDLEN+1];
-    convertToLower(word, convertedWord);
+    //convertToLower(word, convertedWord);
     // Determine where to write file
     Record newWord;
-    strcpy(newWord.word, convertedWord);
+    strcpy(newWord.word, word);
     char firstLetter = word[0];
 
     // Get letter index
