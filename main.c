@@ -506,7 +506,6 @@ int testFileFunctions() {
     insertWord(fp, "middle");
     insertWord(fp, "node");
     insertWord(fp, "march");
-    insertWord(fp, "python");
     insertWord(fp, "next");
     printFileData(fp);
     char **stringArr;
