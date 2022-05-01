@@ -60,7 +60,7 @@ int convertToLower(char *word, char *convertedWord) {
 
 int test_tolower(char *word) {
     int len, i, val;
-    char newword[MAXWORDLEN];
+    char newword[MAXWORDLEN + 1];
 
     len = strlen(word);
     strcpy(newword, word);
