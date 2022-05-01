@@ -505,7 +505,6 @@ int testFileFunctions() {
     // Insert more words and test return array
     insertWord(fp, "middle");
     insertWord(fp, "node");
-    insertWord(fp, "next");
     insertWord(fp, "march");
     insertWord(fp, "python");
     insertWord(fp, "NOOdles");
