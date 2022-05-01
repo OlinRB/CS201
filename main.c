@@ -245,13 +245,13 @@ int insertWord(FILE *fp, char *word) {
                 Record tempRecord;
                 long prevPos;
                 int read = fread(&tempRecord, sizeof(Record), 1, fp);
-                printf("First word is |%s| -> |%ld|", tempRecord.word,tempRecord.nextpos);
+                //printf("First word is |%s| -> |%ld|", tempRecord.word,tempRecord.nextpos);
                 while (tempRecord.nextpos != 0 && read == 1) {
 
                     // set to new position
                     setFile(fp, tempRecord.nextpos);
                     prevPos = tempRecord.nextpos;
-                    fread(&tempRecord, sizeof(Record), 1, fp);
+                    read = fread(&tempRecord, sizeof(Record), 1, fp);
                 }
                 long filesize = checkFileSize(fp);
                 //printf("\nFilesize = %ld\n", filesize);
